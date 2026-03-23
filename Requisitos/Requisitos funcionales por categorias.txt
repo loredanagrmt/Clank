@@ -1,0 +1,80 @@
+﻿REQUISITOS FUNCIONALES
+
+ACCESO Y AUTENTICACIÓN
+RF-01. Selección de idioma antes del inicio de sesión
+ El sistema deberá permitir al usuario seleccionar el idioma de la aplicación antes de iniciar sesión.
+
+RF-02. Inicio de sesión
+ El sistema deberá permitir al usuario iniciar sesión mediante su correo electrónico y contraseña.
+
+RF-03. Registro de usuario
+ El sistema deberá permitir al usuario registrarse en la aplicación en caso de no disponer de una cuenta.
+
+PERFIL
+Usuario
+RF-04. Edición del perfil
+ El sistema deberá permitir al usuario editar sus datos personales, incluyendo nombre, Clank ID y fecha de nacimiento, mediante la opción “Editar perfil”.
+RF-05. Compartir perfil
+ El sistema deberá permitir al usuario compartir su perfil con otros usuarios o mediante medios externos.
+
+REPO
+RF-06. Visualización del contenido del repositorio personal
+ El sistema deberá permitir al usuario visualizar desde su perfil o repositorio personal sus clanks publicados, sus colecciones creadas y sus clanks guardados como borrador.
+
+CLANK
+RF-07. Creación de clanks
+ El sistema deberá permitir al usuario crear un clank introduciendo o subiendo la información necesaria, incluyendo imágenes, título, materiales, herramientas, duración y categorías.
+
+RF-08. Guardado de clanks como borrador
+ El sistema deberá permitir al usuario guardar un clank como borrador cuando su creación no haya finalizado.
+
+RF-09. Modificación de clanks publicados
+ El sistema deberá permitir al usuario editar un clank ya publicado para corregir errores o actualizar su contenido.
+
+RF-10. Compartir clanks
+ El sistema deberá permitir al usuario compartir sus clanks con otros usuarios o mediante medios externos.
+
+RF-11. Añadir clanks a colecciones
+ El sistema deberá permitir al usuario asociar uno o varios clanks a colecciones creadas previamente.
+
+COLECCIÓN
+RF-12. Creación de colecciones
+ El sistema deberá permitir al usuario crear colecciones de clanks.
+
+RF-13. Visualización de colecciones
+ El sistema deberá permitir al usuario visualizar todas las colecciones que haya creado, así como aquellas que se encuentren en estado de borrador.
+
+AJUSTES
+Accesibilidad
+RF-14. Cambio de idioma
+ El sistema deberá permitir al usuario modificar el idioma de la aplicación desde el apartado de ajustes.
+
+RF-15. Selección de tema visual
+ El sistema deberá permitir al usuario seleccionar entre tema oscuro y tema claro desde el apartado de ajustes.
+
+RF-16. Activación de alto contraste
+ El sistema deberá permitir al usuario activar o desactivar el modo de alto contraste desde el apartado de ajustes.
+
+Sistema
+RF-17. Gestión de notificaciones
+ El sistema deberá permitir al usuario activar o desactivar la recepción de notificaciones desde el apartado de ajustes.
+
+RF-18. Cierre de sesión
+ El sistema deberá permitir al usuario cerrar sesión desde el apartado de ajustes.
+
+RF-19. Eliminación de cuenta
+ El sistema deberá permitir al usuario borrar su cuenta desde el apartado de ajustes.
+
+RF-20. Cambio de contraseña
+ El sistema deberá permitir al usuario cambiar su contraseña desde el apartado de ajustes.
+
+Soporte
+RF-21. Contacto con soporte técnico
+ El sistema deberá permitir al usuario contactar con el soporte técnico desde el apartado de ajustes.
+
+NOTIFICACIONES
+RF-22. Notificaciones sobre borradores pendientes
+ El sistema deberá enviar notificaciones al usuario cuando existan clanks en borrador pendientes de completar o publicar.
+
+RF-23. Notificaciones por inactividad
+ El sistema deberá enviar notificaciones al usuario cuando detecte inactividad prolongada en la publicación de clanks.

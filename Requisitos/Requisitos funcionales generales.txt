@@ -1,0 +1,45 @@
+REQUISITOS FUNCIONALES GENERALES
+
+El usuario podrá seleccionar el idioma de la aplicación antes de iniciar sesión.
+Funcional: Es una acción concreta que el sistema debe ejecutar (cambiar configuración de idioma).
+​
+
+El usuario podrá iniciar sesión con su email y contraseña.
+Funcional: Define un proceso específico de autenticación.
+​
+
+El usuario podrá registrarse en caso de no tener cuenta.
+Funcional: Acción específica de creación de cuenta.
+​
+
+El usuario podrá editar sus datos personales (nombre, clank ID, fecha de nacimiento) al presionar el botón "Editar perfil".
+Funcional: Acción concreta de modificación de datos del usuario.
+​
+
+El usuario podrá compartir tanto sus clanks como su perfil.
+Funcional: Funcionalidad específica de compartir contenido.
+​
+
+El usuario podrá crear colecciones de clanks y visualizar todas las que ha creado o tiene en borradores.
+Funcional: Gestión específica de colecciones (crear/ver).
+​
+
+El usuario podrá crear un clank subiendo imágenes, título, materiales, herramientas, duración y categorías.
+Funcional: Proceso específico de creación de contenido multimedia.
+​
+
+Si el clank no está terminado, el usuario podrá guardarlo como borrador.
+Funcional: Acción específica de guardado temporal.
+​
+
+El usuario podrá editar un clank ya publicado en caso de errores.
+Funcional: Acción específica de edición post-publicación.
+​
+
+La aplicación enviará notificaciones sobre clanks en borrador pendientes o inactividad prolongada en publicaciones.
+Funcional: El sistema debe ejecutar un proceso automático de notificación.
+​
+
+En ajustes, el usuario podrá activar/desactivar notificaciones, cambiar idioma, seleccionar tema oscuro/claro, alto contraste, contactar soporte, cerrar sesión, borrar cuenta o cambiar contraseña.
+Funcional: Conjunto de acciones específicas de gestión de cuenta/configuración.
+​
