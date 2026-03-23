@@ -1,0 +1,324 @@
+CASOS DE USO
+
+ACCESO Y AUTENTICACIÓN
+CU-01. Seleccionar idioma antes de iniciar sesión
+
+Actor principal: Usuario
+Descripción: Permite al usuario elegir el idioma de la aplicación antes de acceder a su cuenta.
+Precondiciones: La aplicación se encuentra en la pantalla inicial.
+Flujo principal:
+
+El usuario accede a la pantalla inicial.
+El sistema muestra las opciones de idioma disponibles.
+El usuario selecciona un idioma.
+El sistema aplica el idioma seleccionado a la interfaz.
+Postcondiciones: La aplicación queda configurada en el idioma elegido.
+
+CU-02. Iniciar sesión
+
+Actor principal: Usuario
+Descripción: Permite al usuario acceder a su cuenta mediante correo electrónico y contraseña.
+Precondiciones: El usuario dispone de una cuenta registrada.
+Flujo principal:
+
+El usuario accede a la pantalla de inicio de sesión.
+Introduce su correo electrónico y contraseña.
+El sistema valida las credenciales.
+El sistema inicia la sesión y redirige al usuario a la pantalla principal.
+Postcondiciones: El usuario accede a su cuenta.
+
+CU-03. Registrarse
+
+Actor principal: Usuario
+Descripción: Permite a un nuevo usuario crear una cuenta en la aplicación.
+Precondiciones: El usuario no dispone de una cuenta registrada.
+Flujo principal:
+
+El usuario selecciona la opción de registro.
+Introduce los datos requeridos.
+El sistema valida la información.
+El sistema crea la cuenta del usuario.
+El sistema confirma el registro.
+Postcondiciones: El usuario queda registrado en la aplicación.
+
+PERFIL
+CU-04. Editar perfil
+
+Actor principal: Usuario
+Descripción: Permite al usuario modificar sus datos personales desde su perfil.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a su perfil.
+Pulsa el botón “Editar perfil”.
+El sistema muestra los campos editables.
+El usuario modifica nombre, Clank ID y/o fecha de nacimiento.
+El usuario guarda los cambios.
+El sistema actualiza la información.
+Postcondiciones: Los datos del perfil quedan actualizados.
+
+CU-05. Compartir perfil
+
+Actor principal: Usuario
+Descripción: Permite al usuario compartir su perfil con otras personas.
+Precondiciones: El usuario ha iniciado sesión y dispone de un perfil creado.
+Flujo principal:
+
+El usuario accede a su perfil.
+Selecciona la opción de compartir.
+El sistema genera las opciones de compartición disponibles.
+El usuario elige el medio de compartición.
+El sistema comparte el perfil.
+Postcondiciones: El perfil queda compartido por el medio seleccionado.
+
+CU-06. Ver repositorio personal
+
+Actor principal: Usuario
+Descripción: Permite al usuario visualizar sus clanks publicados, colecciones y borradores.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a su perfil o repositorio personal.
+El sistema muestra las secciones de publicados, colecciones y borradores.
+El usuario consulta el contenido almacenado en cada sección.
+Postcondiciones: El usuario visualiza su contenido personal.
+
+CLANK
+CU-07. Crear clank
+
+Actor principal: Usuario
+Descripción: Permite al usuario crear un clank introduciendo su información y contenido multimedia.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario selecciona la opción de crear clank.
+El sistema muestra el formulario de creación.
+El usuario añade imágenes, título, materiales, herramientas, duración y categorías.
+El usuario guarda o publica el clank.
+Postcondiciones: El clank queda almacenado como borrador o publicado.
+
+CU-08. Guardar clank como borrador
+
+Actor principal: Usuario
+Descripción: Permite al usuario guardar un clank incompleto para continuar editándolo más adelante.
+Precondiciones: El usuario ha iniciado sesión y se encuentra creando o editando un clank.
+Flujo principal:
+
+El usuario introduce información parcial del clank.
+Selecciona la opción “Guardar como borrador”.
+El sistema almacena el contenido introducido.
+Postcondiciones: El clank queda guardado en borradores.
+
+CU-09. Modificar clank publicado
+
+Actor principal: Usuario
+Descripción: Permite al usuario editar un clank ya publicado para corregir errores o actualizar información.
+Precondiciones: El usuario ha iniciado sesión y dispone de al menos un clank publicado.
+Flujo principal:
+
+El usuario accede a uno de sus clanks publicados.
+Selecciona la opción de editar.
+El sistema muestra la información actual del clank.
+El usuario realiza los cambios necesarios.
+Guarda la edición.
+El sistema actualiza el clank publicado.
+Postcondiciones: El clank queda actualizado.
+
+CU-10. Compartir clank
+
+Actor principal: Usuario
+Descripción: Permite al usuario compartir un clank con otras personas.
+Precondiciones: El usuario ha iniciado sesión y dispone de al menos un clank.
+Flujo principal:
+
+El usuario accede al clank que desea compartir.
+Selecciona la opción de compartir.
+El sistema muestra las opciones de compartición.
+El usuario elige el medio.
+El sistema comparte el clank.
+Postcondiciones: El clank queda compartido.
+
+CU-11. Añadir clank a una colección
+
+Actor principal: Usuario
+Descripción: Permite al usuario asociar un clank a una colección previamente creada.
+Precondiciones: El usuario ha iniciado sesión, dispone de un clank y de al menos una colección.
+Flujo principal:
+
+El usuario accede al clank.
+Selecciona la opción “Añadir a colección”.
+El sistema muestra las colecciones disponibles.
+El usuario selecciona una colección.
+El sistema vincula el clank a la colección.
+Postcondiciones: El clank queda añadido a la colección seleccionada.
+
+COLECCIÓN
+CU-12. Crear colección
+
+Actor principal: Usuario
+Descripción: Permite al usuario crear una colección para organizar sus clanks.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede al apartado de colecciones.
+Selecciona la opción de crear colección.
+Introduce la información necesaria.
+Guarda la colección.
+El sistema crea la colección.
+Postcondiciones: La colección queda registrada en el perfil del usuario.
+
+CU-13. Ver colecciones
+
+Actor principal: Usuario
+Descripción: Permite al usuario visualizar las colecciones creadas y las que estén en borrador.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede al apartado de colecciones.
+El sistema muestra todas sus colecciones y borradores disponibles.
+El usuario selecciona una colección para visualizarla.
+Postcondiciones: El usuario puede consultar sus colecciones.
+
+AJUSTES
+CU-14. Cambiar idioma desde ajustes
+
+Actor principal: Usuario
+Descripción: Permite al usuario modificar el idioma de la aplicación desde el menú de ajustes.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Selecciona la opción de idioma.
+Elige un nuevo idioma.
+El sistema aplica el cambio.
+Postcondiciones: La aplicación queda configurada en el nuevo idioma.
+
+CU-15. Cambiar tema visual
+
+Actor principal: Usuario
+Descripción: Permite al usuario seleccionar entre modo oscuro y modo claro.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Selecciona la opción de tema.
+Elige entre modo oscuro o claro.
+El sistema actualiza la apariencia.
+Postcondiciones: La interfaz cambia al tema seleccionado.
+
+CU-16. Activar o desactivar alto contraste
+
+Actor principal: Usuario
+Descripción: Permite al usuario activar o desactivar el modo de alto contraste por accesibilidad.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Selecciona la opción de accesibilidad.
+Activa o desactiva el alto contraste.
+El sistema aplica la configuración.
+Postcondiciones: La interfaz se adapta al modo seleccionado.
+
+CU-17. Activar o desactivar notificaciones
+
+Actor principal: Usuario
+Descripción: Permite al usuario gestionar la recepción de notificaciones de la aplicación.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Entra en el apartado de notificaciones.
+Activa o desactiva la recepción de avisos.
+El sistema guarda la preferencia.
+Postcondiciones: La configuración de notificaciones queda actualizada.
+
+CU-18. Cerrar sesión
+
+Actor principal: Usuario
+Descripción: Permite al usuario cerrar la sesión activa en la aplicación.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Selecciona la opción “Cerrar sesión”.
+El sistema finaliza la sesión y redirige a la pantalla inicial.
+Postcondiciones: La sesión del usuario queda cerrada.
+
+CU-19. Borrar cuenta
+
+Actor principal: Usuario
+Descripción: Permite al usuario eliminar permanentemente su cuenta de la aplicación.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Selecciona la opción “Borrar cuenta”.
+El sistema solicita confirmación.
+El usuario confirma la acción.
+El sistema elimina la cuenta y sus datos asociados según las políticas definidas.
+Postcondiciones: La cuenta del usuario queda eliminada.
+
+CU-20. Cambiar contraseña
+
+Actor principal: Usuario
+Descripción: Permite al usuario modificar su contraseña actual.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Selecciona la opción “Cambiar contraseña”.
+Introduce la contraseña actual y la nueva contraseña.
+El sistema valida los datos.
+El sistema actualiza la contraseña.
+Postcondiciones: La contraseña del usuario queda modificada.
+
+CU-21. Contactar con soporte técnico
+
+Actor principal: Usuario
+Descripción: Permite al usuario enviar una consulta o incidencia al soporte técnico.
+Precondiciones: El usuario ha iniciado sesión.
+Flujo principal:
+
+El usuario accede a ajustes.
+Selecciona la opción de contacto con soporte.
+Redacta el mensaje o incidencia.
+Envía la solicitud.
+El sistema registra y envía la consulta al soporte técnico.
+Postcondiciones: La solicitud queda enviada al soporte.
+
+NOTIFICACIONES
+CU-22. Recibir notificaciones por borradores pendientes
+
+Actor principal: Sistema / Usuario
+Descripción: Permite al sistema avisar al usuario sobre clanks en borrador pendientes de completar o publicar.
+Precondiciones: El usuario tiene notificaciones activadas y existen borradores pendientes.
+Flujo principal:
+
+El sistema detecta la existencia de borradores pendientes.
+Genera una notificación para el usuario.
+El usuario recibe el aviso en la aplicación o dispositivo.
+Postcondiciones: El usuario es informado sobre la existencia de borradores pendientes.
+
+CU-23. Recibir notificaciones por inactividad
+
+Actor principal: Sistema / Usuario
+Descripción: Permite al sistema avisar al usuario cuando detecta inactividad prolongada en sus publicaciones.
+Precondiciones: El usuario tiene notificaciones activadas.
+Flujo principal:
+
+El sistema detecta un periodo prolongado sin publicaciones.
+Genera una notificación recordatoria.
+El usuario recibe el aviso.
+Postcondiciones: El usuario es informado de su inactividad.
+
+CU-24. Recibir mensajes de soporte técnico
+
+Actor principal: Sistema / Usuario
+Descripción: Permite al usuario recibir respuestas o mensajes procedentes del soporte técnico.
+Precondiciones: El usuario ha contactado previamente con soporte o existe una comunicación activa.
+Flujo principal:
+
+El soporte técnico genera una respuesta.
+El sistema envía la notificación o mensaje al usuario.
+El usuario accede al contenido recibido.
+Postcondiciones: El usuario recibe la respuesta del soporte técnico.
