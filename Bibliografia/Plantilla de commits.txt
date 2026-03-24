@@ -1,0 +1,20 @@
+PLANTILLA DE COMMITS 
+
+Debe empezar por uno de estos prefijos:
+    - WIP: si lleva trabajo sin terminar
+    - END: si es código final, listo para revisar
+
+    Además, según el tipo de código, debe llevar un de estos:
+    - #NNN: número de tarea a la que pertenece el trabajo
+    - BUG: cuando corrige un bug
+    - DOC: si se está tocando documentación
+    - REF: si es solo una refactorización
+    - IMG: si son retoques estéticos/de imagen
+    - PRF: retoques de rendimiento
+    - TST: código relacionado con tests
+    - CID: cambios al proceso de CI/CD
+
+    Por ejemplo:
+    - WIP:#123: Nuevo formulario de crear usuario
+    - END:BUG: Problema con cálculo de hash
+    - WIP:DOC: Actualizado manual del alumno
