@@ -8,11 +8,11 @@ Debe empezar por uno de estos prefijos:
     - #NNN: número de tarea a la que pertenece el trabajo
     - BUG: cuando corrige un bug
     - DOC: si se está tocando documentación
-    - REF: si es solo una refactorización
+    - REF: si es una refactorización o cambio en la estructura
     - IMG: si son retoques estéticos/de imagen
-    - PRF: retoques de rendimiento
     - TST: código relacionado con tests
-    - CID: cambios al proceso de CI/CD
+    - BUILD: se actualizan dependencias o gradle
+    - REVERT para revertir commit anterior 
 
     Por ejemplo:
     - WIP:#123: Nuevo formulario de crear usuario
