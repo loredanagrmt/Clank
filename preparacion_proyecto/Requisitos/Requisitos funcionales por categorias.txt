@@ -78,3 +78,10 @@ RF-22. Notificaciones sobre borradores pendientes
 
 RF-23. Notificaciones por inactividad
  El sistema deberá enviar notificaciones al usuario cuando detecte inactividad prolongada en la publicación de clanks.
+
+NAVEGACIÓN
+RF-24. Barra de navegación principal
+  El sistema deberá mostrar una barra de navegación inferior con acceso a las secciones principales (Notificaciones, Crear y Perfil) desde cualquier pantalla de la aplicación.
+
+RF-25. Adaptación contextual de la navegación
+  El sistema deberá adaptar las opciones visibles en la barra de navegación en función de la pantalla en la que se encuentre el usuario.
