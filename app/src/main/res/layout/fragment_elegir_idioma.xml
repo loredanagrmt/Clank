@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.ElegirIdiomaFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#6BA587"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="220dp">
+
+        <ImageView
+            android:id="@+id/appLogo"
+            android:layout_width="255dp"
+            android:layout_height="255dp"
+            android:background="@drawable/clank_logo_circulo"
+            android:padding="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Clank"
+            android:textColor="#FFFCF8"
+            android:textSize="63.84sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000" />
+
+</FrameLayout>

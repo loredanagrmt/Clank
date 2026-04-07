@@ -1,9 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Base.Theme.Clank" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Personaliza el tema aquí -->
     </style>
 
-    <style name="Theme.Clank" parent="Base.Theme.Clank" />
+    <style name="Theme.Clank" parent="Base.Theme.Clank">
+        <item name="android:fontFamily">@font/poppins_family</item>
+        <item name="fontFamily">@font/poppins_family</item>
+    </style>
+
 </resources>
