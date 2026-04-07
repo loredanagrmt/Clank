@@ -45,6 +45,9 @@ dependencies {
     // Carga de imágenes
     implementation(libs.glide)
 
+    // Idiomas
+    implementation("com.google.mlkit:translate:17.0.3")
+
     // Firebase
     /*implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
