@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.LogoFragment"
+    tools:context=".ui.logo.LogoFragment"
     android:background="#6BA587">
 
     <LinearLayout
@@ -16,7 +16,7 @@
         android:layout_weight="2">
 
 
-
+      <!-- logo -->
         <ImageView
             android:id="@+id/appLogo"
             android:layout_width="255dp"
@@ -24,6 +24,7 @@
             android:background="@drawable/clank_logo_circulo"
             android:padding="10dp" />
 
+      <!-- nombre Clank -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
