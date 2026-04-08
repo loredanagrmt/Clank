@@ -1,4 +1,4 @@
-package com.clank.app.ui;
+package com.clank.app.ui.auth;
 
 import android.os.Bundle;
 
@@ -12,10 +12,10 @@ import com.clank.app.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NavbarFragment#newInstance} factory method to
+ * Use the {@link InicioSesionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NavbarFragment extends Fragment {
+public class InicioSesionFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class NavbarFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public NavbarFragment() {
+    public InicioSesionFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class NavbarFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NavbarFragment.
+     * @return A new instance of fragment InicioSesionFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NavbarFragment newInstance(String param1, String param2) {
-        NavbarFragment fragment = new NavbarFragment();
+    public static InicioSesionFragment newInstance(String param1, String param2) {
+        InicioSesionFragment fragment = new InicioSesionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class NavbarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_navbar, container, false);
+        return inflater.inflate(R.layout.fragment_inicio_sesion, container, false);
     }
 }
