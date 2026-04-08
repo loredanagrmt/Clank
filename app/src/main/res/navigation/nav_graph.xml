@@ -1,6 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/nav_graph">
+  <!--AUN POR IMPLMENTAR:   app:startDestination="@id/perfilFragment"  <!- ← Pantalla inicial al abrir la app (Perfil) -->
 
-</navigation>
+  <!-- PANTALLA CREAR (pantalla de crear Clank desde navegación inferior ) -->
+  <fragment
+    android:id="@+id/feedFragment"
+    android:name="com.clank.app.ui.CrearFragment"
+    android:label="Crear Clank"
+    tools:layout="@layout/fragment_crear">
+
+    <!--AUN POR IMPLMENTAR
+
+     <!- Desde Crear puedes ir a Perfil
+    <action
+      android:id="@+id/action_crear_a_perfil"
+      app:destination="@id/perfilFragment" />
+
+    <!- Desde Crear puedes ir a Detalle del Clank
+    <action
+      android:id="@+id/action_crear_a_detalle"
+      app:destination="@id/detalleClankFragment" />
+    -->
+
+  </fragment>
+
+  <!--AUN POR IMPLMENTAR
+     <!- PANTALLA DETALLE DEL CLANK
+    <fragment
+      android:id="@+id/detalleClankFragment"
+      android:name="com.clank.app.ui.DetalleClankFragment"
+      android:label="Detalle del Clank"
+      tools:layout="@layout/fragment_detalle_clank" />
+
+    <!- PANTALLA PERFIL
+    <fragment
+      android:id="@+id/perfilFragment"
+      android:name="com.clank.app.ui.PerfilFragment"
+      android:label="Perfil"
+      tools:layout="@layout/fragment_perfil" />
+  -->
+
+  <!-- PANTALLA APERTURA (sin navbar) -->
+  <fragment
+    android:id="@+id/LogoFragment"
+    android:name="com.clank.app.ui.LogoFragment"
+    android:label=""
+    tools:layout="@layout/fragment_logo">
+
+  <!--AUN POR IMPLMENTAR
+  <action
+    android:id="@+id/action_logo_a_idioma"
+    app:destination="@id/ElegirIdiomaFragment" />
+
+  -->
+
+  </fragment>
+
+<!-- PANTALLA INICIO (sin navbar) -->
+  <fragment
+    android:id="@+id/inicioFragment"
+    android:name="com.clank.app.ui.InicioSesionFragment"
+    android:label=""
+    tools:layout="@layout/fragment_inicio_sesion">
+    <!--AUN POR IMPLMENTAR
+        <action
+          android:id="@+id/action_inicio_a_perfil"
+          app:destination="@id/perfilFragment" />
+     -->
+
+    </fragment>
+
+  </navigation>
