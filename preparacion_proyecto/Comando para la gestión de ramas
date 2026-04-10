@@ -1,0 +1,33 @@
+**CICLO DE VIDA DE RAMA PARA FEATURE**
+
+1. cd carpeta_padre
+2. git checkout desarrollo
+git pull origin desarrollo
+4. git checkout -b feature/mi-funcionalidad
+
+    //Se añaden los nuevos cambios
+
+5. git add .
+6. git commit -m "WIP/END: #NNN: ..."
+7 git push origin feature/mi-funcionalidad
+
+    //En el repo:
+    //Compare & pull request de feature/mi-funcionalidad
+
+    //En el PR:
+    //Título: igual que el commit
+    //Descripcion
+    //Añadir reviewer
+    //Añadir asignee
+
+8. git push origin --delete feature/mi-funcionalidad
+9. git branch -d feature/mi-funcionalidad
+10. git fetch --prune
+
+**TRAER NUEVOS CAMBIOS DEL REPO A RAMA FEATURE**
+1. git status
+2. git fetch origin
+3. git checkout desarrollo
+4. git pull origin desarrollo
+5. git checkout feature/mi-funcionalidad
+6. git merge desarrollo
