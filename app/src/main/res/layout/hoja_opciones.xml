@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_hoja"
+    android:paddingTop="28dp"
+    android:paddingBottom="40dp"
+    android:paddingStart="28dp"
+    android:paddingEnd="28dp">
+
+    <TextView
+        android:id="@+id/tituloPanelOpciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/color_clank_activo"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins_semibold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listaOpciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textoConfirmacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:textColor="@color/color_negrita"
+        android:textSize="14sp"
+        android:fontFamily="@font/poppins_regular"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/inputNombre"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_input"
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="@color/color_negrita"
+        android:textColorHint="@color/color_negrita"
+        android:textSize="14sp"
+        android:visibility="visible" />
+
+
+</LinearLayout>

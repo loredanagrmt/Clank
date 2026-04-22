@@ -52,6 +52,7 @@ dependencies {
 
   // Idiomas
   implementation("com.google.mlkit:translate:17.0.3")
+  implementation("com.google.mlkit:language-id:17.0.6")
 
   // Hilt — inyección de dependencias
   implementation(libs.hilt.android)

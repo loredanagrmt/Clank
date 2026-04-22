@@ -1,68 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/nav_graph"
-  app:startDestination="@id/logoFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/logoFragment">
 
-  <!-- 1. LOGO (sin navbar, sin bottomnav) -->
   <fragment
-    android:id="@+id/logoFragment"
-    android:name="com.clank.app.ui.logo.LogoFragment"
-    android:label=""
-    tools:layout="@layout/fragment_logo">
+      android:id="@+id/logoFragment"
+      android:name="com.clank.app.ui.logo.LogoFragment"
+      android:label=""
+      tools:layout="@layout/fragment_logo">
     <action
-      android:id="@+id/action_logo_a_idioma"
-      app:destination="@id/elegirIdiomaFragment"
-      app:popUpTo="@id/logoFragment"
-      app:popUpToInclusive="true" />
+        android:id="@+id/action_logo_a_idioma"
+        app:destination="@id/elegirIdiomaFragment"
+        app:popUpTo="@id/logoFragment"
+        app:popUpToInclusive="true" />
   </fragment>
 
-  <!-- 2. ELEGIR IDIOMA (sin navbar, sin bottomnav) -->
   <fragment
-    android:id="@+id/elegirIdiomaFragment"
-    android:name="com.clank.app.ui.idioma.ElegirIdiomaFragment"
-    android:label=""
-    tools:layout="@layout/fragment_elegir_idioma">
+      android:id="@+id/elegirIdiomaFragment"
+      android:name="com.clank.app.ui.idioma.ElegirIdiomaFragment"
+      android:label=""
+      tools:layout="@layout/fragment_elegir_idioma">
     <action
-      android:id="@+id/action_idioma_a_inicio"
-      app:destination="@id/inicioSesionFragment"
-      app:popUpTo="@id/elegirIdiomaFragment"
-      app:popUpToInclusive="true" />
+        android:id="@+id/action_idioma_a_inicio"
+        app:destination="@id/inspirarFragment"
+        app:popUpTo="@id/elegirIdiomaFragment"
+        app:popUpToInclusive="true" />
   </fragment>
 
-  <!-- 3. INICIO DE SESIÓN (sin navbar, sin bottomnav) -->
   <fragment
-    android:id="@+id/inicioSesionFragment"
-    android:name="com.clank.app.ui.auth.InicioSesionFragment"
-    android:label=""
-    tools:layout="@layout/fragment_inicio_sesion">
+      android:id="@+id/inspirarFragment"
+      android:name="com.clank.app.ui.inspirar.InspirarFragment"
+      android:label=""
+      tools:layout="@layout/fragment_inspirar">
     <action
-      android:id="@+id/action_inicio_a_feed"
-      app:destination="@id/feedFragment"
-      app:popUpTo="@id/inicioSesionFragment"
-      app:popUpToInclusive="true" />
+        android:id="@+id/action_inspirar_a_bienvenida"
+        app:destination="@id/bienvenidaFragment"
+        app:popUpTo="@id/inspirarFragment"
+        app:popUpToInclusive="true" />
   </fragment>
 
-  <!-- 4. CREAR CLANK (con navbar y bottomnav) -->
   <fragment
-    android:id="@+id/crearFragment"
-    android:name="com.clank.app.ui.crear.CrearFragment"
-    android:label="Crear Clank"
-    tools:layout="@layout/fragment_crear">
+      android:id="@+id/bienvenidaFragment"
+      android:name="com.clank.app.ui.bienvenida.BienvenidaFragment"
+      android:label=""
+      tools:layout="@layout/fragment_bienvenida">
     <action
-      android:id="@+id/action_crear_a_feed"
-      app:destination="@id/feedFragment" />
+        android:id="@+id/action_bienvenida_a_registro"
+        app:destination="@id/crearFragment"
+        app:popUpTo="@id/bienvenidaFragment"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_bienvenida_a_inicio_sesion"
+        app:destination="@id/inicioSesionFragment"
+        app:popUpTo="@id/bienvenidaFragment"
+        app:popUpToInclusive="true" />
   </fragment>
 
-  <!-- 6. PERFIL (con navbar y bottomnav) — pendiente de crear -->
+  <fragment
+      android:id="@+id/inicioSesionFragment"
+      android:name="com.clank.app.ui.auth.InicioSesionFragment"
+      android:label=""
+      tools:layout="@layout/fragment_inicio_sesion" />
 
-<!--  <fragment-->
-<!--      android:id="@+id/perfilFragment"-->
-<!--      android:name="com.clank.app.ui.perfil.PerfilFragment"-->
-<!--      android:label="Perfil"-->
-<!--      tools:layout="@layout/fragment_perfil" />-->
-
+  <fragment
+      android:id="@+id/crearFragment"
+      android:name="com.clank.app.ui.crear.CrearFragment"
+      android:label="Crear Clank"
+      tools:layout="@layout/fragment_crear">
+    <action
+        android:id="@+id/action_crear_a_feed"
+        app:destination="@id/feedFragment" />
+  </fragment>
 
 </navigation>
