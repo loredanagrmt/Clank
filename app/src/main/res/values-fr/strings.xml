@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Clank</string>
+    <string name="logo_titulo">Clank</string>
+    <string name="elige_tu_idioma">Choisissez votre langue</string>
+    <string name="inspirar_titulo">Laissez-vous inspirer</string>
+    <string name="inspirar_subtitulo">Faites partie de la communauté créative la plus cool</string>
+    <string name="continuar">Continuer</string>
+    <string name="cancelar">Annuler</string>
+    <string name="confirmar">Confirmer</string>
+    <string name="bienvenida_titulo">Bienvenue</string>
+    <string name="bienvenida_subtitulo">Gardez votre côté créatif en sécurité.</string>
+    <string name="soy_nuevo">Je suis nouveau</string>
+    <string name="ya_he_estado">Je suis déjà passé par ici</string>
+</resources>

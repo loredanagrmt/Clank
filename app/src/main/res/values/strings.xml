@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Clank</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logo_titulo">Clank</string>
+    <string name="elige_tu_idioma">Elige tu idioma</string>
+    <string name="inspirar_titulo">Déjate inspirar</string>
+    <string name="inspirar_subtitulo">Forma parte de la comunidad creativa más chula</string>
+    <string name="continuar">Continuar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="bienvenida_titulo">Bienvenid@</string>
+    <string name="bienvenida_subtitulo">Guarda tu lado creativo en un sitio seguro.</string>
+    <string name="soy_nuevo">Soy nuevo</string>
+    <string name="ya_he_estado">Ya he estado aquí</string>
 </resources>
