@@ -4,21 +4,21 @@
     <item android:state_enabled="false">
         <shape>
             <solid android:color="@color/color_boton_inactivo" />
-            <corners android:radius="20dp" />
+            <corners android:radius="28dp" />
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape>
             <solid android:color="@color/color_clank_activo" />
-            <corners android:radius="20dp" />
+            <corners android:radius="28dp" />
         </shape>
     </item>
 
     <item>
         <shape>
             <solid android:color="@color/color_boton_inactivo" />
-            <corners android:radius="20dp" />
+            <corners android:radius="28dp" />
         </shape>
     </item>
 
