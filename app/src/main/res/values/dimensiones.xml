@@ -1,0 +1,22 @@
+<resources>
+    <dimen name="splash_horizontal_padding">24dp</dimen>
+    <dimen name="splash_title_margin_top">18dp</dimen>
+    <dimen name="splash_title_text_size">60sp</dimen>
+
+    <dimen name="screen_margin_horizontal">24dp</dimen>
+    <dimen name="space_l">16dp</dimen>
+    <dimen name="space_xs">6dp</dimen>
+
+    <dimen name="text_screen_title">26sp</dimen>
+    <dimen name="text_body_small">13sp</dimen>
+
+    <dimen name="inspirar_gradient_height">150dp</dimen>
+
+    <dimen name="inspirar_button_margin_bottom">32dp</dimen>
+    <dimen name="bt_secundario_height">62dp</dimen>
+    <dimen name="bt_secundario_min_width">112dp</dimen>
+    <dimen name="bt_secundario_padding_horizontal">22dp</dimen>
+    <dimen name="bt_secundario_text_size">17sp</dimen>
+    <dimen name="bt_secundario_radius">31dp</dimen>
+
+</resources>
