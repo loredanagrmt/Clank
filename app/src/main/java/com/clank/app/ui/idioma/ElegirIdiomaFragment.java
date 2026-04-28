@@ -14,7 +14,7 @@ import androidx.navigation.Navigation;
 import com.clank.app.R;
 import com.clank.app.ui.common.HojaOpciones;
 import com.clank.app.ui.common.ItemOpcion;
-import com.clank.app.util.LanguageManager;
+import com.clank.app.util.GestorIdioma;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ElegirIdiomaFragment extends Fragment {
                 getString(R.string.elige_tu_idioma),
                 obtenerIdiomasDisponibles(),
                 codigoIdioma -> {
-                    LanguageManager.getInstance(requireContext()).aplicarIdioma(codigoIdioma);
+                    GestorIdioma.getInstance(requireContext()).aplicarIdioma(codigoIdioma);
 
                     NavController navController = Navigation.findNavController(view);
                     navController.navigate(R.id.action_idioma_a_inicio);
