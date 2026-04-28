@@ -12,4 +12,13 @@
     <string name="bienvenida_subtitulo">Guarda tu lado creativo en un sitio seguro.</string>
     <string name="soy_nuevo">Soy nuevo</string>
     <string name="ya_he_estado">Ya he estado aquí</string>
+    <string name="inicio_sesion_titulo">Inicio De Sesión</string>
+    <string name="correo_electronico">Correo Electrónico</string>
+    <string name="ejemplo_correo">ejemplo@ejemplo.com</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="olvido_contrasena">¿Olvidaste tu contraseña? Click aqui</string>
+    <string name="o_inicia_con">O inicia sesión con:</string>
+    <string name="aun_sin_cuenta">¿Aún sin cuenta? Click aqui</string>
 </resources>

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.clank.app.data.model.Clank;
 import com.clank.app.data.source.FirestoreDataSource;
-import com.clank.app.util.Resource;
+import com.clank.app.util.Recurso;
 
 import java.util.List;
 
@@ -21,16 +21,16 @@ public class ClankRepository {
     this.dataSource = dataSource;
   }
 
-  public MutableLiveData<Resource<List<Clank>>> getClanks() {
-    MutableLiveData<Resource<List<Clank>>> liveData = new MutableLiveData<>();
-    liveData.setValue(Resource.loading());
+  public MutableLiveData<Recurso<List<Clank>>> getClanks() {
+    MutableLiveData<Recurso<List<Clank>>> liveData = new MutableLiveData<>();
+    liveData.setValue(Recurso.loading());
 
     dataSource.getClanks(
       querySnapshot -> {
         List<Clank> lista = querySnapshot.toObjects(Clank.class);
-        liveData.setValue(Resource.success(lista));
+        liveData.setValue(Recurso.success(lista));
       },
-      e -> liveData.setValue(Resource.error(e.getMessage()))
+      e -> liveData.setValue(Recurso.error(e.getMessage()))
     );
     return liveData;
   }

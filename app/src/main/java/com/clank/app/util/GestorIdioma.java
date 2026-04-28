@@ -8,23 +8,23 @@ import androidx.core.os.LocaleListCompat;
 
 import java.util.Locale;
 
-public class LanguageManager {
+public class GestorIdioma {
 
     private static final String PREFS_NAME = "clank_prefs";
     private static final String KEY_IDIOMA = "idioma_seleccionado";
     private static final String IDIOMA_DEFAULT = "es";
 
-    private static LanguageManager instancia;
+    private static GestorIdioma instancia;
     private final SharedPreferences prefs;
 
-    private LanguageManager(Context context) {
+    private GestorIdioma(Context context) {
         prefs = context.getApplicationContext()
                 .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public static LanguageManager getInstance(Context context) {
+    public static GestorIdioma getInstance(Context context) {
         if (instancia == null) {
-            instancia = new LanguageManager(context);
+            instancia = new GestorIdioma(context);
         }
         return instancia;
     }

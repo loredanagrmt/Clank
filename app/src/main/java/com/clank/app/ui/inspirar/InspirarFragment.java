@@ -35,7 +35,7 @@ public class InspirarFragment extends Fragment {
 
         binding.btnContinuar.getRoot().setText(getString(R.string.continuar));
         binding.btnContinuar.getRoot().setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_bienvenida_pantalla)
+                Navigation.findNavController(v).navigate(R.id.action_inspirar_a_bienvenida)
         );
     }
 
