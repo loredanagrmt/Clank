@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.clank.app.R;
+import com.clank.app.util.GestorIdioma;
 
 public class LogoFragment extends Fragment {
 
@@ -37,6 +38,7 @@ public class LogoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        GestorIdioma.getInstance(requireContext()).aplicarIdiomaSinGuardar("es");
         handler.postDelayed(navegarRunnable, 1000);
     }
 

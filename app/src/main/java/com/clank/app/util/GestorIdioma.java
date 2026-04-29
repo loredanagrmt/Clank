@@ -35,6 +35,17 @@ public class GestorIdioma {
         AppCompatDelegate.setApplicationLocales(localeList);
     }
 
+    public void aplicarIdiomaSinGuardar(String codigoIdioma) {
+        LocaleListCompat localeList = LocaleListCompat.forLanguageTags(codigoIdioma);
+        AppCompatDelegate.setApplicationLocales(localeList);
+    }
+
+    public void restablecerIdiomaPorDefecto() {
+        prefs.edit().remove(KEY_IDIOMA).apply();
+        LocaleListCompat localeList = LocaleListCompat.forLanguageTags(IDIOMA_DEFAULT);
+        AppCompatDelegate.setApplicationLocales(localeList);
+    }
+
     public String getIdiomaActual() {
         return prefs.getString(KEY_IDIOMA, IDIOMA_DEFAULT);
     }
