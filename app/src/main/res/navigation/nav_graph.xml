@@ -48,13 +48,13 @@
       android:label=""
       tools:layout="@layout/fragment_bienvenida">
     <action
-        android:id="@+id/action_bienvenida_a_registro"
-        app:destination="@id/crearFragment"
+        android:id="@+id/action_bienvenida_a_inicio_sesion"
+        app:destination="@id/inicioSesionFragment"
         app:popUpTo="@id/bienvenidaFragment"
         app:popUpToInclusive="true" />
     <action
-        android:id="@+id/action_bienvenida_a_inicio_sesion"
-        app:destination="@id/inicioSesionFragment"
+        android:id="@+id/action_bienvenida_a_registro"
+        app:destination="@id/registroFragment"
         app:popUpTo="@id/bienvenidaFragment"
         app:popUpToInclusive="true" />
   </fragment>
@@ -66,13 +66,10 @@
       tools:layout="@layout/fragment_inicio_sesion" />
 
   <fragment
-      android:id="@+id/crearFragment"
+      android:id="@+id/registroFragment"
       android:name="com.clank.app.ui.crear.CrearFragment"
       android:label="Crear Clank"
       tools:layout="@layout/fragment_crear">
-    <action
-        android:id="@+id/action_crear_a_feed"
-        app:destination="@id/feedFragment" />
   </fragment>
 
 </navigation>
