@@ -1,0 +1,28 @@
+
+# Clank Backup - Guía de Replicación
+
+Este paquete permite replicar la estructura y los datos maestros de la base de datos Firestore de Clank.
+
+## Requisitos Previos
+1. Tener **Node.js** instalado en tu ordenador.
+2. Tener un proyecto de **Firebase** creado.
+
+## Pasos para Instalar
+1. **Credenciales**:
+   - Ve a la Consola de Firebase > Configuración del proyecto > Cuentas de servicio.
+   - Haz clic en **Generar nueva clave privada**.
+   - Descarga el archivo, cámbiale el nombre a `serviceAccountKey.json` y colócalo en esta carpeta.
+
+2. **Dependencias**:
+   - Abre una terminal en esta carpeta y ejecuta:
+     ```bash
+     npm install firebase-admin
+     ```
+3. **Importación**:
+   - Ejecuta el script de carga:
+     ```bash
+     node importar.js
+     ```
+
+---
+*Atenciónn: Este proceso sobrescribirá documentos con el mismo ID si ya existen en la base de datos de destino.*

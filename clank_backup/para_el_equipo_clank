@@ -1,0 +1,19 @@
+Última actualización: [24-04-26]
+
+PASOS PARA ACTUALIZAR ESTE BACKUP (Si cambiamos la BBDD)
+=====================================================
+
+
+1. ACTUALIZAR DATOS:
+   - Abre la terminal en esta carpeta.
+   - Ejecuta el comando: node extraer.js
+   - Verifica que el archivo 'categorias.json' se haya actualizado con la fecha de hoy.
+
+2. ACTUALIZAR REGLAS (Opcional):
+   - Si cambiamos las reglas de seguridad en la consola, copia el texto
+     de la pestaña "Reglas" y pégalo en el archivo 'firestore.rules'.
+
+3. DISTRIBUIR:
+   - Ya podemos pasarle la carpeta a otros usuarios.
+   - IMPORTANTE: Nunca incluyas TU 'serviceAccountKey.json' cuando envíes la carpeta. (en nuestr caso NO-COMPARTIR-clave-privada.json)
+
