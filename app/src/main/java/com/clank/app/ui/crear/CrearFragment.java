@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -30,6 +28,7 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.clank.app.R;
+import com.clank.app.databinding.FragmentCrearBinding;
 import com.clank.app.util.Recurso;
 
 import java.io.File;
@@ -42,36 +41,16 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class CrearFragment extends Fragment {
 
+  private FragmentCrearBinding binding;
   private CrearViewModel viewModel;
-
-  /////////////////////////navbar pdte crear elemento comun/////////////////////////
-  private ImageButton btnCrearVolver;
-  private ImageButton btnCrearEliminar;
-  private Button btnPublicar;
-  private Button btnGuardarBoceto;
-  private FrameLayout framePortada;
-  private ImageView ivPortadaPreview;
-  private View llAnyadirPortada;
-  private Uri uriPortadaSeleccionada;
-  private EditText etTitulo;
-  private EditText etDescripcion;
-  private ImageButton btnTiempoCohete;
-  private ImageButton btnTiempoLiebre;
-  private ImageButton btnTiempoTortuga;
   private int tiempoSeleccionado = -1;
-  private LinearLayout llContenedorMateriales;
-  private LinearLayout llContenedorHerramientas;
-  private LinearLayout llContenedorInstrucciones;
-  private Button btnAnyadirMaterial;
-  private Button btnAnyadirHerramienta;
-  private Button btnAnyadirInstruccion;
-  private com.google.android.flexbox.FlexboxLayout flexboxCategorias;
   private View targetActivo = null;
+  private Uri uriPortadaSeleccionada = null;
   private Uri uriFotoTemporal = null;
 
+
+
   /////////////////////////launchers/////////////////////////
-
-
   private final ActivityResultLauncher<String> galeriaLauncher =
           registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
             if (uri != null) procesarImagenSeleccionada(uri);
@@ -90,85 +69,68 @@ public class CrearFragment extends Fragment {
                     getString(R.string.error_permiso_camara), Toast.LENGTH_SHORT).show();
           });
 
+
+
   /////////////////////////On create/////////////////////////
-
-
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_crear, container, false);
+    binding = FragmentCrearBinding.inflate(inflater, container, false);
+    return binding.getRoot();
   }
 
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    binding = null;
+  }
+
+
+
   /////////////////////////on View Created/////////////////////////
-
-
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     viewModel = new ViewModelProvider(this).get(CrearViewModel.class);
-    enlazarVistas(view);
-    establecerTextosBotones();
+    configurarNavbar();
     configurarListeners(view);
     observarViewModel();
     anyadirFilaMaterial(false);
     anyadirFilaInstruccion();
   }
 
-  /////////////////////////binding. Migrar a view binding?/////////////////////////
-  private void enlazarVistas(View v) {
-    btnCrearVolver            = v.findViewById(R.id.btnCrearVolver);
-    btnCrearEliminar          = v.findViewById(R.id.btnCrearEliminar);
-    btnPublicar               = v.findViewById(R.id.btnPublicar);
-    btnGuardarBoceto          = v.findViewById(R.id.btnGuardarBoceto);
-    framePortada              = v.findViewById(R.id.framePortada);
-    ivPortadaPreview          = v.findViewById(R.id.ivPortadaPreview);
-    llAnyadirPortada           = v.findViewById(R.id.llAnyadirPortada);
-    etTitulo                  = v.findViewById(R.id.etTitulo);
-    etDescripcion             = v.findViewById(R.id.etDescripcion);
-    btnTiempoCohete           = v.findViewById(R.id.btnTiempoCohete);
-    btnTiempoLiebre           = v.findViewById(R.id.btnTiempoLiebre);
-    btnTiempoTortuga          = v.findViewById(R.id.btnTiempoTortuga);
-    llContenedorMateriales    = v.findViewById(R.id.llContenedorMateriales);
-    llContenedorHerramientas  = v.findViewById(R.id.llContenedorHerramientas);
-    llContenedorInstrucciones = v.findViewById(R.id.llContenedorInstrucciones);
-    btnAnyadirMaterial         = v.findViewById(R.id.btnAnyadirMaterial);
-    btnAnyadirHerramienta      = v.findViewById(R.id.btnAnyadirHerramienta);
-    btnAnyadirInstruccion      = v.findViewById(R.id.btnAnyadirInstruccion);
-    flexboxCategorias         = v.findViewById(R.id.flexboxCategorias);
+
+  /////////////////////////navbar/////////////////////////
+  private void configurarNavbar() {
+    binding.navbar.tvNavbarTitulo.setText(getString(R.string.crear_titulo));
+    binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_delete);
+    binding.navbar.btnNavbarAccion.setVisibility(View.VISIBLE);
   }
 
-  private void establecerTextosBotones() {
-    btnPublicar.setText(getString(R.string.crear_publicar));
-    btnGuardarBoceto.setText(getString(R.string.crear_guardar_boceto));
-    btnAnyadirMaterial.setText(getString(R.string.crear_anyadir_material));
-    btnAnyadirHerramienta.setText(getString(R.string.crear_anyadir_herramienta));
-    btnAnyadirInstruccion.setText(getString(R.string.crear_anyadir_instruccion));
-  }
 
   /////////////////////////listeners/////////////////////////
-
   private void configurarListeners(View v) {
-    btnCrearVolver.setOnClickListener(b ->
+    binding.navbar.btnNavbarVolver.setOnClickListener(b ->
             Navigation.findNavController(v).navigateUp());
 
-    btnCrearEliminar.setOnClickListener(b -> mostrarConfirmarEliminar(v));
+    binding.navbar.btnNavbarAccion.setOnClickListener(b -> mostrarConfirmarEliminar(v));
 
-    framePortada.setOnClickListener(b -> mostrarDialogoSeleccionImagen(null));
+    binding.framePortada.setOnClickListener(b -> mostrarDialogoSeleccionImagen(null));
 
-    btnPublicar.setOnClickListener(b -> intentarPublicar(v));
-    btnGuardarBoceto.setOnClickListener(b -> guardarBoceto());
+    binding.btnPublicar.setOnClickListener(b -> intentarPublicar(v));
+    binding.btnGuardarBoceto.setOnClickListener(b -> guardarBoceto());
 
-    btnTiempoCohete.setOnClickListener(b  -> seleccionarTiempo(0));
-    btnTiempoLiebre.setOnClickListener(b  -> seleccionarTiempo(1));
-    btnTiempoTortuga.setOnClickListener(b -> seleccionarTiempo(2));
+    binding.btnTiempoCohete.setOnClickListener(b  -> seleccionarTiempo(0));
+    binding.btnTiempoLiebre.setOnClickListener(b  -> seleccionarTiempo(1));
+    binding.btnTiempoTortuga.setOnClickListener(b -> seleccionarTiempo(2));
 
-    btnAnyadirMaterial.setOnClickListener(b    -> anyadirFilaMaterial(false));
-    btnAnyadirHerramienta.setOnClickListener(b -> anyadirFilaMaterial(true));
-    btnAnyadirInstruccion.setOnClickListener(b -> anyadirFilaInstruccion());
+    binding.btnAnyadirMaterial.setOnClickListener(b    -> anyadirFilaMaterial(false));
+    binding.btnAnyadirHerramienta.setOnClickListener(b -> anyadirFilaMaterial(true));
+    binding.btnAnyadirInstruccion.setOnClickListener(b -> anyadirFilaInstruccion());
   }
 
-  /////////////////////////imagen/////////////////////////
 
+  /////////////////////////imagen/////////////////////////
   private void mostrarDialogoSeleccionImagen(@Nullable View target) {
     targetActivo = target;
     new AlertDialog.Builder(requireContext())
@@ -212,9 +174,9 @@ public class CrearFragment extends Fragment {
   private void procesarImagenSeleccionada(Uri uri) {
     if (targetActivo == null) {
       uriPortadaSeleccionada = uri;
-      ivPortadaPreview.setVisibility(View.VISIBLE);
-      llAnyadirPortada.setVisibility(View.GONE);
-      Glide.with(this).load(uri).centerCrop().into(ivPortadaPreview);
+      binding.ivPortadaPreview.setVisibility(View.VISIBLE);
+      binding.llAnyadirPortada.setVisibility(View.GONE);
+      Glide.with(this).load(uri).centerCrop().into(binding.ivPortadaPreview);
     } else {
       View fila         = targetActivo;
       View boton        = fila.findViewById(R.id.llBotonImagenInstruccion);
@@ -261,12 +223,15 @@ public class CrearFragment extends Fragment {
     dialog.show();
   }
 
+
   ///////////////////////// Tiempo enum/////////////////////////
-
-
   private void seleccionarTiempo(int indice) {
     tiempoSeleccionado = indice;
-    ImageButton[] botones = {btnTiempoCohete, btnTiempoLiebre, btnTiempoTortuga};
+    android.widget.ImageButton[] botones = {
+            binding.btnTiempoCohete,
+            binding.btnTiempoLiebre,
+            binding.btnTiempoTortuga
+    };
     for (int i = 0; i < botones.length; i++) {
       if (i == indice) {
         botones[i].setBackground(ContextCompat.getDrawable(requireContext(),
@@ -275,19 +240,19 @@ public class CrearFragment extends Fragment {
                 R.color.clank_background_light));
       } else {
         botones[i].setBackground(ContextCompat.getDrawable(requireContext(),
-                R.drawable.bg_tiempo_redondo));
+                R.drawable.bg_input));
         botones[i].setImageTintList(ContextCompat.getColorStateList(requireContext(),
                 R.color.color_texto_inactivo));
       }
     }
   }
 
-  /////////////////////////Añadir filas/////////////////////////
 
+  /////////////////////////Añadir filas/////////////////////////
 
   private void anyadirFilaMaterial(boolean esHerramienta) {
     LinearLayout contenedor = esHerramienta
-            ? llContenedorHerramientas : llContenedorMateriales;
+            ? binding.llContenedorHerramientas : binding.llContenedorMateriales;
     View fila = LayoutInflater.from(requireContext())
             .inflate(R.layout.item_material, contenedor, false);
 
@@ -311,11 +276,11 @@ public class CrearFragment extends Fragment {
 
   private void anyadirFilaInstruccion() {
     View fila = LayoutInflater.from(requireContext())
-            .inflate(R.layout.item_instruccion, llContenedorInstrucciones, false);
+            .inflate(R.layout.item_instruccion, binding.llContenedorInstrucciones, false);
 
     fila.findViewById(R.id.btnEliminarInstruccion).setOnClickListener(b -> {
-      if (llContenedorInstrucciones.getChildCount() > 1) {
-        llContenedorInstrucciones.removeView(fila);
+      if (binding.llContenedorInstrucciones.getChildCount() > 1) {
+        binding.llContenedorInstrucciones.removeView(fila);
       } else {
         Toast.makeText(requireContext(),
                 getString(R.string.crear_error_min_instruccion), Toast.LENGTH_SHORT).show();
@@ -331,22 +296,23 @@ public class CrearFragment extends Fragment {
       if (uri != null) mostrarDialogoAccionesImagen(uri, fila);
     });
 
-    llContenedorInstrucciones.addView(fila);
+    binding.llContenedorInstrucciones.addView(fila);
   }
 
   /////////////////////////publicar/////////////////////////
+
   private void intentarPublicar(View v) {
-    String titulo      = etTitulo.getText().toString().trim();
-    String descripcion = etDescripcion.getText().toString().trim();
+    String titulo      = binding.etTitulo.getText().toString().trim();
+    String descripcion = binding.etDescripcion.getText().toString().trim();
 
     if (titulo.isEmpty()) {
-      etTitulo.setError(getString(R.string.crear_error_titulo_vacio));
-      etTitulo.requestFocus();
+      binding.etTitulo.setError(getString(R.string.crear_error_titulo_vacio));
+      binding.etTitulo.requestFocus();
       return;
     }
     if (descripcion.isEmpty()) {
-      etDescripcion.setError(getString(R.string.crear_error_descripcion_vacia));
-      etDescripcion.requestFocus();
+      binding.etDescripcion.setError(getString(R.string.crear_error_descripcion_vacia));
+      binding.etDescripcion.requestFocus();
       return;
     }
     if (tiempoSeleccionado == -1) {
@@ -358,8 +324,8 @@ public class CrearFragment extends Fragment {
     List<String> textosInstrucciones   = new ArrayList<>();
     List<Uri>    imagenesInstrucciones = new ArrayList<>();
 
-    for (int i = 0; i < llContenedorInstrucciones.getChildCount(); i++) {
-      View fila    = llContenedorInstrucciones.getChildAt(i);
+    for (int i = 0; i < binding.llContenedorInstrucciones.getChildCount(); i++) {
+      View fila    = binding.llContenedorInstrucciones.getChildAt(i);
       String texto = ((EditText) fila.findViewById(R.id.etTextoInstruccion))
               .getText().toString().trim();
       if (!texto.isEmpty()) {
@@ -397,12 +363,10 @@ public class CrearFragment extends Fragment {
   }
 
   /////////////////////////Recoger datos clank/////////////////////////
-
-
   private List<String[]> recogerMateriales() {
     List<String[]> lista = new ArrayList<>();
-    for (int i = 0; i < llContenedorMateriales.getChildCount(); i++) {
-      View fila     = llContenedorMateriales.getChildAt(i);
+    for (int i = 0; i < binding.llContenedorMateriales.getChildCount(); i++) {
+      View fila     = binding.llContenedorMateriales.getChildAt(i);
       String cant   = ((EditText) fila.findViewById(R.id.etCantidad))
               .getText().toString().trim();
       String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
@@ -415,8 +379,8 @@ public class CrearFragment extends Fragment {
 
   private List<String> recogerHerramientas() {
     List<String> lista = new ArrayList<>();
-    for (int i = 0; i < llContenedorHerramientas.getChildCount(); i++) {
-      View fila     = llContenedorHerramientas.getChildAt(i);
+    for (int i = 0; i < binding.llContenedorHerramientas.getChildCount(); i++) {
+      View fila     = binding.llContenedorHerramientas.getChildAt(i);
       String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
               .getText().toString().trim();
       if (!nombre.isEmpty()) lista.add(nombre);
@@ -426,8 +390,8 @@ public class CrearFragment extends Fragment {
 
   private List<String> recogerCategoriasSeleccionadas() {
     List<String> seleccionadas = new ArrayList<>();
-    for (int i = 0; i < flexboxCategorias.getChildCount(); i++) {
-      View chip = flexboxCategorias.getChildAt(i);
+    for (int i = 0; i < binding.flexboxCategorias.getChildCount(); i++) {
+      View chip = binding.flexboxCategorias.getChildAt(i);
       if (chip.isSelected() && chip instanceof Button) {
         Object tag = chip.getTag();
         if (tag instanceof String) seleccionadas.add((String) tag);
@@ -437,20 +401,18 @@ public class CrearFragment extends Fragment {
   }
 
   /////////////////////////Observadores/////////////////////////
-
-
   private void observarViewModel() {
     viewModel.getEstadoPublicacion().observe(getViewLifecycleOwner(), estado -> {
       if (estado == null) return;
       switch (estado.estado) {
         case CARGANDO:
-          btnPublicar.setEnabled(false);
+          binding.btnPublicar.setEnabled(false);
           break;
         case EXITO:
           /// PENDIENTE: debe ir al feed
           break;
         case ERROR:
-          btnPublicar.setEnabled(true);
+          binding.btnPublicar.setEnabled(true);
           String msg = estado.mensaje != null
                   ? estado.mensaje
                   : getString(R.string.crear_error_publicar);
@@ -466,13 +428,13 @@ public class CrearFragment extends Fragment {
 
   private void cargarChipsCategorias(List<String[]> categorias) {
     if (categorias == null || categorias.isEmpty()) return;
-    flexboxCategorias.removeAllViews();
+    binding.flexboxCategorias.removeAllViews();
     for (String[] cat : categorias) {
       String catId     = cat[0];
       String catNombre = cat[1];
 
       Button chip = (Button) LayoutInflater.from(requireContext())
-              .inflate(R.layout.bt_secundario, flexboxCategorias, false);
+              .inflate(R.layout.bt_secundario, binding.flexboxCategorias, false);
       chip.setText(catNombre);
       chip.setTag(catId);
 
@@ -492,7 +454,7 @@ public class CrearFragment extends Fragment {
                         : R.color.color_texto_inactivo));
       });
 
-      flexboxCategorias.addView(chip);
+      binding.flexboxCategorias.addView(chip);
     }
   }
 }
