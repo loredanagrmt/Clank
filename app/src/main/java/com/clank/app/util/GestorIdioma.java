@@ -51,7 +51,7 @@ public class GestorIdioma {
     }
 
     public Locale getLocaleActual() {
-        return new Locale(getIdiomaActual());
+        return Locale.forLanguageTag(getIdiomaActual());
     }
 
     public void aplicarIdiomaGuardado() {

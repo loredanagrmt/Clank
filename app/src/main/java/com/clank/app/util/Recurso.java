@@ -1,25 +1,27 @@
 package com.clank.app.util;
 
 public class Recurso<T> {
-  public enum Status { SUCCESS, ERROR, LOADING }
+  public enum Estado { EXITO, ERROR, CARGANDO }
 
-  public final Status status;
+  public final Estado estado;
   public final T data;
-  public final String message;
+  public final String mensaje;
 
-  private Recurso(Status status, T data, String message) {
-    this.status = status;
-    this.data = data;
-    this.message = message;
+  private Recurso(Estado estado, T data, String mensaje) {
+    this.estado  = estado;
+    this.data    = data;
+    this.mensaje = mensaje;
   }
 
-  public static <T> Recurso<T> success(T data) {
-    return new Recurso<>(Status.SUCCESS, data, null);
+  public static <T> Recurso<T> exito(T data) {
+    return new Recurso<>(Estado.EXITO, data, null);
   }
+
   public static <T> Recurso<T> error(String msg) {
-    return new Recurso<>(Status.ERROR, null, msg);
+    return new Recurso<>(Estado.ERROR, null, msg);
   }
-  public static <T> Recurso<T> loading() {
-    return new Recurso<>(Status.LOADING, null, null);
+
+  public static <T> Recurso<T> cargando() {
+    return new Recurso<>(Estado.CARGANDO, null, null);
   }
 }
