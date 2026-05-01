@@ -13,47 +13,9 @@
       android:orientation="vertical"
       android:paddingBottom="@dimen/crear_padding_bottom">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/crear_cabecera_height"
-        android:paddingStart="@dimen/space_xs"
-        android:paddingEnd="@dimen/space_xs">
-
-      <ImageButton
-          android:id="@+id/btnCrearVolver"
-          android:layout_width="44dp"
-          android:layout_height="44dp"
-          android:layout_centerVertical="true"
-          android:layout_alignParentStart="true"
-          android:background="?attr/selectableItemBackgroundBorderless"
-          android:padding="10dp"
-          android:src="@drawable/ic_flecha_atras"
-          app:tint="@color/color_texto_btprincipal" />
-
-      <TextView
-          android:id="@+id/tvTituloCrear"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:fontFamily="@font/poppins_semibold"
-          android:text="@string/crear_titulo"
-          android:textColor="@color/color_texto_btprincipal"
-          android:textSize="@dimen/text_header_title" />
-
-      <ImageButton
-          android:id="@+id/btnCrearEliminar"
-          android:layout_width="44dp"
-          android:layout_height="44dp"
-          android:layout_centerVertical="true"
-          android:layout_alignParentEnd="true"
-          android:background="?attr/selectableItemBackgroundBorderless"
-          android:padding="10dp"
-          android:src="@drawable/ic_delete"
-          app:tint="@color/color_texto_btprincipal" />
-
-    </RelativeLayout>
-    
-    
+    <include
+        android:id="@+id/navbar"
+        layout="@layout/navbar_superior" />
 
     <!-- Botones publicar y boceto-->
     <LinearLayout
@@ -64,21 +26,23 @@
         android:paddingTop="4dp"
         android:paddingBottom="20dp">
 
-      <include
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/btnPublicar"
-          layout="@layout/bt_principal"
+          style="@style/Widget.Clank.BotonPrincipal"
           android:layout_width="0dp"
           android:layout_height="@dimen/crear_btn_publicar_height"
           android:layout_weight="1"
-          android:layout_marginEnd="@dimen/crear_btn_publicar_gap" />
+          android:layout_marginEnd="@dimen/crear_btn_publicar_gap"
+          android:text="@string/crear_publicar" />
 
-      <include
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/btnGuardarBoceto"
-          layout="@layout/bt_principal"
+          style="@style/Widget.Clank.BotonPrincipal"
           android:layout_width="0dp"
           android:layout_height="@dimen/crear_btn_publicar_height"
           android:layout_weight="1"
-          android:layout_marginStart="@dimen/crear_btn_publicar_gap" />
+          android:layout_marginStart="@dimen/crear_btn_publicar_gap"
+          android:text="@string/crear_guardar_boceto" />
 
     </LinearLayout>
 
@@ -265,11 +229,13 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/crear_campo_margin_top">
 
-      <include
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/btnAnyadirMaterial"
-          layout="@layout/bt_secundario"
+          style="@style/Widget.Clank.BotonSecundario"
           android:layout_width="wrap_content"
-          android:layout_height="@dimen/crear_btn_publicar_height" />
+          android:layout_height="@dimen/crear_btn_publicar_height"
+          android:paddingHorizontal="@dimen/bt_secundario_padding_horizontal"
+          android:text="@string/crear_anyadir_material" />
 
     </LinearLayout>
 
@@ -293,11 +259,13 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/crear_campo_margin_top">
 
-      <include
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/btnAnyadirHerramienta"
-          layout="@layout/bt_secundario"
+          style="@style/Widget.Clank.BotonSecundario"
           android:layout_width="wrap_content"
-          android:layout_height="@dimen/crear_btn_publicar_height" />
+          android:layout_height="@dimen/crear_btn_publicar_height"
+          android:paddingHorizontal="@dimen/bt_secundario_padding_horizontal"
+          android:text="@string/crear_anyadir_herramienta" />
 
     </LinearLayout>
 
@@ -321,11 +289,13 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/crear_campo_margin_top">
 
-      <include
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/btnAnyadirInstruccion"
-          layout="@layout/bt_secundario"
+          style="@style/Widget.Clank.BotonSecundario"
           android:layout_width="wrap_content"
-          android:layout_height="@dimen/crear_btn_publicar_height" />
+          android:layout_height="@dimen/crear_btn_publicar_height"
+          android:paddingHorizontal="@dimen/bt_secundario_padding_horizontal"
+          android:text="@string/crear_anyadir_instruccion" />
 
     </LinearLayout>
 
