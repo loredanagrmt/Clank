@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ── Generales ─────────────────────────────── -->
+    <dimen name="screen_margin_horizontal">48dp</dimen>
+    <dimen name="space_l">20dp</dimen>
+
+    <!-- ── Textos ─────────────────────────────────── -->
+    <dimen name="text_screen_title">32sp</dimen>
+    <dimen name="text_body_small">14sp</dimen>
+    <dimen name="text_body">15sp</dimen>
+    <dimen name="text_label">15sp</dimen>
+    <dimen name="text_header_title">19sp</dimen>
+
+    <!-- ── Botón secundario ───────────────────────── -->
+    <dimen name="bt_secundario_height">70dp</dimen>
+    <dimen name="bt_secundario_min_width">140dp</dimen>
+    <dimen name="bt_secundario_padding_horizontal">28dp</dimen>
+    <dimen name="bt_secundario_text_size">18sp</dimen>
+    <dimen name="bt_secundario_radius">35dp</dimen>
+
+    <!-- ── Crear Clank ────────────────────────────── -->
+    <dimen name="crear_cabecera_height">64dp</dimen>
+    <dimen name="crear_portada_height">280dp</dimen>
+    <dimen name="crear_btn_publicar_height">48dp</dimen>
+    <dimen name="crear_btn_tiempo_size">68dp</dimen>
+    <dimen name="crear_btn_tiempo_gap">16dp</dimen>
+    <dimen name="crear_seccion_margin_top">32dp</dimen>
+    <dimen name="crear_primera_seccion_margin_top">28dp</dimen>
+    <dimen name="crear_segunda_seccion_margin_top">20dp</dimen>
+    <dimen name="crear_campo_margin_top">10dp</dimen>
+    <dimen name="crear_padding_bottom">60dp</dimen>
+    <dimen name="crear_btn_publicar_gap">12dp</dimen>
+    <dimen name="crear_instruccion_imagen_indent">36dp</dimen>
+    <dimen name="crear_btn_tiempo_padding">14dp</dimen>
+
+</resources>

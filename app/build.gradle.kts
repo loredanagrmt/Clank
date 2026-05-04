@@ -1,8 +1,8 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.hilt.android)
-
 }
+
 android {
   namespace = "com.clank.app"
   compileSdk = 36
@@ -30,12 +30,12 @@ android {
       )
     }
   }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
 }
-
 
 dependencies {
   implementation(libs.androidx.appcompat)
@@ -56,24 +56,23 @@ dependencies {
 
   // Hilt — inyección de dependencias
   implementation(libs.hilt.android)
-  implementation(libs.google.firebase.firestore)
-  implementation(libs.google.firebase.auth)
   annotationProcessor(libs.hilt.compiler)
 
   // ViewModel + LiveData
   implementation(libs.lifecycle.viewmodel)
   implementation(libs.lifecycle.livedata)
 
-  //Firebase
+  // Firebase
   implementation(platform(libs.firebase.bom))
   implementation(libs.firebase.auth)
   implementation(libs.firebase.firestore)
   implementation(libs.firebase.storage)
+  implementation (libs.firebase.functions)
+
+  implementation (libs.flexbox)
 
   // Tests
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
-
-
 }

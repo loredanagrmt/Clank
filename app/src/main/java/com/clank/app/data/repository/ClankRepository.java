@@ -1,12 +1,9 @@
 package com.clank.app.data.repository;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.clank.app.data.model.Clank;
 import com.clank.app.data.source.FirestoreDataSource;
-import com.clank.app.util.Recurso;
-
-import java.util.List;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,6 +11,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ClankRepository {
 
+  private static final String COLLECTION = "clanks";
   private final FirestoreDataSource dataSource;
 
   @Inject
@@ -21,17 +19,15 @@ public class ClankRepository {
     this.dataSource = dataSource;
   }
 
-  public MutableLiveData<Recurso<List<Clank>>> getClanks() {
-    MutableLiveData<Recurso<List<Clank>>> liveData = new MutableLiveData<>();
-    liveData.setValue(Recurso.loading());
+  public DocumentReference crear(Clank clank) {
+    CollectionReference col = dataSource.collection(COLLECTION);
+    DocumentReference ref = col.document();
+    clank.setClankId(ref.getId());
+    ref.set(clank);
+    return ref;
+  }
 
-    dataSource.getClanks(
-      querySnapshot -> {
-        List<Clank> lista = querySnapshot.toObjects(Clank.class);
-        liveData.setValue(Recurso.success(lista));
-      },
-      e -> liveData.setValue(Recurso.error(e.getMessage()))
-    );
-    return liveData;
+  public DocumentReference nuevaReferencia() {
+    return dataSource.collection(COLLECTION).document();
   }
 }
