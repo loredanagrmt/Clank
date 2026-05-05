@@ -41,4 +41,49 @@
     <dimen name="crear_instruccion_imagen_indent">28dp</dimen>
     <dimen name="crear_btn_tiempo_padding">12dp</dimen>
 
+    <!-- Registro -->
+    <dimen name="registro_alto_minimo">932dp</dimen>
+    <dimen name="registro_padding_inferior">40dp</dimen>
+
+    <dimen name="registro_margen_lateral">36dp</dimen>
+    <dimen name="registro_margen_superior_icono">64dp</dimen>
+    <dimen name="registro_margen_superior_formulario">194dp</dimen>
+
+    <dimen name="registro_tamanyo_icono_volver">30dp</dimen>
+    <dimen name="registro_tamanyo_titulo">22sp</dimen>
+
+    <dimen name="registro_margen_inferior_input">8dp</dimen>
+
+    <dimen name="registro_espacio_formulario_boton">44dp</dimen>
+    <dimen name="registro_ancho_boton">194dp</dimen>
+    <dimen name="registro_alto_boton">45dp</dimen>
+
+    <dimen name="registro_espacio_boton_texto">10dp</dimen>
+    <dimen name="registro_tamanyo_texto_inferior">12sp</dimen>
+    <dimen name="registro_espacio_texto_enlace">4dp</dimen>
+
+    <dimen name="registro_margen_superior_formulario_navbar">120dp</dimen>
+
+    <!-- Popup -->
+    <dimen name="popup_margen_horizontal">56dp</dimen>
+    <dimen name="popup_padding_horizontal">20dp</dimen>
+    <dimen name="popup_padding_superior">22dp</dimen>
+    <dimen name="popup_padding_inferior">18dp</dimen>
+
+    <dimen name="popup_radio_esquinas">28dp</dimen>
+
+    <dimen name="popup_tamanyo_titulo">17sp</dimen>
+    <dimen name="popup_tamanyo_icono">58dp</dimen>
+    <dimen name="popup_tamanyo_mensaje">10sp</dimen>
+
+    <dimen name="popup_espacio_titulo_icono">16dp</dimen>
+    <dimen name="popup_espacio_icono_mensaje">12dp</dimen>
+    <dimen name="popup_espacio_mensaje_boton">16dp</dimen>
+
+    <dimen name="popup_ancho_boton">132dp</dimen>
+    <dimen name="popup_alto_boton">40dp</dimen>
+
+    <dimen name="popup_tamanyo_fondo_icono">58dp</dimen>
+    <dimen name="popup_padding_icono">12dp</dimen>
+
 </resources>
