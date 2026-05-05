@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/clank_background_light">
+
+    <include
+        android:id="@+id/navbar"
+        layout="@layout/navbar_superior"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/crear_cabecera_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollRegistro"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/navbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contenedorRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/registro_alto_minimo"
+            android:paddingBottom="@dimen/registro_padding_inferior">
+
+            <LinearLayout
+                android:id="@+id/contenedorFormularioRegistro"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/registro_margen_lateral"
+                android:layout_marginTop="@dimen/registro_margen_superior_formulario_navbar"
+                android:layout_marginEnd="@dimen/registro_margen_lateral"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/inputNombreCompleto"
+                    layout="@layout/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/registro_margen_inferior_input" />
+
+                <include
+                    android:id="@+id/inputCorreo"
+                    layout="@layout/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/registro_margen_inferior_input" />
+
+                <include
+                    android:id="@+id/inputTelefono"
+                    layout="@layout/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/registro_margen_inferior_input" />
+
+                <include
+                    android:id="@+id/inputFechaNacimiento"
+                    layout="@layout/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/registro_margen_inferior_input" />
+
+                <include
+                    android:id="@+id/inputContrasenya"
+                    layout="@layout/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/registro_margen_inferior_input" />
+
+                <include
+                    android:id="@+id/inputConfirmarContrasenya"
+                    layout="@layout/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/contenedorBotonRegistrarme"
+                android:layout_width="@dimen/registro_ancho_boton"
+                android:layout_height="@dimen/registro_alto_boton"
+                android:layout_marginTop="@dimen/registro_espacio_formulario_boton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contenedorFormularioRegistro">
+
+                <include
+                    android:id="@+id/btnRegistrarme"
+                    layout="@layout/bt_secundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/contenedorInicioSesionRegistro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/registro_espacio_boton_texto"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contenedorBotonRegistrarme">
+
+                <TextView
+                    android:id="@+id/tvYaTienesCuenta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="@string/ya_tienes_cuenta"
+                    android:textColor="@color/color_negrita"
+                    android:textSize="@dimen/registro_tamanyo_texto_inferior" />
+
+                <TextView
+                    android:id="@+id/tvIrInicioSesion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/registro_espacio_texto_enlace"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="@string/iniciar_sesion"
+                    android:textColor="@color/color_clank_activo"
+                    android:textSize="@dimen/registro_tamanyo_texto_inferior" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/capaPopup"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/color_sombra_popup"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/popup"
+                layout="@layout/pop_up"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/popup_margen_horizontal"
+                android:layout_marginEnd="@dimen/popup_margen_horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
