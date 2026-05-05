@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.hilt.android)
+  alias(libs.plugins.google.services)
 }
 
 android {
@@ -67,9 +68,12 @@ dependencies {
   implementation(libs.firebase.auth)
   implementation(libs.firebase.firestore)
   implementation(libs.firebase.storage)
-  implementation (libs.firebase.functions)
+  implementation(libs.firebase.functions)
 
-  implementation (libs.flexbox)
+  // Inicio de sesión con Google
+  implementation(libs.play.services.auth)
+
+  implementation(libs.flexbox)
 
   // Tests
   testImplementation(libs.junit)

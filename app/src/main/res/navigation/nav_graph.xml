@@ -61,12 +61,40 @@
 
   <fragment
       android:id="@+id/inicioSesionFragment"
-      android:name="com.clank.app.ui.auth.InicioSesionFragment"
+      android:name="com.clank.app.ui.inicioSesion.InicioSesionFragment"
       android:label=""
-      tools:layout="@layout/fragment_inicio_sesion" />
+      tools:layout="@layout/fragment_inicio_sesion">
+
+    <action
+        android:id="@+id/action_inicio_sesion_a_crear_clank"
+        app:destination="@id/crearFragment"
+        app:popUpTo="@id/inicioSesionFragment"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_inicio_sesion_a_registro"
+        app:destination="@id/registroFragment"
+        app:popUpTo="@id/inicioSesionFragment"
+        app:popUpToInclusive="true" />
+
+  </fragment>
 
   <fragment
       android:id="@+id/registroFragment"
+      android:name="com.clank.app.ui.auth.RegistroFragment"
+      android:label=""
+      tools:layout="@layout/fragment_registro">
+
+    <action
+        android:id="@+id/action_registro_a_inicio_sesion"
+        app:destination="@id/inicioSesionFragment"
+        app:popUpTo="@id/registroFragment"
+        app:popUpToInclusive="true" />
+
+  </fragment>
+
+  <fragment
+      android:id="@+id/crearFragment"
       android:name="com.clank.app.ui.crear.CrearFragment"
       android:label="Crear Clank"
       tools:layout="@layout/fragment_crear">
