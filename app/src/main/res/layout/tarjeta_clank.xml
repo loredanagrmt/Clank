@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginHorizontal="@dimen/tarjeta_margin_horizontal"
+  android:layout_marginVertical="@dimen/tarjeta_margin_vertical"
+  app:cardCornerRadius="@dimen/tarjeta_corner_radius"
+  app:cardElevation="@dimen/tarjeta_elevation">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/tarjeta_portada_height">
+
+      <ImageView
+        android:id="@+id/ivPortada"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/tarjeta_portada_desc" />
+
+      <ImageView
+        android:id="@+id/ivOpciones"
+        android:layout_width="@dimen/tarjeta_btn_opciones_size"
+        android:layout_height="@dimen/tarjeta_btn_opciones_size"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/tarjeta_btn_opciones_margin"
+        android:src="@drawable/ic_opciones_activo"
+        android:background="@drawable/bg_circulo_opciones_inactivo"
+        android:padding="@dimen/space_xs"
+        android:contentDescription="@string/tarjeta_opciones_desc" />
+
+    </FrameLayout>
+
+    <TextView
+      android:id="@+id/tvTituloClank"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/tarjeta_texto_margin_top"
+      android:layout_marginHorizontal="@dimen/tarjeta_texto_margin_horizontal"
+      android:textSize="@dimen/text_header_title"
+      android:textColor="@color/color_negrita"
+      android:fontFamily="@font/poppins_regular"
+      android:maxLines="1"
+      android:ellipsize="end"
+      android:text="@string/tarjeta_hint_titulo" />
+
+    <TextView
+      android:id="@+id/tvUsuario"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/tarjeta_usuario_margin_top"
+      android:layout_marginHorizontal="@dimen/tarjeta_texto_margin_horizontal"
+      android:textSize="@dimen/text_body_small"
+      android:textColor="@color/color_clank_activo"
+      android:fontFamily="@font/poppins_family"
+      android:maxLines="1"
+      android:ellipsize="end"
+      android:text="@string/tarjeta_hint_usuario" />
+
+    <TextView
+      android:id="@+id/tvDescripcionClank"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/tarjeta_desc_margin_top"
+      android:layout_marginHorizontal="@dimen/tarjeta_texto_margin_horizontal"
+      android:textSize="@dimen/text_body"
+      android:textColor="@color/color_negrita"
+      android:fontFamily="@font/league_spartan_light"
+      android:maxLines="2"
+      android:ellipsize="end"
+      android:text="@string/tarjeta_hint_descripcion" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginHorizontal="@dimen/tarjeta_texto_margin_horizontal"
+      android:layout_marginTop="@dimen/tarjeta_footer_margin_top"
+      android:layout_marginBottom="@dimen/tarjeta_footer_margin_bottom"
+      android:gravity="center_vertical">
+
+      <ImageView
+        android:id="@+id/ivTiempo"
+        android:layout_width="@dimen/tarjeta_icono_size"
+        android:layout_height="@dimen/tarjeta_icono_size"
+        android:src="@drawable/ic_liebre"
+        android:contentDescription="@string/tarjeta_tiempo_desc" />
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+

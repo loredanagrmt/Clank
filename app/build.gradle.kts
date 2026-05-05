@@ -69,6 +69,7 @@ dependencies {
   implementation(libs.firebase.firestore)
   implementation(libs.firebase.storage)
   implementation(libs.firebase.functions)
+  implementation(libs.firebase.ui.firestore)
 
   // Inicio de sesión con Google
   implementation(libs.play.services.auth)

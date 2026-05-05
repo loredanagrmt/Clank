@@ -1,89 +1,105 @@
 <resources>
-    <dimen name="splash_horizontal_padding">24dp</dimen>
-    <dimen name="splash_title_margin_top">18dp</dimen>
-    <dimen name="splash_title_text_size">60sp</dimen>
+  <dimen name="splash_horizontal_padding">24dp</dimen>
+  <dimen name="splash_title_margin_top">18dp</dimen>
+  <dimen name="splash_title_text_size">60sp</dimen>
 
-    <!-- ── Generales ─────────────────────────────── -->
-    <dimen name="screen_margin_horizontal">24dp</dimen>
-    <dimen name="space_l">16dp</dimen>
-    <dimen name="space_xs">6dp</dimen>
+  <!-- ── Generales ─────────────────────────────── -->
+  <dimen name="screen_margin_horizontal">24dp</dimen>
+  <dimen name="space_l">16dp</dimen>
+  <dimen name="space_xs">6dp</dimen>
 
-    <!-- ── Textos ─────────────────────────────────── -->
-    <dimen name="text_screen_title">26sp</dimen>
-    <dimen name="text_body_small">13sp</dimen>
-    <dimen name="text_body">14sp</dimen>
-    <dimen name="text_label">14sp</dimen>
-    <dimen name="text_header_title">17sp</dimen>
+  <!-- ── Textos ─────────────────────────────────── -->
+  <dimen name="text_screen_title">26sp</dimen>
+  <dimen name="text_body_small">13sp</dimen>
+  <dimen name="text_body">14sp</dimen>
+  <dimen name="text_label">14sp</dimen>
+  <dimen name="text_header_title">17sp</dimen>
 
-    <!-- ── Inspirar / Bienvenida ──────────────────── -->
-    <dimen name="inspirar_gradient_height">150dp</dimen>
-    <dimen name="inspirar_button_margin_bottom">32dp</dimen>
+  <!-- ── Inspirar / Bienvenida ──────────────────── -->
+  <dimen name="inspirar_gradient_height">150dp</dimen>
+  <dimen name="inspirar_button_margin_bottom">32dp</dimen>
 
-    <!-- ── Botón secundario ───────────────────────── -->
-    <dimen name="bt_secundario_height">62dp</dimen>
-    <dimen name="bt_secundario_min_width">112dp</dimen>
-    <dimen name="bt_secundario_padding_horizontal">22dp</dimen>
-    <dimen name="bt_secundario_text_size">17sp</dimen>
-    <dimen name="bt_secundario_radius">31dp</dimen>
+  <!-- ── Botón secundario ───────────────────────── -->
+  <dimen name="bt_secundario_height">62dp</dimen>
+  <dimen name="bt_secundario_min_width">112dp</dimen>
+  <dimen name="bt_secundario_padding_horizontal">22dp</dimen>
+  <dimen name="bt_secundario_text_size">17sp</dimen>
+  <dimen name="bt_secundario_radius">31dp</dimen>
 
-    <!-- ── Crear Clank ────────────────────────────── -->
-    <dimen name="crear_cabecera_height">56dp</dimen>
-    <dimen name="crear_portada_height">200dp</dimen>
-    <dimen name="crear_btn_publicar_height">40dp</dimen>
-    <dimen name="crear_btn_tiempo_size">56dp</dimen>
-    <dimen name="crear_btn_tiempo_gap">12dp</dimen>
-    <dimen name="crear_seccion_margin_top">24dp</dimen>
-    <dimen name="crear_primera_seccion_margin_top">20dp</dimen>
-    <dimen name="crear_segunda_seccion_margin_top">16dp</dimen>
-    <dimen name="crear_campo_margin_top">8dp</dimen>
-    <dimen name="crear_padding_bottom">40dp</dimen>
-    <dimen name="crear_btn_publicar_gap">8dp</dimen>
-    <dimen name="crear_instruccion_imagen_indent">28dp</dimen>
-    <dimen name="crear_btn_tiempo_padding">12dp</dimen>
+  <!-- ── Crear Clank ────────────────────────────── -->
+  <dimen name="crear_cabecera_height">56dp</dimen>
+  <dimen name="crear_portada_height">200dp</dimen>
+  <dimen name="crear_btn_publicar_height">40dp</dimen>
+  <dimen name="crear_btn_tiempo_size">56dp</dimen>
+  <dimen name="crear_btn_tiempo_gap">12dp</dimen>
+  <dimen name="crear_seccion_margin_top">24dp</dimen>
+  <dimen name="crear_primera_seccion_margin_top">20dp</dimen>
+  <dimen name="crear_segunda_seccion_margin_top">16dp</dimen>
+  <dimen name="crear_campo_margin_top">8dp</dimen>
+  <dimen name="crear_padding_bottom">40dp</dimen>
+  <dimen name="crear_btn_publicar_gap">8dp</dimen>
+  <dimen name="crear_instruccion_imagen_indent">28dp</dimen>
+  <dimen name="crear_btn_tiempo_padding">12dp</dimen>
 
-    <!-- Registro -->
-    <dimen name="registro_alto_minimo">932dp</dimen>
-    <dimen name="registro_padding_inferior">40dp</dimen>
+  <!-- Registro -->
+  <dimen name="registro_alto_minimo">932dp</dimen>
+  <dimen name="registro_padding_inferior">40dp</dimen>
 
-    <dimen name="registro_margen_lateral">36dp</dimen>
-    <dimen name="registro_margen_superior_icono">64dp</dimen>
-    <dimen name="registro_margen_superior_formulario">194dp</dimen>
+  <dimen name="registro_margen_lateral">36dp</dimen>
+  <dimen name="registro_margen_superior_icono">64dp</dimen>
+  <dimen name="registro_margen_superior_formulario">194dp</dimen>
 
-    <dimen name="registro_tamanyo_icono_volver">30dp</dimen>
-    <dimen name="registro_tamanyo_titulo">22sp</dimen>
+  <dimen name="registro_tamanyo_icono_volver">30dp</dimen>
+  <dimen name="registro_tamanyo_titulo">22sp</dimen>
 
-    <dimen name="registro_margen_inferior_input">8dp</dimen>
+  <dimen name="registro_margen_inferior_input">8dp</dimen>
 
-    <dimen name="registro_espacio_formulario_boton">44dp</dimen>
-    <dimen name="registro_ancho_boton">194dp</dimen>
-    <dimen name="registro_alto_boton">45dp</dimen>
+  <dimen name="registro_espacio_formulario_boton">44dp</dimen>
+  <dimen name="registro_ancho_boton">194dp</dimen>
+  <dimen name="registro_alto_boton">45dp</dimen>
 
-    <dimen name="registro_espacio_boton_texto">10dp</dimen>
-    <dimen name="registro_tamanyo_texto_inferior">12sp</dimen>
-    <dimen name="registro_espacio_texto_enlace">4dp</dimen>
+  <dimen name="registro_espacio_boton_texto">10dp</dimen>
+  <dimen name="registro_tamanyo_texto_inferior">12sp</dimen>
+  <dimen name="registro_espacio_texto_enlace">4dp</dimen>
 
-    <dimen name="registro_margen_superior_formulario_navbar">120dp</dimen>
+  <dimen name="registro_margen_superior_formulario_navbar">120dp</dimen>
 
-    <!-- Popup -->
-    <dimen name="popup_margen_horizontal">56dp</dimen>
-    <dimen name="popup_padding_horizontal">20dp</dimen>
-    <dimen name="popup_padding_superior">22dp</dimen>
-    <dimen name="popup_padding_inferior">18dp</dimen>
+  <!-- Popup -->
+  <dimen name="popup_margen_horizontal">56dp</dimen>
+  <dimen name="popup_padding_horizontal">20dp</dimen>
+  <dimen name="popup_padding_superior">22dp</dimen>
+  <dimen name="popup_padding_inferior">18dp</dimen>
 
-    <dimen name="popup_radio_esquinas">28dp</dimen>
+  <dimen name="popup_radio_esquinas">28dp</dimen>
 
-    <dimen name="popup_tamanyo_titulo">17sp</dimen>
-    <dimen name="popup_tamanyo_icono">58dp</dimen>
-    <dimen name="popup_tamanyo_mensaje">10sp</dimen>
+  <dimen name="popup_tamanyo_titulo">17sp</dimen>
+  <dimen name="popup_tamanyo_icono">58dp</dimen>
+  <dimen name="popup_tamanyo_mensaje">10sp</dimen>
 
-    <dimen name="popup_espacio_titulo_icono">16dp</dimen>
-    <dimen name="popup_espacio_icono_mensaje">12dp</dimen>
-    <dimen name="popup_espacio_mensaje_boton">16dp</dimen>
+  <dimen name="popup_espacio_titulo_icono">16dp</dimen>
+  <dimen name="popup_espacio_icono_mensaje">12dp</dimen>
+  <dimen name="popup_espacio_mensaje_boton">16dp</dimen>
 
-    <dimen name="popup_ancho_boton">132dp</dimen>
-    <dimen name="popup_alto_boton">40dp</dimen>
+  <dimen name="popup_ancho_boton">132dp</dimen>
+  <dimen name="popup_alto_boton">40dp</dimen>
 
-    <dimen name="popup_tamanyo_fondo_icono">58dp</dimen>
-    <dimen name="popup_padding_icono">12dp</dimen>
+  <dimen name="popup_tamanyo_fondo_icono">58dp</dimen>
+  <dimen name="popup_padding_icono">12dp</dimen>
+
+  <!-- ── Tarjeta Clank ─────────────────────────── -->
+  <dimen name="tarjeta_margin_horizontal">@dimen/space_l</dimen>
+  <dimen name="tarjeta_margin_vertical">8dp</dimen>
+  <dimen name="tarjeta_corner_radius">12dp</dimen>
+  <dimen name="tarjeta_elevation">2dp</dimen>
+  <dimen name="tarjeta_portada_height">210dp</dimen>
+  <dimen name="tarjeta_btn_opciones_size">36dp</dimen>
+  <dimen name="tarjeta_btn_opciones_margin">8dp</dimen>
+  <dimen name="tarjeta_texto_margin_horizontal">14dp</dimen>
+  <dimen name="tarjeta_texto_margin_top">10dp</dimen>
+  <dimen name="tarjeta_usuario_margin_top">3dp</dimen>
+  <dimen name="tarjeta_desc_margin_top">5dp</dimen>
+  <dimen name="tarjeta_footer_margin_top">8dp</dimen>
+  <dimen name="tarjeta_footer_margin_bottom">12dp</dimen>
+  <dimen name="tarjeta_icono_size">28dp</dimen>
 
 </resources>
