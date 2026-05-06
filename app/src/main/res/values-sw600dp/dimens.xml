@@ -3,6 +3,7 @@
 
   <!-- ── Generales ─────────────────────────────── -->
   <dimen name="screen_margin_horizontal">48dp</dimen>
+  <dimen name="screen_margin_vertical">12dp</dimen>
   <dimen name="space_l">20dp</dimen>
 
   <!-- ── Textos ─────────────────────────────────── -->
@@ -47,5 +48,12 @@
   <dimen name="tarjeta_footer_margin_top">10dp</dimen>
   <dimen name="tarjeta_footer_margin_bottom">16dp</dimen>
   <dimen name="tarjeta_icono_size">34dp</dimen>
+
+  <!-- ── Perfil ─────────────────────────────────── -->
+  <dimen name="perfil_foto_size">90dp</dimen>
+  <dimen name="perfil_foto_margen">20dp</dimen>
+  <dimen name="perfil_btn_ajustes_size">48dp</dimen>
+  <dimen name="perfil_btn_editar_height">44dp</dimen>
+  <dimen name="perfil_rv_padding_bottom">120dp</dimen>
 
 </resources>
