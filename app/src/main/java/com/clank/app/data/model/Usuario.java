@@ -14,79 +14,88 @@ public class Usuario {
   private String fechaNacimiento;
   private long ultimaConexion;
   private boolean enLinea;
+  private String usuarioClank;
 
   public Usuario() {
   }
 
-  public String obtenerUid() {
+  public String getUid() {
     return uid;
   }
 
-  public void establecerUid(String uid) {
+  public void setUid(String uid) {
     this.uid = uid;
   }
 
-  public String obtenerCorreo() {
+  public String getCorreo() {
     return correo;
   }
 
-  public void establecerCorreo(String correo) {
+  public void setCorreo(String correo) {
     this.correo = correo;
   }
 
-  public String obtenerNombre() {
+  public String getNombre() {
     return nombre;
   }
 
-  public void establecerNombre(String nombre) {
+  public void setNombre(String nombre) {
     this.nombre = nombre;
   }
 
-  public String obtenerTelefono() {
+  public String getTelefono() {
     return telefono;
   }
 
-  public void establecerTelefono(String telefono) {
+  public void setTelefono(String telefono) {
     this.telefono = telefono;
   }
 
-  public String obtenerFotoPerfil() {
+  public String getFotoPerfil() {
     return fotoPerfil;
   }
 
-  public void establecerFotoPerfil(String fotoPerfil) {
+  public void setFotoPerfil(String fotoPerfil) {
     this.fotoPerfil = fotoPerfil;
   }
 
-  public String obtenerFechaCreacion() {
+  public String getFechaCreacion() {
     return fechaCreacion;
   }
 
-  public void establecerFechaCreacion(String fechaCreacion) {
+  public void setFechaCreacion(String fechaCreacion) {
     this.fechaCreacion = fechaCreacion;
   }
 
-  public String obtenerFechaNacimiento() {
+  public String getFechaNacimiento() {
     return fechaNacimiento;
   }
 
-  public void establecerFechaNacimiento(String fechaNacimiento) {
+  public void setFechaNacimiento(String fechaNacimiento) {
     this.fechaNacimiento = fechaNacimiento;
   }
 
-  public long obtenerUltimaConexion() {
+  public long getUltimaConexion() {
     return ultimaConexion;
   }
 
-  public void establecerUltimaConexion(long ultimaConexion) {
+  public void setUltimaConexion(long ultimaConexion) {
     this.ultimaConexion = ultimaConexion;
   }
 
-  public boolean estaEnLinea() {
+  public boolean isEnLinea() {
     return enLinea;
   }
 
-  public void establecerEnLinea(boolean enLinea) {
+  public void setEnLinea(boolean enLinea) {
     this.enLinea = enLinea;
+  }
+
+  public String getUsuarioClank() {
+    return usuarioClank;
+  }
+
+  public void setUsuarioClank(String usuarioClank) {
+    this.usuarioClank = usuarioClank;
   }
 }
