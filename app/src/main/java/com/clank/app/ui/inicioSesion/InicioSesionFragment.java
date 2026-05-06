@@ -193,8 +193,7 @@ public class InicioSesionFragment extends Fragment {
             return;
         }
 
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_inicio_sesion_a_crear_clank);
+        Navigation.findNavController(requireView()).navigate(R.id.action_inicio_sesion_a_perfil);
     }
 
     private void navegarRegistro() {
