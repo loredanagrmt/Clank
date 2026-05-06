@@ -16,6 +16,7 @@ lifecycle = "2.8.3"
 flexbox = "3.0.0"
 play-services-auth = "21.5.1"
 firebase-ui = "8.0.2"
+circleimageview = "3.1.0"
 
 
 [libraries]
@@ -41,6 +42,7 @@ lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata"
 flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "flexbox" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
 firebase-ui-firestore = { group = "com.firebaseui", name = "firebase-ui-firestore", version.ref = "firebase-ui" }
+circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimageview" }
 
 
 [plugins]
