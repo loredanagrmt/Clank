@@ -12,8 +12,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.clank.app.R;
-import com.clank.app.ui.common.HojaOpciones;
-import com.clank.app.ui.common.ItemOpcion;
+import com.clank.app.ui.comun.HojaOpciones;
+import com.clank.app.ui.comun.ItemOpcion;
 import com.clank.app.util.GestorIdioma;
 
 import java.util.ArrayList;
