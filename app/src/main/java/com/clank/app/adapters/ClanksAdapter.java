@@ -115,7 +115,7 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
     //usuario
     String usuarioId = clank.getUsuarioId();
     if (usuarioId != null && !usuarioId.isEmpty()) {
-      usuarioRepository.obtenerUsuario(usuarioId).addOnSuccessListener(doc -> {
+      usuarioRepository.getUsuario(usuarioId).addOnSuccessListener(doc -> {
         if (!doc.exists()) return;
         String nombre = doc.contains("nombre") ? doc.getString("nombre") : null;
         holder.tvUsuario.setText(nombre != null ? nombre : "");
