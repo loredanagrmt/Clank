@@ -29,7 +29,6 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCrearBinding;
-import com.clank.app.util.Recurso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -409,7 +408,7 @@ public class CrearFragment extends Fragment {
           binding.btnPublicar.setEnabled(false);
           break;
         case EXITO:
-          /// PENDIENTE: debe ir al feed
+          binding.btnPublicar.setEnabled(true);
           break;
         case ERROR:
           binding.btnPublicar.setEnabled(true);
