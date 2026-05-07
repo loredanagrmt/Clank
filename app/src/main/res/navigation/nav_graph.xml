@@ -1,103 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/logoFragment">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/nav_graph"
+  app:startDestination="@id/logoFragment">
 
   <fragment
-      android:id="@+id/logoFragment"
-      android:name="com.clank.app.ui.logo.LogoFragment"
-      android:label=""
-      tools:layout="@layout/fragment_logo">
+    android:id="@+id/logoFragment"
+    android:name="com.clank.app.ui.logo.LogoFragment"
+    android:label=""
+    tools:layout="@layout/fragment_logo">
     <action
-        android:id="@+id/action_logo_a_idioma"
-        app:destination="@id/elegirIdiomaFragment"
-        app:popUpTo="@id/logoFragment"
-        app:popUpToInclusive="true" />
+      android:id="@+id/action_logo_a_idioma"
+      app:destination="@id/elegirIdiomaFragment"
+      app:popUpTo="@id/logoFragment"
+      app:popUpToInclusive="true" />
   </fragment>
 
   <fragment
-      android:id="@+id/elegirIdiomaFragment"
-      android:name="com.clank.app.ui.idioma.ElegirIdiomaFragment"
-      android:label=""
-      tools:layout="@layout/fragment_elegir_idioma">
+    android:id="@+id/elegirIdiomaFragment"
+    android:name="com.clank.app.ui.idioma.ElegirIdiomaFragment"
+    android:label=""
+    tools:layout="@layout/fragment_elegir_idioma">
     <action
-        android:id="@+id/action_idioma_a_inicio"
-        app:destination="@id/inspirarFragment"
-        app:popUpTo="@id/elegirIdiomaFragment"
-        app:popUpToInclusive="true" />
+      android:id="@+id/action_idioma_a_inicio"
+      app:destination="@id/inspirarFragment"
+      app:popUpTo="@id/elegirIdiomaFragment"
+      app:popUpToInclusive="true" />
   </fragment>
 
   <fragment
-      android:id="@+id/inspirarFragment"
-      android:name="com.clank.app.ui.inspirar.InspirarFragment"
-      android:label=""
-      tools:layout="@layout/fragment_inspirar">
+    android:id="@+id/inspirarFragment"
+    android:name="com.clank.app.ui.inspirar.InspirarFragment"
+    android:label=""
+    tools:layout="@layout/fragment_inspirar">
     <action
-        android:id="@+id/action_inspirar_a_bienvenida"
-        app:destination="@id/bienvenidaFragment"
-        app:popUpTo="@id/inspirarFragment"
-        app:popUpToInclusive="true" />
+      android:id="@+id/action_inspirar_a_bienvenida"
+      app:destination="@id/bienvenidaFragment"
+      app:popUpTo="@id/inspirarFragment"
+      app:popUpToInclusive="true" />
   </fragment>
 
   <fragment
-      android:id="@+id/bienvenidaFragment"
-      android:name="com.clank.app.ui.bienvenida.BienvenidaFragment"
-      android:label=""
-      tools:layout="@layout/fragment_bienvenida">
+    android:id="@+id/bienvenidaFragment"
+    android:name="com.clank.app.ui.bienvenida.BienvenidaFragment"
+    android:label=""
+    tools:layout="@layout/fragment_bienvenida">
     <action
-        android:id="@+id/action_bienvenida_a_inicio_sesion"
-        app:destination="@id/inicioSesionFragment"
-        app:popUpTo="@id/bienvenidaFragment"
-        app:popUpToInclusive="true" />
+      android:id="@+id/action_bienvenida_a_inicio_sesion"
+      app:destination="@id/inicioSesionFragment"
+      app:popUpTo="@id/bienvenidaFragment"
+      app:popUpToInclusive="true" />
     <action
-        android:id="@+id/action_bienvenida_a_registro"
-        app:destination="@id/registroFragment"
-        app:popUpTo="@id/bienvenidaFragment"
-        app:popUpToInclusive="true" />
+      android:id="@+id/action_bienvenida_a_registro"
+      app:destination="@id/registroFragment"
+      app:popUpTo="@id/bienvenidaFragment"
+      app:popUpToInclusive="true" />
   </fragment>
 
   <fragment
-      android:id="@+id/inicioSesionFragment"
-      android:name="com.clank.app.ui.inicioSesion.InicioSesionFragment"
-      android:label=""
-      tools:layout="@layout/fragment_inicio_sesion">
-
+    android:id="@+id/inicioSesionFragment"
+    android:name="com.clank.app.ui.inicioSesion.InicioSesionFragment"
+    android:label=""
+    tools:layout="@layout/fragment_inicio_sesion">
     <action
-        android:id="@+id/action_inicio_sesion_a_crear_clank"
-        app:destination="@id/crearFragment"
-        app:popUpTo="@id/inicioSesionFragment"
-        app:popUpToInclusive="true" />
-
+      android:id="@+id/action_inicio_sesion_a_perfil"
+      app:destination="@id/perfilFragment"
+      app:popUpTo="@id/inicioSesionFragment"
+      app:popUpToInclusive="true" />
     <action
-        android:id="@+id/action_inicio_sesion_a_registro"
-        app:destination="@id/registroFragment"
-        app:popUpTo="@id/inicioSesionFragment"
-        app:popUpToInclusive="true" />
-
+      android:id="@+id/action_inicio_sesion_a_registro"
+      app:destination="@id/registroFragment"
+      app:popUpTo="@id/inicioSesionFragment"
+      app:popUpToInclusive="true" />
   </fragment>
 
   <fragment
-      android:id="@+id/registroFragment"
-      android:name="com.clank.app.ui.auth.RegistroFragment"
-      android:label=""
-      tools:layout="@layout/fragment_registro">
-
+    android:id="@+id/registroFragment"
+    android:name="com.clank.app.ui.auth.RegistroFragment"
+    android:label=""
+    tools:layout="@layout/fragment_registro">
     <action
-        android:id="@+id/action_registro_a_inicio_sesion"
-        app:destination="@id/inicioSesionFragment"
-        app:popUpTo="@id/registroFragment"
-        app:popUpToInclusive="true" />
-
+      android:id="@+id/action_registro_a_inicio_sesion"
+      app:destination="@id/inicioSesionFragment"
+      app:popUpTo="@id/registroFragment"
+      app:popUpToInclusive="true" />
   </fragment>
 
   <fragment
-      android:id="@+id/crearFragment"
-      android:name="com.clank.app.ui.crear.CrearFragment"
-      android:label="Crear Clank"
-      tools:layout="@layout/fragment_crear">
+    android:id="@+id/perfilFragment"
+    android:name="com.clank.app.ui.perfil.PerfilFragment"
+    android:label=""
+    tools:layout="@layout/fragment_perfil">
+    <action
+      android:id="@+id/action_perfil_a_ajustes"
+      app:destination="@id/ajustesFragment" />
+    <action
+      android:id="@+id/action_perfil_a_crear"
+      app:destination="@id/crearFragment" />
   </fragment>
+
+  <fragment
+    android:id="@+id/crearFragment"
+    android:name="com.clank.app.ui.crear.CrearFragment"
+    android:label=""
+    tools:layout="@layout/fragment_crear">
+    <action
+      android:id="@+id/action_crear_a_perfil"
+      app:destination="@id/perfilFragment"
+      app:popUpTo="@id/perfilFragment"
+      app:popUpToInclusive="true" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/ajustesFragment"
+    android:name="com.clank.app.ui.ajustes.AjustesFragment"
+    android:label=""
+    tools:layout="@layout/fragment_ajustes" />
 
 </navigation>

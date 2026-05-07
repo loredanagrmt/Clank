@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/clank_background_light">
+
+  <!-- info de usuario -->
+  <LinearLayout
+    android:id="@+id/llCabeceraPerfil"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/clank_background_light"
+    android:paddingTop="16dp"
+    android:paddingBottom="4dp"
+    android:elevation="4dp"
+    android:layout_gravity="top">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingHorizontal="@dimen/screen_margin_horizontal"
+      android:paddingVertical="@dimen/screen_margin_vertical">
+
+      <!-- foto perfil circular -->
+      <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civFotoPerfil"
+        android:layout_width="@dimen/perfil_foto_size"
+        android:layout_height="@dimen/perfil_foto_size"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_usuario_inactivo"/>
+
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/civFotoPerfil"
+        android:layout_toStartOf="@id/btnAjustes"
+        android:layout_marginStart="@dimen/perfil_foto_margen"
+        android:orientation="vertical">
+
+        <!-- nombre -->
+        <TextView
+          android:id="@+id/tvNombrePerfil"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/poppins_semibold"
+          android:textColor="@color/color_negrita"
+          android:textSize="@dimen/text_header_title"
+          android:maxLines="1"
+          android:ellipsize="end"
+          android:text="@string/perfil_hint_nombre" />
+
+        <!-- clank user -->
+        <TextView
+          android:id="@+id/tvUidPerfil"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/poppins_family"
+          android:textColor="@color/color_texto_inactivo"
+          android:textSize="@dimen/text_body_small"
+          android:maxLines="1"
+          android:ellipsize="end"
+          android:text="@string/perfil_hint_uid" />
+
+      </LinearLayout>
+
+      <!-- botón ajustes -->
+      <ImageButton
+        android:id="@+id/btnAjustes"
+        android:layout_width="@dimen/perfil_btn_ajustes_size"
+        android:layout_height="@dimen/perfil_btn_ajustes_size"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/bg_circulo_opciones_inactivo"
+        android:src="@drawable/ic_ajustes"
+        android:padding="10dp"
+        android:contentDescription="@string/perfil_ajustes" />
+    </RelativeLayout>
+
+    <!-- editar perfil -->
+    <TextView
+      android:id="@+id/tvEditarPerfil"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:fontFamily="@font/poppins_regular"
+      android:gravity="center"
+      android:text="@string/perfil_editar"
+      android:textColor="@color/color_texto_inactivo"
+      android:textSize="14sp" />
+
+    <!-- tabs de clanks y bocetos -->
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginTop="5dp">
+
+      <LinearLayout
+        android:id="@+id/tabClanks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- clanks -->
+        <TextView
+          android:id="@+id/tvNumClanks"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/poppins_semibold"
+          android:textColor="@color/color_negrita"
+          android:textSize="@dimen/text_header_title"
+          android:text="0" />
+
+        <Space
+          android:layout_width="8dp"
+          android:layout_height="match_parent"/>
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/poppins_family"
+          android:textColor="@color/color_negrita"
+          android:textSize="@dimen/text_body_small"
+          android:text="@string/perfil_tab_clanks" />
+
+      </LinearLayout>
+
+      <LinearLayout
+        android:id="@+id/tabBocetos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- bocetos -->
+        <TextView
+          android:id="@+id/tvNumBocetos"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/poppins_semibold"
+          android:textColor="@color/color_negrita"
+          android:textSize="@dimen/text_header_title"
+          android:text="0" />
+
+        <Space
+          android:layout_width="8dp"
+          android:layout_height="match_parent"/>
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/poppins_family"
+          android:textColor="@color/color_negrita"
+          android:textSize="@dimen/text_body_small"
+          android:text="@string/perfil_tab_bocetos" />
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- subrayado del tab -->
+    <View
+      android:id="@+id/indicadorTab"
+      android:layout_width="0dp"
+      android:layout_height="3dp"
+      android:background="@drawable/bg_boton_principal" />
+
+  </LinearLayout>
+
+  <!-- tarjetas de clanks -->
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rvClanks"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingTop="8dp"
+    android:paddingBottom="@dimen/perfil_rv_padding_bottom"
+    app:layout_anchor="@id/llCabeceraPerfil"
+    app:layout_anchorGravity="bottom"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

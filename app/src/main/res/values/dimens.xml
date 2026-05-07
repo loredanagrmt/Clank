@@ -5,6 +5,7 @@
 
   <!-- ── Generales ─────────────────────────────── -->
   <dimen name="screen_margin_horizontal">24dp</dimen>
+  <dimen name="screen_margin_vertical">12dp</dimen>
   <dimen name="space_l">16dp</dimen>
   <dimen name="space_xs">6dp</dimen>
 
@@ -101,5 +102,12 @@
   <dimen name="tarjeta_footer_margin_top">8dp</dimen>
   <dimen name="tarjeta_footer_margin_bottom">12dp</dimen>
   <dimen name="tarjeta_icono_size">28dp</dimen>
+
+  <!-- ── Perfil ─────────────────────────────────── -->
+  <dimen name="perfil_foto_size">72dp</dimen>
+  <dimen name="perfil_foto_margen">16dp</dimen>
+  <dimen name="perfil_btn_ajustes_size">40dp</dimen>
+  <dimen name="perfil_btn_editar_height">36dp</dimen>
+  <dimen name="perfil_rv_padding_bottom">100dp</dimen>
 
 </resources>

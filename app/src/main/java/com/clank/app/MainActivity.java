@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     R.id.inspirarFragment,
     R.id.bienvenidaFragment,
     R.id.inicioSesionFragment,
-//    R.id.loginFragment,
     R.id.registroFragment,
 //    R.id.completarPerfilFragment,
     R.id.crearFragment
@@ -66,8 +65,12 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     setContentView(binding.getRoot());
 
     navbarBinding = NavbarSuperiorBinding.bind(binding.navbar.getRoot());
-
     configurarNavbar();
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
     configurarBottombar();
   }
 

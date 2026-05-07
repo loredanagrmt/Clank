@@ -1,6 +1,6 @@
 <resources>
 
-  <!-- Inicio -->
+  <!-- Configuración -->
   <string name="id_cliente_web_firebase">976901046275-hmrl51og8g5a1l6aeed9v91hp9bs69gv.apps.googleusercontent.com</string>
 
   <!-- Popup registro -->
@@ -107,5 +107,13 @@
   <string name="tarjeta_hint_usuario">Nombre de usuario</string>
   <string name="tarjeta_hint_descripcion">Descripción del Clank…</string>
 
+
+  <!-- ── Perfil ── -->
+  <string name="perfil_hint_nombre">Nombre</string>
+  <string name="perfil_hint_uid">@usuario</string>
+  <string name="perfil_tab_clanks">Clanks</string>
+  <string name="perfil_tab_bocetos">Borradores</string>
+  <string name="perfil_editar">Editar perfil</string>
+  <string name="perfil_ajustes">Ajustes</string>
 
 </resources>

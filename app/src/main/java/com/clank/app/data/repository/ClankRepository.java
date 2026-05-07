@@ -4,6 +4,7 @@ import com.clank.app.data.model.Clank;
 import com.clank.app.data.source.FirestoreDataSource;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Query;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,5 +30,9 @@ public class ClankRepository {
 
   public DocumentReference nuevaReferencia() {
     return dataSource.collection(COLLECTION).document();
+  }
+  public Query getPorUsuario(String usuarioId) {
+    return dataSource.collection(COLLECTION)
+      .whereEqualTo("usuarioId", usuarioId);
   }
 }

@@ -40,9 +40,9 @@ public class InicioSesionViewModel extends ViewModel {
         return resultadoInicioSesion;
     }
 
-    public boolean haySesionIniciada() {
-        return repositorioAutenticacion.obtenerSesionUsuario() != null;
-    }
+  public boolean haySesionIniciada() {
+    return repositorioAutenticacion.getSesionUsuario() != null;
+  }
 
     public void iniciarSesion(String correo, String contrasenya) {
         if (correo == null || contrasenya == null
@@ -84,7 +84,7 @@ public class InicioSesionViewModel extends ViewModel {
         repositorioAutenticacion.iniciarSesionGoogle(cuenta)
                 .addOnCompleteListener(tarea -> {
                     if (tarea.isSuccessful()) {
-                        comprobarUsuarioExiste(repositorioAutenticacion.obtenerUid());
+                        comprobarUsuarioExiste(repositorioAutenticacion.getUid());
                     } else {
                         resultadoInicioSesion.postValue(
                                 Recurso.error("No se pudo iniciar sesión con Google")
@@ -93,30 +93,30 @@ public class InicioSesionViewModel extends ViewModel {
                 });
     }
 
-    private void comprobarUsuarioExiste(String uid) {
-        if (uid == null || uid.isEmpty()) {
-            resultadoInicioSesion.postValue(
-                    Recurso.error("No se pudo obtener el usuario autenticado")
-            );
-            return;
-        }
-
-        repositorioUsuario.obtenerUsuario(uid)
-                .addOnSuccessListener(documento -> {
-                    if (documento.exists()) {
-                        resultadoInicioSesion.postValue(
-                                Recurso.exito(DestinoNavegacion.PRINCIPAL)
-                        );
-                    } else {
-                        resultadoInicioSesion.postValue(
-                                Recurso.exito(DestinoNavegacion.REGISTRO)
-                        );
-                    }
-                })
-                .addOnFailureListener(error ->
-                        resultadoInicioSesion.postValue(
-                                Recurso.error("Error accediendo al usuario: " + error.getMessage())
-                        )
-                );
+  private void comprobarUsuarioExiste(String uid) {
+    if (uid == null || uid.isEmpty()) {
+      resultadoInicioSesion.postValue(
+        Recurso.error("No se pudo obtener el usuario autenticado")
+      );
+      return;
     }
+
+    repositorioUsuario.getUsuario(uid)
+      .addOnSuccessListener(documento -> {
+        if (documento.exists()) {
+          resultadoInicioSesion.postValue(
+            Recurso.exito(DestinoNavegacion.PRINCIPAL)
+          );
+        } else {
+          resultadoInicioSesion.postValue(
+            Recurso.exito(DestinoNavegacion.REGISTRO)
+          );
+        }
+      })
+      .addOnFailureListener(error ->
+        resultadoInicioSesion.postValue(
+          Recurso.error("Error accediendo al usuario: " + error.getMessage())
+        )
+      );
+  }
 }

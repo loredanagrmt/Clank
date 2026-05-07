@@ -80,4 +80,7 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
+
+  // Imagen circular (perfil)
+  implementation(libs.circleimageview)
 }
