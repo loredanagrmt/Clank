@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -23,9 +26,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class RegistroFragment extends Fragment {
 
-    private static final long DURACION_POPUP_MILISEGUNDOS = 2300;
+    private static final long DURACION_POPUP_MILISEGUNDOS = 3000;
 
     private FragmentRegistroBinding binding;
+    private RegistroCompartidoViewModel vistaModeloCompartida;
 
     private final Handler temporizador = new Handler(Looper.getMainLooper());
     private Runnable accionDespuesPopup;
@@ -48,8 +52,12 @@ public class RegistroFragment extends Fragment {
     public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
 
+        vistaModeloCompartida = new ViewModelProvider(requireActivity())
+                .get(RegistroCompartidoViewModel.class);
+
         configurarVista();
         configurarListeners();
+        precargarDatosRegistro();
     }
 
     private void configurarVista() {
@@ -91,7 +99,7 @@ public class RegistroFragment extends Fragment {
         binding.inputFechaNacimiento.inputTrailingIcon.setVisibility(View.GONE);
 
         binding.inputContrasenya.tvInputTitulo.setText(getString(R.string.contrasenya));
-        binding.inputContrasenya.customEditText.setHint("••••••••");
+        binding.inputContrasenya.customEditText.setHint(getString(R.string.hint_contrasenya_oculta));
         binding.inputContrasenya.customEditText.setInputType(
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
         );
@@ -99,7 +107,7 @@ public class RegistroFragment extends Fragment {
         binding.inputContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
 
         binding.inputConfirmarContrasenya.tvInputTitulo.setText(getString(R.string.confirmar_contrasenya));
-        binding.inputConfirmarContrasenya.customEditText.setHint("••••••••");
+        binding.inputConfirmarContrasenya.customEditText.setHint(getString(R.string.hint_contrasenya_oculta));
         binding.inputConfirmarContrasenya.customEditText.setInputType(
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
         );
@@ -115,7 +123,6 @@ public class RegistroFragment extends Fragment {
         binding.popup.tvTituloPopup.setText(getString(R.string.popup_registro_perfil_titulo));
         binding.popup.tvMensajePopup.setText(getString(R.string.popup_registro_perfil_mensaje));
         binding.popup.imgIconoPopup.setImageResource(R.drawable.ic_usuario_inactivo);
-
         binding.popup.contenedorBotonPopup.setVisibility(View.GONE);
     }
 
@@ -137,8 +144,174 @@ public class RegistroFragment extends Fragment {
         );
 
         binding.btnRegistrarme.btnSecundario.setOnClickListener(vista ->
-                mostrarPopupRegistro()
+                procesarRegistro()
         );
+    }
+
+    private void precargarDatosRegistro() {
+        if (vistaModeloCompartida == null) {
+            return;
+        }
+
+        vistaModeloCompartida.recargarDatosGuardados();
+
+        if (!vistaModeloCompartida.tieneDatosRegistro()) {
+            vistaModeloCompartida.limpiar();
+            limpiarCamposFormulario();
+            return;
+        }
+
+        binding.inputNombreCompleto.customEditText.setText(vistaModeloCompartida.getNombre());
+        binding.inputCorreo.customEditText.setText(vistaModeloCompartida.getCorreo());
+        binding.inputTelefono.customEditText.setText(vistaModeloCompartida.getTelefono());
+        binding.inputFechaNacimiento.customEditText.setText(vistaModeloCompartida.getFechaNacimiento());
+        binding.inputContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
+        binding.inputConfirmarContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
+    }
+
+    private void limpiarCamposFormulario() {
+        binding.inputNombreCompleto.customEditText.setText("");
+        binding.inputCorreo.customEditText.setText("");
+        binding.inputTelefono.customEditText.setText("");
+        binding.inputFechaNacimiento.customEditText.setText("");
+        binding.inputContrasenya.customEditText.setText("");
+        binding.inputConfirmarContrasenya.customEditText.setText("");
+    }
+
+    private void procesarRegistro() {
+        String nombre = getTexto(binding.inputNombreCompleto.customEditText.getText());
+        String correo = getTexto(binding.inputCorreo.customEditText.getText());
+        String telefono = getTexto(binding.inputTelefono.customEditText.getText());
+        String fechaNacimiento = getTexto(binding.inputFechaNacimiento.customEditText.getText());
+        String contrasenya = getContrasenya(binding.inputContrasenya.customEditText.getText());
+        String confirmarContrasenya = getContrasenya(binding.inputConfirmarContrasenya.customEditText.getText());
+
+        limpiarErroresFormulario();
+
+        if (!validarFormulario(nombre, correo, telefono, fechaNacimiento, contrasenya, confirmarContrasenya)) {
+            return;
+        }
+
+        vistaModeloCompartida.guardarDatosRegistro(
+                nombre,
+                correo,
+                telefono,
+                fechaNacimiento,
+                contrasenya
+        );
+
+        mostrarPopupRegistro();
+    }
+
+    private boolean validarFormulario(String nombre,
+                                      String correo,
+                                      String telefono,
+                                      String fechaNacimiento,
+                                      String contrasenya,
+                                      String confirmarContrasenya) {
+        if (nombre.isEmpty()) {
+            mostrarError(
+                    binding.inputNombreCompleto.customEditText,
+                    R.string.registro_error_nombre_vacio
+            );
+            return false;
+        }
+
+        if (correo.isEmpty()) {
+            mostrarError(
+                    binding.inputCorreo.customEditText,
+                    R.string.registro_error_correo_vacio
+            );
+            return false;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            mostrarError(
+                    binding.inputCorreo.customEditText,
+                    R.string.registro_error_correo_invalido
+            );
+            return false;
+        }
+
+        if (telefono.isEmpty()) {
+            mostrarError(
+                    binding.inputTelefono.customEditText,
+                    R.string.registro_error_telefono_vacio
+            );
+            return false;
+        }
+
+        if (fechaNacimiento.isEmpty()) {
+            mostrarError(
+                    binding.inputFechaNacimiento.customEditText,
+                    R.string.registro_error_fecha_nacimiento_vacia
+            );
+            return false;
+        }
+
+        if (contrasenya.isEmpty()) {
+            mostrarError(
+                    binding.inputContrasenya.customEditText,
+                    R.string.registro_error_contrasenya_vacia
+            );
+            return false;
+        }
+
+        if (contrasenya.length() < 6) {
+            mostrarError(
+                    binding.inputContrasenya.customEditText,
+                    R.string.registro_error_contrasenya_corta
+            );
+            return false;
+        }
+
+        if (confirmarContrasenya.isEmpty()) {
+            mostrarError(
+                    binding.inputConfirmarContrasenya.customEditText,
+                    R.string.registro_error_confirmar_contrasenya_vacia
+            );
+            return false;
+        }
+
+        if (!contrasenya.equals(confirmarContrasenya)) {
+            mostrarError(
+                    binding.inputConfirmarContrasenya.customEditText,
+                    R.string.registro_error_contrasenyas_distintas
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    private void mostrarError(EditText editText, int mensajeError) {
+        editText.setError(getString(mensajeError));
+        editText.requestFocus();
+    }
+
+    private void limpiarErroresFormulario() {
+        binding.inputNombreCompleto.customEditText.setError(null);
+        binding.inputCorreo.customEditText.setError(null);
+        binding.inputTelefono.customEditText.setError(null);
+        binding.inputFechaNacimiento.customEditText.setError(null);
+        binding.inputContrasenya.customEditText.setError(null);
+        binding.inputConfirmarContrasenya.customEditText.setError(null);
+    }
+
+    private String getTexto(@Nullable CharSequence texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        return texto.toString().trim();
+    }
+
+    private String getContrasenya(@Nullable CharSequence texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        return texto.toString();
     }
 
     private void mostrarPopupRegistro() {
@@ -193,6 +366,8 @@ public class RegistroFragment extends Fragment {
     }
 
     private void navegarInicioSesion() {
+        vistaModeloCompartida.limpiar();
+
         NavController navegador = Navigation.findNavController(requireView());
 
         NavOptions opciones = new NavOptions.Builder()
@@ -203,13 +378,18 @@ public class RegistroFragment extends Fragment {
     }
 
     private void navegarPantallaSiguiente() {
+        if (binding == null) {
+            return;
+        }
+
         NavController navegador = Navigation.findNavController(requireView());
 
-        NavOptions opciones = new NavOptions.Builder()
-                .setPopUpTo(R.id.registroFragment, true)
-                .build();
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.registroFragment) {
+            return;
+        }
 
-        navegador.navigate(R.id.crearFragment, null, opciones);
+        navegador.navigate(R.id.completarPerfilFragment);
     }
 
     private void alternarVisibilidadContrasenya() {

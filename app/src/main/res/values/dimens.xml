@@ -42,7 +42,7 @@
   <dimen name="crear_instruccion_imagen_indent">28dp</dimen>
   <dimen name="crear_btn_tiempo_padding">12dp</dimen>
 
-  <!-- Registro -->
+  <!-- ── Registro ───────────────────────────  -->
   <dimen name="registro_alto_minimo">932dp</dimen>
   <dimen name="registro_padding_inferior">40dp</dimen>
 
@@ -65,7 +65,7 @@
 
   <dimen name="registro_margen_superior_formulario_navbar">120dp</dimen>
 
-  <!-- Popup -->
+  <!-- ── Pop Up ───────────────────────────  -->
   <dimen name="popup_margen_horizontal">56dp</dimen>
   <dimen name="popup_padding_horizontal">20dp</dimen>
   <dimen name="popup_padding_superior">22dp</dimen>
@@ -102,6 +102,23 @@
   <dimen name="tarjeta_footer_margin_top">8dp</dimen>
   <dimen name="tarjeta_footer_margin_bottom">12dp</dimen>
   <dimen name="tarjeta_icono_size">28dp</dimen>
+
+  <!-- ──  Completar perfil ─────────────────────────────────── -->
+  <dimen name="completar_perfil_margen_lateral">31dp</dimen>
+  <dimen name="completar_perfil_margen_superior_titulo">28dp</dimen>
+  <dimen name="completar_perfil_tamanyo_titulo">20sp</dimen>
+
+  <dimen name="completar_perfil_espacio_titulo_foto">24dp</dimen>
+  <dimen name="completar_perfil_tamanyo_foto">96dp</dimen>
+  <dimen name="completar_perfil_padding_foto">20dp</dimen>
+
+  <dimen name="completar_perfil_tamanyo_boton_editar">30dp</dimen>
+  <dimen name="completar_perfil_padding_boton_editar">7dp</dimen>
+
+  <dimen name="completar_perfil_espacio_foto_formulario">28dp</dimen>
+
+  <dimen name="completar_perfil_alto_boton">56dp</dimen>
+  <dimen name="completar_perfil_margen_inferior_boton">42dp</dimen>
 
   <!-- ── Perfil ─────────────────────────────────── -->
   <dimen name="perfil_foto_size">72dp</dimen>
