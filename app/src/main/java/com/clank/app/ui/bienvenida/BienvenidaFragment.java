@@ -4,45 +4,87 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.clank.app.R;
+import com.clank.app.databinding.FragmentBienvenidaBinding;
+import com.clank.app.ui.auth.RegistroCompartidoViewModel;
 
 public class BienvenidaFragment extends Fragment {
+
+    private FragmentBienvenidaBinding binding;
+    private RegistroCompartidoViewModel vistaModeloRegistro;
 
     public BienvenidaFragment() {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_bienvenida, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup contenedor,
+                             Bundle estadoGuardado) {
+        binding = FragmentBienvenidaBinding.inflate(inflater, contenedor, false);
+        return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
+        super.onViewCreated(vista, estadoGuardado);
 
-        Button btnSoyNuevo = view.findViewById(R.id.btnSoyNuevo);
-        Button btnYaHeEstado = view.findViewById(R.id.btnYaHeEstado);
+        vistaModeloRegistro = new ViewModelProvider(requireActivity())
+                .get(RegistroCompartidoViewModel.class);
 
-        btnSoyNuevo.setText(getString(R.string.soy_nuevo));
-        btnYaHeEstado.setText(getString(R.string.ya_he_estado));
+        configurarVista();
+        configurarListeners();
+    }
 
-        NavController navController = Navigation.findNavController(view);
+    private void configurarVista() {
+        binding.btnSoyNuevo.btnSecundario.setText(getString(R.string.soy_nuevo));
+        binding.btnYaHeEstado.btnSecundario.setText(getString(R.string.ya_he_estado));
+    }
 
-        btnSoyNuevo.setOnClickListener(v ->
-                navController.navigate(R.id.action_bienvenida_a_registro)
+    private void configurarListeners() {
+        binding.btnSoyNuevo.btnSecundario.setOnClickListener(vista ->
+                navegarRegistro()
         );
 
-        btnYaHeEstado.setOnClickListener(v ->
-                navController.navigate(R.id.action_bienvenida_a_inicio_sesion)
+        binding.btnYaHeEstado.btnSecundario.setOnClickListener(vista ->
+                navegarInicioSesion()
         );
+    }
+
+    private void navegarRegistro() {
+        vistaModeloRegistro.iniciarNuevoRegistro();
+
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.bienvenidaFragment) {
+            return;
+        }
+
+        navegador.navigate(R.id.action_bienvenida_a_registro);
+    }
+
+    private void navegarInicioSesion() {
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.bienvenidaFragment) {
+            return;
+        }
+
+        navegador.navigate(R.id.action_bienvenida_a_inicio_sesion);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
