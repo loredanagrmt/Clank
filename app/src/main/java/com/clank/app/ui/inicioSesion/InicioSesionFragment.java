@@ -16,10 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentInicioSesionBinding;
+import com.clank.app.ui.auth.RegistroCompartidoViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -34,6 +36,7 @@ public class InicioSesionFragment extends Fragment {
 
     private FragmentInicioSesionBinding binding;
     private InicioSesionViewModel vistaModelo;
+    private RegistroCompartidoViewModel vistaModeloRegistro;
     private GoogleSignInClient clienteInicioGoogle;
 
     private boolean contrasenyaVisible = false;
@@ -42,16 +45,18 @@ public class InicioSesionFragment extends Fragment {
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     resultado -> {
-                        if (resultado.getResultCode() == Activity.RESULT_OK) {
-                            Task<GoogleSignInAccount> tarea =
-                                    GoogleSignIn.getSignedInAccountFromIntent(resultado.getData());
+                        if (resultado.getResultCode() != Activity.RESULT_OK) {
+                            return;
+                        }
 
-                            try {
-                                GoogleSignInAccount cuenta = tarea.getResult(ApiException.class);
-                                vistaModelo.iniciarSesionGoogle(cuenta);
-                            } catch (ApiException error) {
-                                mostrarMensaje("No se pudo iniciar sesión con Google");
-                            }
+                        Task<GoogleSignInAccount> tarea =
+                                GoogleSignIn.getSignedInAccountFromIntent(resultado.getData());
+
+                        try {
+                            GoogleSignInAccount cuenta = tarea.getResult(ApiException.class);
+                            vistaModelo.iniciarSesionGoogle(cuenta);
+                        } catch (ApiException error) {
+                            mostrarMensaje("No se pudo iniciar sesión con Google");
                         }
                     }
             );
@@ -66,7 +71,8 @@ public class InicioSesionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup contenedor,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup contenedor,
                              Bundle estadoGuardado) {
         binding = FragmentInicioSesionBinding.inflate(inflater, contenedor, false);
         return binding.getRoot();
@@ -77,6 +83,8 @@ public class InicioSesionFragment extends Fragment {
         super.onViewCreated(vista, estadoGuardado);
 
         vistaModelo = new ViewModelProvider(this).get(InicioSesionViewModel.class);
+        vistaModeloRegistro = new ViewModelProvider(requireActivity())
+                .get(RegistroCompartidoViewModel.class);
 
         configurarVista();
         configurarListeners();
@@ -102,7 +110,7 @@ public class InicioSesionFragment extends Fragment {
         binding.inputCorreo.inputTrailingIcon.setVisibility(View.GONE);
 
         binding.inputContrasenya.tvInputTitulo.setText(getString(R.string.contrasenya));
-        binding.inputContrasenya.customEditText.setHint("••••••••");
+        binding.inputContrasenya.customEditText.setHint(getString(R.string.hint_contrasenya_oculta));
         binding.inputContrasenya.customEditText.setInputType(
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
         );
@@ -144,23 +152,30 @@ public class InicioSesionFragment extends Fragment {
         );
 
         binding.tvOlvidoContrasenya.setOnClickListener(vista -> {
-            // Pendiente: recuperación de contrasenya.
         });
     }
 
     private void iniciarSesion() {
-        String correo = obtenerTexto(binding.inputCorreo.customEditText.getText());
-        String contrasenya = obtenerTexto(binding.inputContrasenya.customEditText.getText());
+        String correo = getTexto(binding.inputCorreo.customEditText.getText());
+        String contrasenya = getContrasenya(binding.inputContrasenya.customEditText.getText());
 
         vistaModelo.iniciarSesion(correo, contrasenya);
     }
 
-    private String obtenerTexto(@Nullable CharSequence texto) {
+    private String getTexto(@Nullable CharSequence texto) {
         if (texto == null) {
             return "";
         }
 
         return texto.toString().trim();
+    }
+
+    private String getContrasenya(@Nullable CharSequence texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        return texto.toString();
     }
 
     private void observarVistaModelo() {
@@ -193,15 +208,38 @@ public class InicioSesionFragment extends Fragment {
             return;
         }
 
-        Navigation.findNavController(requireView()).navigate(R.id.action_inicio_sesion_a_perfil);
+        navegarPerfil();
     }
 
     private void navegarRegistro() {
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_inicio_sesion_a_registro);
+        vistaModeloRegistro.iniciarNuevoRegistro();
+
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.inicioSesionFragment) {
+            return;
+        }
+
+        navegador.navigate(R.id.action_inicio_sesion_a_registro);
+    }
+
+    private void navegarPerfil() {
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.inicioSesionFragment) {
+            return;
+        }
+
+        navegador.navigate(R.id.action_inicio_sesion_a_perfil);
     }
 
     private void mostrarCargando(boolean cargando) {
+        if (binding == null) {
+            return;
+        }
+
         binding.btnIniciarSesion.btnSecundario.setEnabled(!cargando);
         binding.btnRegistrarse.btnSecundario.setEnabled(!cargando);
         binding.inputCorreo.customEditText.setEnabled(!cargando);
@@ -236,6 +274,11 @@ public class InicioSesionFragment extends Fragment {
     }
 
     private void mostrarMensaje(String mensaje) {
+        if (mensaje == null || mensaje.trim().isEmpty()) {
+            Toast.makeText(requireContext(), "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Toast.makeText(requireContext(), mensaje, Toast.LENGTH_LONG).show();
     }
 
