@@ -1,7 +1,6 @@
 package com.clank.app.ui.editar;
 
 import android.net.Uri;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -23,54 +22,47 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.inject.Inject;
-
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class EditarClankViewModel extends ViewModel {
-
   public static class DatosClank {
-    public String         clankId       = "";
-    public String         titulo        = "";
-    public String         descripcion   = "";
-    public int            tiempo        = -1;
-    public String         portadaUrl    = "";
-    public List<String>   categorias    = new ArrayList<>();
-    public List<String[]> materiales    = new ArrayList<>();
-    public List<String>   herramientas  = new ArrayList<>();
+    public String clankId = "";
+    public String titulo = "";
+    public String descripcion= "";
+    public int tiempo = -1;
+    public String portadaUrl = "";
+    public List<String> categorias = new ArrayList<>();
+    public List<String[]> materiales = new ArrayList<>();
+    public List<String> herramientas = new ArrayList<>();
     public List<String[]> instrucciones = new ArrayList<>(); // [texto, urlImagen|null]
   }
 
   private final FirebaseFirestore db;
-  private final FirebaseStorage   storage;
-  private final AuthRepository    authRepository;
-  private final MutableLiveData<DatosClank>     datosClank    = new MutableLiveData<>();
-  private final MutableLiveData<Recurso<Void>>  estadoGuardar = new MutableLiveData<>();
-  private final MutableLiveData<List<String[]>> categorias    = new MutableLiveData<>();
-  private final MutableLiveData<Boolean>        hayCambios    = new MutableLiveData<>(false);
+  private final FirebaseStorage storage;
+  private final AuthRepository authRepository;
+  private final MutableLiveData<DatosClank> datosClank = new MutableLiveData<>();
+  private final MutableLiveData<Recurso<Void>> estadoGuardar = new MutableLiveData<>();
+  private final MutableLiveData<List<String[]>> categorias = new MutableLiveData<>();
+  private final MutableLiveData<Boolean> hayCambios = new MutableLiveData<>(false);
   private String clankId;
 
   @Inject
-  public EditarClankViewModel(FirebaseFirestore db,
-                              FirebaseStorage   storage,
-                              AuthRepository    authRepository) {
-    this.db             = db;
-    this.storage        = storage;
+  public EditarClankViewModel(FirebaseFirestore db, FirebaseStorage storage, AuthRepository authRepository) {
+    this.db = db;
+    this.storage = storage;
     this.authRepository = authRepository;
     cargarCategorias();
   }
 
-  // ─── Getters LiveData ─────────────────────────────────────────────────────
-
-  public LiveData<DatosClank>     getDatosClank()    { return datosClank; }
-  public LiveData<Recurso<Void>>  getEstadoGuardar() { return estadoGuardar; }
-  public LiveData<List<String[]>> getCategorias()    { return categorias; }
-  public LiveData<Boolean>        getHayCambios()    { return hayCambios; }
-
+  /////////////////////////getters/////////////////////////
+  public LiveData<DatosClank> getDatosClank(){ return datosClank; }
+  public LiveData<Recurso<Void>> getEstadoGuardar() { return estadoGuardar; }
+  public LiveData<List<String[]>> getCategorias(){ return categorias; }
+  public LiveData<Boolean> getHayCambios() { return hayCambios; }
   public void marcarCambios()  { hayCambios.setValue(true); }
   public boolean hayCambios()  { return Boolean.TRUE.equals(hayCambios.getValue()); }
 
-  // ─── Carga datos del clank ────────────────────────────────────────────────
 
   public void cargarClank(String id) {
     this.clankId = id;
@@ -78,12 +70,13 @@ public class EditarClankViewModel extends ViewModel {
       .addOnSuccessListener(doc -> {
         if (!doc.exists()) return;
         DatosClank datos = new DatosClank();
-        datos.clankId     = id;
-        datos.titulo      = strOrEmpty(doc.getString("titulo"));
+        datos.clankId = id;
+        datos.titulo= strOrEmpty(doc.getString("titulo"));
         datos.descripcion = strOrEmpty(doc.getString("descripcion"));
-        datos.portadaUrl  = strOrEmpty(doc.getString("portada"));
+        datos.portadaUrl = strOrEmpty(doc.getString("portada"));
         Long tiempo = doc.getLong("tiempo");
         datos.tiempo = tiempo != null ? tiempo.intValue() : -1;
+        @SuppressWarnings("unchecked")
         List<String> cats = (List<String>) doc.get("categorias");
         if (cats != null) datos.categorias = cats;
         cargarSubcolecciones(datos);
@@ -123,12 +116,10 @@ public class EditarClankViewModel extends ViewModel {
       .addOnCompleteListener(tarea -> datosClank.postValue(datos));
   }
 
-  // ─── Publicar ─────────────────────────────────────────────────────────────
+  /////////////////////////publicar/////////////////////////
 
-  public void publicarClank(String titulo, String descripcion, int tiempo,
-                            Uri portadaUri, String portadaUrlActual,
-                            List<String[]> materiales, List<String> herramientas,
-                            List<String> instrucciones, List<Object> imagenesInstrucciones,
+  public void publicarClank(String titulo, String descripcion, int tiempo, Uri portadaUri, String portadaUrlActual,
+                            List<String[]> materiales, List<String> herramientas, List<String> instrucciones, List<Object> imagenesInstrucciones,
                             List<String> categoriasSeleccionadas) {
     estadoGuardar.setValue(Recurso.cargando());
     procesarYGuardar(true, titulo, descripcion, tiempo,
@@ -137,13 +128,10 @@ public class EditarClankViewModel extends ViewModel {
       categoriasSeleccionadas);
   }
 
-  // ─── Guardar borrador ─────────────────────────────────────────────────────
-
-  public void guardarBorrador(String titulo, String descripcion, int tiempo,
-                              Uri portadaUri, String portadaUrlActual,
-                              List<String[]> materiales, List<String> herramientas,
-                              List<String> instrucciones, List<Object> imagenesInstrucciones,
-                              List<String> categoriasSeleccionadas) {
+  /////////////////////////boceto/////////////////////////
+  public void guardarBoceto(String titulo, String descripcion, int tiempo, Uri portadaUri, String portadaUrlActual,
+                            List<String[]> materiales, List<String> herramientas, List<String> instrucciones, List<Object> imagenesInstrucciones,
+                            List<String> categoriasSeleccionadas) {
     estadoGuardar.setValue(Recurso.cargando());
     procesarYGuardar(false, titulo, descripcion, tiempo,
       portadaUri, portadaUrlActual, authRepository.getUid(),
@@ -151,19 +139,18 @@ public class EditarClankViewModel extends ViewModel {
       categoriasSeleccionadas);
   }
 
-  // ─── Flujo común ──────────────────────────────────────────────────────────
-
-  private void procesarYGuardar(boolean acabado,
-                                String titulo, String descripcion, int tiempo,
-                                Uri portadaUri, String portadaUrlActual, String uid,
-                                List<String[]> materiales, List<String> herramientas,
-                                List<String> textos, List<Object> imagenesInstrucciones,
-                                List<String> categoriasSeleccionadas) {
+  /////////////////////////guardar/////////////////////////
+  private void procesarYGuardar(boolean acabado, String titulo, String descripcion, int tiempo, Uri portadaUri, String portadaUrlActual, String uid,
+                                List<String[]> materiales, List<String> herramientas, List<String> textos, List<Object> imagenesInstrucciones, List<String> categoriasSeleccionadas) {
     if (portadaUri != null) {
+      //ruta: {uid}/{clankId}/portada/{fileName} — coincide con las reglas de Storage
       StorageReference ref = storage.getReference()
-        .child("portadas/" + uid + "/" + UUID.randomUUID() + ".jpg");
+        .child(uid + "/" + clankId + "/portada/" + UUID.randomUUID() + ".jpg");
       ref.putFile(portadaUri)
-        .continueWithTask(tarea -> ref.getDownloadUrl())
+        .continueWithTask(tarea -> {
+          if (!tarea.isSuccessful()) throw tarea.getException();
+          return ref.getDownloadUrl();
+        })
         .addOnSuccessListener(uri ->
           subirImagenesInstruccionesYGuardar(acabado, titulo, descripcion, tiempo,
             uri.toString(), uid, materiales, herramientas,
@@ -177,22 +164,22 @@ public class EditarClankViewModel extends ViewModel {
     }
   }
 
-  private void subirImagenesInstruccionesYGuardar(boolean acabado,
-                                                  String titulo, String descripcion,
-                                                  int tiempo, String portadaUrl, String uid,
-                                                  List<String[]> materiales,
-                                                  List<String> herramientas,
-                                                  List<String> textos,
-                                                  List<Object> imagenesInstrucciones,
-                                                  List<String> categoriasSeleccionadas) {
+  private void subirImagenesInstruccionesYGuardar(boolean acabado, String titulo, String descripcion, int tiempo, String portadaUrl, String uid,
+                                                  List<String[]> materiales, List<String> herramientas, List<String> textos,
+                                                  List<Object> imagenesInstrucciones, List<String> categoriasSeleccionadas) {
     List<Task<String>> tareas = new ArrayList<>();
 
-    for (Object imagen : imagenesInstrucciones) {
+    for (int i = 0; i < imagenesInstrucciones.size(); i++) {
+      Object imagen = imagenesInstrucciones.get(i);
       if (imagen instanceof Uri) {
+        //ruta: {uid}/{clankId}/instrucciones/{fileName} — coincide con las reglas de Storage
         StorageReference ref = storage.getReference()
-          .child("instrucciones/" + uid + "/" + UUID.randomUUID() + ".jpg");
+          .child(uid + "/" + clankId + "/instrucciones/" + UUID.randomUUID() + ".jpg");
         Task<String> tarea = ref.putFile((Uri) imagen)
-          .continueWithTask(t -> ref.getDownloadUrl())
+          .continueWithTask(t -> {
+            if (!t.isSuccessful()) throw t.getException();
+            return ref.getDownloadUrl();
+          })
           .continueWith(t -> t.getResult().toString());
         tareas.add(tarea);
       } else {
@@ -212,35 +199,29 @@ public class EditarClankViewModel extends ViewModel {
       });
   }
 
-  private void guardarEnFirestore(boolean acabado,
-                                  String titulo, String descripcion,
-                                  int tiempo, String portadaUrl, String uid,
-                                  List<String[]> materiales, List<String> herramientas,
-                                  List<String> textos, List<String> urlsInstrucciones,
-                                  List<String> categoriasSeleccionadas) {
+  private void guardarEnFirestore(boolean acabado, String titulo, String descripcion, int tiempo, String portadaUrl, String uid,
+                                  List<String[]> materiales, List<String> herramientas, List<String> textos, List<String> urlsInstrucciones, List<String> categoriasSeleccionadas) {
     Map<String, Object> datos = new HashMap<>();
     datos.put("titulo",        titulo);
     datos.put("descripcion",   descripcion);
     datos.put("tiempo",        tiempo);
     datos.put("portada",       portadaUrl);
     datos.put("categorias",    categoriasSeleccionadas);
-    datos.put("autorId",       uid);
+    datos.put("usuarioId",     uid);
     datos.put("estadoAcabado", acabado);
     datos.put("fechaEdicion",  Timestamp.now());
 
-    db.collection("clanks").document(clankId).update(datos)
-      .addOnSuccessListener(unused -> {
+    db.collection("clanks").document(clankId).update(datos).addOnSuccessListener(unused -> {
         guardarSubcolecciones(materiales, herramientas, textos, urlsInstrucciones);
       })
       .addOnFailureListener(e ->
         estadoGuardar.postValue(Recurso.error(e.getMessage())));
   }
 
-  private void guardarSubcolecciones(List<String[]> materiales, List<String> herramientas,
-                                     List<String> textos, List<String> urlsInstrucciones) {
+  private void guardarSubcolecciones(List<String[]> materiales, List<String> herramientas, List<String> textos, List<String> urlsInstrucciones) {
     String rutaBase = "clanks/" + clankId;
 
-    // Borrar y reescribir materiales
+    //borra y reescribe materiales
     db.collection(rutaBase + "/materiales").get().addOnSuccessListener(snap -> {
       for (QueryDocumentSnapshot doc : snap) doc.getReference().delete();
       for (String[] material : materiales) {
@@ -251,7 +232,7 @@ public class EditarClankViewModel extends ViewModel {
       }
     });
 
-    // Borrar y reescribir herramientas
+    //borra y reescribe herramientas
     db.collection(rutaBase + "/herramientas").get().addOnSuccessListener(snap -> {
       for (QueryDocumentSnapshot doc : snap) doc.getReference().delete();
       for (String herramienta : herramientas) {
@@ -261,7 +242,7 @@ public class EditarClankViewModel extends ViewModel {
       }
     });
 
-    // Borrar y reescribir instrucciones
+    //borra y reescribe instrucciones
     db.collection(rutaBase + "/instrucciones").get().addOnSuccessListener(snap -> {
       for (QueryDocumentSnapshot doc : snap) doc.getReference().delete();
       for (int i = 0; i < textos.size(); i++) {
@@ -276,26 +257,21 @@ public class EditarClankViewModel extends ViewModel {
     });
   }
 
-  // ─── Eliminar clank ───────────────────────────────────────────────────────
-
+  /////////////////////////eliminar clank/////////////////////////
   public void eliminarClank() {
     db.collection("clanks").document(clankId).delete();
   }
 
-  // ─── Categorías ───────────────────────────────────────────────────────────
-
+  /////////////////////////categorías de bbdd/////////////////////////
   private void cargarCategorias() {
     db.collection("categorias").get()
       .addOnSuccessListener(snap -> {
         List<String[]> lista = new ArrayList<>();
         for (QueryDocumentSnapshot doc : snap)
-          lista.add(new String[]{doc.getId(), strOrEmpty(doc.getString("nombre"))});
+          lista.add(new String[]{doc.getId(), strOrEmpty(doc.getString("categoria"))});
         categorias.postValue(lista);
       });
   }
-
-  // ─── Utilidades ───────────────────────────────────────────────────────────
-
   private String strOrEmpty(String valor) {
     return valor != null ? valor : "";
   }
