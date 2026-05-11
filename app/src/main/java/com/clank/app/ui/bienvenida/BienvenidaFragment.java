@@ -44,11 +44,22 @@ public class BienvenidaFragment extends Fragment {
     }
 
     private void configurarVista() {
+        configurarNavbar();
+
         binding.btnSoyNuevo.btnSecundario.setText(getString(R.string.soy_nuevo));
         binding.btnYaHeEstado.btnSecundario.setText(getString(R.string.ya_he_estado));
     }
 
+    private void configurarNavbar() {
+        binding.navbar.tvNavbarTitulo.setText("");
+        binding.navbar.btnNavbarAccion.setVisibility(View.GONE);
+    }
+
     private void configurarListeners() {
+        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
+                navegarInspirar()
+        );
+
         binding.btnSoyNuevo.btnSecundario.setOnClickListener(vista ->
                 navegarRegistro()
         );
@@ -56,6 +67,17 @@ public class BienvenidaFragment extends Fragment {
         binding.btnYaHeEstado.btnSecundario.setOnClickListener(vista ->
                 navegarInicioSesion()
         );
+    }
+
+    private void navegarInspirar() {
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.bienvenidaFragment) {
+            return;
+        }
+
+        navegador.navigate(R.id.action_bienvenida_a_inspirar);
     }
 
     private void navegarRegistro() {

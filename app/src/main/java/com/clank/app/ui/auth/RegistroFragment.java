@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.clank.app.R;
@@ -358,11 +357,13 @@ public class RegistroFragment extends Fragment {
 
     private void volverPantallaAnterior() {
         NavController navegador = Navigation.findNavController(requireView());
-        boolean haVuelto = navegador.popBackStack();
 
-        if (!haVuelto) {
-            navegador.navigate(R.id.inicioSesionFragment);
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.registroFragment) {
+            return;
         }
+
+        navegador.navigate(R.id.action_registro_a_bienvenida);
     }
 
     private void navegarInicioSesion() {
@@ -370,11 +371,12 @@ public class RegistroFragment extends Fragment {
 
         NavController navegador = Navigation.findNavController(requireView());
 
-        NavOptions opciones = new NavOptions.Builder()
-                .setPopUpTo(R.id.registroFragment, true)
-                .build();
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.registroFragment) {
+            return;
+        }
 
-        navegador.navigate(R.id.inicioSesionFragment, null, opciones);
+        navegador.navigate(R.id.action_registro_a_inicio_sesion);
     }
 
     private void navegarPantallaSiguiente() {
@@ -389,7 +391,7 @@ public class RegistroFragment extends Fragment {
             return;
         }
 
-        navegador.navigate(R.id.completarPerfilFragment);
+        navegador.navigate(R.id.action_registro_a_completar_perfil);
     }
 
     private void alternarVisibilidadContrasenya() {
