@@ -45,6 +45,7 @@ public class UsuarioRepository {
         datosUsuario.put("correo", usuario.getCorreo());
         datosUsuario.put("nombre", usuario.getNombre());
         datosUsuario.put("telefono", usuario.getTelefono());
+        datosUsuario.put(CAMPO_USUARIO_CLANK, usuario.getUsuarioClank());
         datosUsuario.put("fotoPerfil", usuario.getFotoPerfil());
         datosUsuario.put("fechaCreacion", usuario.getFechaCreacion());
         datosUsuario.put("fechaNacimiento", usuario.getFechaNacimiento());
