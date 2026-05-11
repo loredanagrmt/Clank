@@ -27,11 +27,14 @@ public class PerfilViewModel extends ViewModel {
   private final UsuarioRepository usuarioRepository;
   private final ClankRepository clankRepository;
   private final AuthRepository authRepository;
-  private final MutableLiveData<PerfilData> mPerfil = new MutableLiveData<>();
-  private final MutableLiveData<Integer> mNumClanks = new MutableLiveData<>(0);
-  private final MutableLiveData<Integer> mNumBocetos = new MutableLiveData<>(0);
-  private ListenerRegistration mClanksListener;
-  private boolean mDatosCargados = false;
+  private final MutableLiveData<PerfilData> perfil = new MutableLiveData<>();
+  private final MutableLiveData<Integer> numClanks = new MutableLiveData<>(0);
+  private final MutableLiveData<Integer> numBocetos = new MutableLiveData<>(0);
+  private boolean datosCargados = false;
+
+  //listeners en tiempo real
+  private ListenerRegistration listenerClanks;
+  private ListenerRegistration listenerBocetos;
 
   @Inject
   public PerfilViewModel(UsuarioRepository usuarioRepository, ClankRepository clankRepository, AuthRepository authRepository) {
@@ -42,13 +45,13 @@ public class PerfilViewModel extends ViewModel {
 
   /////////////////////////getters/////////////////////////
   public LiveData<PerfilData> getPerfil() {
-    return mPerfil;
+    return perfil;
   }
   public LiveData<Integer> getNumClanks() {
-    return mNumClanks;
+    return numClanks;
   }
   public LiveData<Integer> getNumBocetos() {
-    return mNumBocetos;
+    return numBocetos;
   }
   public UsuarioRepository getUsuarioRepository() {
     return usuarioRepository;
@@ -62,37 +65,51 @@ public class PerfilViewModel extends ViewModel {
   }
   /////////////////////////queries/////////////////////////
   public FirestoreRecyclerOptions<Clank> buildClankOptionsAcabados(String idUser) {
-    Query query = clankRepository.getPorUsuario(idUser).whereEqualTo("estadoAcabado", true);
-    return new FirestoreRecyclerOptions.Builder<Clank>().setQuery(query, Clank.class).build();
+    Query query = clankRepository.getPorUsuario(idUser)
+      .whereEqualTo("estadoAcabado", true);
+    return new FirestoreRecyclerOptions.Builder<Clank>()
+      .setQuery(query, Clank.class)
+      .build();
   }
 
   public FirestoreRecyclerOptions<Clank> buildClankOptionsBocetos(String idUser) {
-    Query query = clankRepository.getPorUsuario(idUser).whereEqualTo("estadoAcabado", false);
-    return new FirestoreRecyclerOptions.Builder<Clank>().setQuery(query, Clank.class).build();
+    Query query = clankRepository.getPorUsuario(idUser)
+      .whereEqualTo("estadoAcabado", false);
+    return new FirestoreRecyclerOptions.Builder<Clank>()
+      .setQuery(query, Clank.class)
+      .build();
   }
 
   /////////////////////////carga de datos/////////////////////////
   public void cargarDatos(String idUser) {
-    if (mDatosCargados) return;
-    mDatosCargados = true;
+    if (datosCargados) return;
+    datosCargados = true;
     cargarPerfil(idUser);
     cargarContadores(idUser);
   }
   private void cargarPerfil(String idUser) {
     usuarioRepository.getUsuario(idUser).addOnSuccessListener(doc -> {
       if (!doc.exists()) return;
-      PerfilData perfil = new PerfilData();
-      perfil.nombre = obtenerCampo(doc, "nombre");
-      perfil.correo = obtenerCampo(doc, "correo");
-      perfil.fotoPerfil = obtenerCampo(doc, "fotoPerfil");
-      mPerfil.setValue(perfil);
+      PerfilData datos = new PerfilData();
+      datos.nombre = obtenerCampo(doc, "nombre");
+      datos.correo = obtenerCampo(doc, "correo");
+      datos.fotoPerfil = obtenerCampo(doc, "fotoPerfil");
+      perfil.setValue(datos);
     });
   }
+  //carga en tiempo real
   private void cargarContadores(String idUser) {
-    clankRepository.getPorUsuario(idUser).whereEqualTo("estadoAcabado", true).get()
-      .addOnSuccessListener(snap -> mNumClanks.setValue(snap.size()));
-    clankRepository.getPorUsuario(idUser).whereEqualTo("estadoAcabado", false).get()
-      .addOnSuccessListener(snap -> mNumBocetos.setValue(snap.size()));
+    listenerClanks = clankRepository.getPorUsuario(idUser)
+      .whereEqualTo("estadoAcabado", true)
+      .addSnapshotListener((snap, e) -> {
+        if (snap != null) numClanks.setValue(snap.size());
+      });
+
+    listenerBocetos = clankRepository.getPorUsuario(idUser)
+      .whereEqualTo("estadoAcabado", false)
+      .addSnapshotListener((snap, e) -> {
+        if (snap != null) numBocetos.setValue(snap.size());
+      });
   }
   private String obtenerCampo(DocumentSnapshot doc, String campo) {
     if (!doc.contains(campo)) return "";
@@ -103,9 +120,7 @@ public class PerfilViewModel extends ViewModel {
   @Override
   protected void onCleared() {
     super.onCleared();
-    if (mClanksListener != null) {
-      mClanksListener.remove();
-      mClanksListener = null;
-    }
+    if (listenerClanks  != null) listenerClanks.remove();
+    if (listenerBocetos != null) listenerBocetos.remove();
   }
 }

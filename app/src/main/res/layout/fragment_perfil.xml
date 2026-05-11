@@ -7,16 +7,22 @@
   android:background="@color/clank_background_light">
 
   <!-- info de usuario -->
-  <LinearLayout
-    android:id="@+id/llCabeceraPerfil"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appBarPerfil"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@color/clank_background_light"
-    android:paddingTop="16dp"
-    android:paddingBottom="4dp"
-    android:elevation="4dp"
-    android:layout_gravity="top">
+    app:elevation="4dp">
+
+    <LinearLayout
+      android:id="@+id/llCabeceraPerfil"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:background="@color/clank_background_light"
+      android:paddingTop="16dp"
+      android:paddingBottom="4dp"
+      app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
     <RelativeLayout
       android:layout_width="match_parent"
@@ -180,6 +186,7 @@
 
   </LinearLayout>
 
+  </com.google.android.material.appbar.AppBarLayout>
   <!-- tarjetas de clanks -->
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/rvClanks"
@@ -188,8 +195,6 @@
     android:clipToPadding="false"
     android:paddingTop="8dp"
     android:paddingBottom="@dimen/perfil_rv_padding_bottom"
-    app:layout_anchor="@id/llCabeceraPerfil"
-    app:layout_anchorGravity="bottom"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

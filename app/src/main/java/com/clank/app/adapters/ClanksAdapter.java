@@ -77,11 +77,8 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
     this.listener = listener;
   }
 
-
   @Override
-  protected void onBindViewHolder(@NonNull ViewHolder holder,
-                                  int position,
-                                  @NonNull Clank clank) {
+  protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Clank clank) {
     String clankId = getSnapshots().getSnapshot(position).getId();
 
     //contador de resultado
@@ -91,6 +88,9 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
 
     //botón opciones
     holder.ivOpciones.setVisibility(mostrarOpciones ? View.VISIBLE : View.GONE);
+    holder.ivOpciones.setOnClickListener(v -> {
+      if (listener != null) listener.onClankClick(clankId);
+    });
 
     //título y descripción
     holder.tvTitulo.setText(clank.getTitulo() != null ? clank.getTitulo() : "");
@@ -102,8 +102,7 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
     if (tiempo == 0) iconoTiempo = R.drawable.ic_cohete;
     else if (tiempo == 1) iconoTiempo = R.drawable.ic_liebre;
     else iconoTiempo = R.drawable.ic_tortuga;
-    holder.ivTiempo.setImageDrawable(
-      ContextCompat.getDrawable(context, iconoTiempo));
+    holder.ivTiempo.setImageDrawable(ContextCompat.getDrawable(context, iconoTiempo));
 
     //portada
     if (clank.getPortada() != null && !clank.getPortada().isEmpty()) {
@@ -127,12 +126,10 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
       int pos = holder.getBindingAdapterPosition();
       if (pos == RecyclerView.NO_ID) return;
       String id = clank.getClankId();
-      if (id == null || id.isEmpty()) {
+      if (id == null || id.isEmpty())
         id = getSnapshots().getSnapshot(pos).getId();
-      }
-      if (id != null && !id.isEmpty() && listener != null) {
+      if (id != null && !id.isEmpty() && listener != null)
         listener.onClankClick(id);
-      }
     });
   }
 

@@ -1,164 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+ 
     <!-- Configuración -->
-    <string name="app_name">Clank</string>
-    <string name="id_cliente_web_firebase">976901046275-hmrl51og8g5a1l6aeed9v91hp9bs69gv.apps.googleusercontent.com</string>
-
+<string name="app_name">Clank</string>
+<string name="id_cliente_web_firebase">976901046275-hmrl51og8g5a1l6aeed9v91hp9bs69gv.apps.googleusercontent.com</string>
+ 
     <!-- Comunes -->
-    <string name="continuar">Continuar</string>
-    <string name="cancelar">Cancelar</string>
-    <string name="confirmar">Confirmar</string>
-    <string name="volver">Volver</string>
-    <string name="error_generico">Ha ocurrido un error. Inténtalo de nuevo.</string>
-    <string name="error_permiso_camara">Se necesita permiso de cámara</string>
-    <string name="error_camara">No se pudo abrir la cámara</string>
-
+<string name="continuar">Continuar</string>
+<string name="cancelar">Cancelar</string>
+<string name="confirmar">Confirmar</string>
+<string name="volver">Volver</string>
+<string name="error_generico">Ha ocurrido un error. Inténtalo de nuevo.</string>
+<string name="error_permiso_camara">Se necesita permiso de cámara</string>
+<string name="error_camara">No se pudo abrir la cámara</string>
+ 
     <!-- Logo -->
-    <string name="logo_titulo">Clank</string>
-
+<string name="logo_titulo">Clank</string>
+ 
     <!-- Elegir idioma -->
-    <string name="elige_tu_idioma">Elige tu idioma</string>
-
+<string name="elige_tu_idioma">Elige tu idioma</string>
+ 
     <!-- Inspirar -->
-    <string name="inspirar_titulo">Déjate inspirar</string>
-    <string name="inspirar_subtitulo">Forma parte de la comunidad creativa más chula</string>
-
+<string name="inspirar_titulo">Déjate inspirar</string>
+<string name="inspirar_subtitulo">Forma parte de la comunidad creativa más chula</string>
+ 
     <!-- Bienvenida -->
-    <string name="bienvenida_titulo">Bienvenid@</string>
-    <string name="bienvenida_subtitulo">Guarda tu lado creativo en un sitio seguro.</string>
-    <string name="soy_nuevo">Soy nuevo</string>
-    <string name="ya_he_estado">Ya he estado aquí</string>
-
+<string name="bienvenida_titulo">Bienvenid@</string>
+<string name="bienvenida_subtitulo">Guarda tu lado creativo en un sitio seguro.</string>
+<string name="soy_nuevo">Soy nuevo</string>
+<string name="ya_he_estado">Ya he estado aquí</string>
+ 
     <!-- Inicio de sesión -->
-    <string name="inicio_sesion_titulo">Inicio De Sesión</string>
-    <string name="correo_electronico">Correo Electrónico</string>
-    <string name="ejemplo_correo">ejemplo@ejemplo.com</string>
-    <string name="contrasena">Contraseña</string>
-    <string name="contrasenya">Contraseña</string>
-    <string name="hint_contrasenya_oculta">••••••••</string>
-    <string name="iniciar_sesion">Iniciar Sesión</string>
-    <string name="registrarse">Registrarse</string>
-    <string name="olvido_contrasena">¿Olvidaste tu contraseña? Click aquí</string>
-    <string name="olvido_contrasenya">¿Olvidaste tu contraseña? Click aquí</string>
-    <string name="o_inicia_con">O inicia sesión con:</string>
-    <string name="aun_sin_cuenta">¿Aún sin cuenta? Click aquí</string>
-
+<string name="inicio_sesion_titulo">Inicio de sesión</string>
+<string name="correo_electronico">Correo electrónico</string>
+<string name="ejemplo_correo">ejemplo@ejemplo.com</string>
+<string name="contrasena">Contraseña</string>
+<string name="contrasenya">Contraseña</string>
+<string name="hint_contrasenya_oculta">••••••••</string>
+<string name="iniciar_sesion">Iniciar sesión</string>
+<string name="registrarse">Registrarse</string>
+<string name="olvido_contrasena">¿Olvidaste tu contraseña? Click aquí</string>
+<string name="olvido_contrasenya">¿Olvidaste tu contraseña? Click aquí</string>
+<string name="o_inicia_con">O inicia sesión con:</string>
+<string name="aun_sin_cuenta">¿Aún sin cuenta? Click aquí</string>
+ 
     <!-- Registro -->
-    <string name="registro_titulo">Registro</string>
-    <string name="nombre_completo">Nombre</string>
-    <string name="nombre_apellidos">Nombre </string>
-    <string name="numero_telefono">Número De Teléfono</string>
-    <string name="ejemplo_telefono">123 456 789</string>
-    <string name="fecha_nacimiento">Fecha De Nacimiento</string>
-    <string name="ejemplo_fecha_nacimiento">DD / MM / YYYY</string>
-    <string name="confirmar_contrasenya">Confirma Tu Contraseña</string>
-    <string name="registrarme">Registrarme</string>
-    <string name="ya_tienes_cuenta">¿Ya tienes cuenta? Click aquí</string>
-
+<string name="registro_titulo">Registro</string>
+<string name="nombre_completo">Nombre</string>
+<string name="nombre_apellidos">Nombre</string>
+<string name="numero_telefono">Número de teléfono</string>
+<string name="ejemplo_telefono">123 456 789</string>
+<string name="fecha_nacimiento">Fecha de nacimiento</string>
+<string name="ejemplo_fecha_nacimiento">DD / MM / YYYY</string>
+<string name="confirmar_contrasenya">Confirma tu contraseña</string>
+<string name="registrarme">Registrarme</string>
+<string name="ya_tienes_cuenta">¿Ya tienes cuenta? Click aquí</string>
+ 
     <!-- Errores de registro -->
-    <string name="registro_error_campos_vacios">Para continuar, completa todos los campos</string>
-    <string name="registro_error_nombre_vacio">Introduce tu nombre </string>
-    <string name="registro_error_correo_vacio">Introduce tu correo electrónico</string>
-    <string name="registro_error_correo_invalido">El correo electrónico no es válido</string>
-    <string name="registro_error_telefono_vacio">Introduce tu número de teléfono</string>
-    <string name="registro_error_fecha_nacimiento_vacia">Introduce tu fecha de nacimiento</string>
-    <string name="registro_error_contrasenya_vacia">Introduce una contraseña</string>
-    <string name="registro_error_confirmar_contrasenya_vacia">Confirma tu contraseña</string>
-    <string name="registro_error_contrasenyas_distintas">Las contraseñas no coinciden</string>
-    <string name="registro_error_contrasenya_corta">La contraseña debe tener al menos 6 caracteres</string>
-    <string name="registro_error_uid_no_obtenido">No se pudo obtener el usuario autenticado</string>
-    <string name="registro_error_guardar_usuario">No se pudo guardar el usuario en la base de datos</string>
-    <string name="registro_error_registro">No se pudo registrar el usuario. Inténtalo de nuevo</string>
-
+<string name="registro_error_campos_vacios">Para continuar, completa todos los campos</string>
+<string name="registro_error_nombre_vacio">Introduce tu nombre</string>
+<string name="registro_error_correo_vacio">Introduce tu correo electrónico</string>
+<string name="registro_error_correo_invalido">El correo electrónico no es válido</string>
+<string name="registro_error_telefono_vacio">Introduce tu número de teléfono</string>
+<string name="registro_error_fecha_nacimiento_vacia">Introduce tu fecha de nacimiento</string>
+<string name="registro_error_contrasenya_vacia">Introduce una contraseña</string>
+<string name="registro_error_confirmar_contrasenya_vacia">Confirma tu contraseña</string>
+<string name="registro_error_contrasenyas_distintas">Las contraseñas no coinciden</string>
+<string name="registro_error_contrasenya_corta">La contraseña debe tener al menos 6 caracteres</string>
+<string name="registro_error_uid_no_obtenido">No se pudo obtener el usuario autenticado</string>
+<string name="registro_error_guardar_usuario">No se pudo guardar el usuario en la base de datos</string>
+<string name="registro_error_registro">No se pudo registrar el usuario. Inténtalo de nuevo</string>
+ 
     <!-- Popup registro -->
-    <string name="popup_boton_continuar">Continuar</string>
-    <string name="popup_icono_desc">Icono informativo del popup</string>
-    <string name="popup_registro_perfil_titulo">¡Listo! Ahora&#10;Vamos Con&#10;Tu Perfil De&#10;Clank</string>
-    <string name="popup_registro_perfil_mensaje">Estos son los datos que verás en tu panel personal</string>
-
+<string name="popup_boton_continuar">Continuar</string>
+<string name="popup_icono_desc">Icono informativo del popup</string>
+<string name="popup_registro_perfil_titulo">¡Listo! Ahora&#10;Vamos Con&#10;Tu Perfil De&#10;Clank</string>
+<string name="popup_registro_perfil_mensaje">Estos son los datos que verás en tu panel personal</string>
+ 
     <!-- Completar perfil -->
-    <string name="completar_perfil_titulo">Completar perfil</string>
-    <string name="completar_perfil_titulo_pantalla">Termina de crear tu perfil</string>
-    <string name="imagen_foto_perfil">Foto de perfil</string>
-    <string name="editar_foto_perfil">Editar foto de perfil</string>
-    <string name="clank_user">Clank User</string>
-    <string name="ejemplo_clank_user">@usuario</string>
-    <string name="completar_perfil_guardando">Guardando...</string>
-    <string name="completar_perfil_seleccionar_foto">Selecciona una foto</string>
-    <string name="completar_perfil_desde_galeria">Elegir de la galería</string>
-    <string name="completar_perfil_desde_camara">Hacer una foto</string>
-
+<string name="completar_perfil_titulo">Completar perfil</string>
+<string name="completar_perfil_titulo_pantalla">Termina de crear tu perfil</string>
+<string name="imagen_foto_perfil">Foto de perfil</string>
+<string name="editar_foto_perfil">Editar foto de perfil</string>
+<string name="clank_user">Clank User</string>
+<string name="ejemplo_clank_user">@usuario</string>
+<string name="completar_perfil_guardando">Guardando...</string>
+<string name="completar_perfil_seleccionar_foto">Selecciona una foto</string>
+<string name="completar_perfil_desde_galeria">Elegir de la galería</string>
+<string name="completar_perfil_desde_camara">Hacer una foto</string>
+ 
     <!-- Errores de completar perfil -->
-    <string name="completar_perfil_error_usuario_clank_vacio">Introduce tu Clank User</string>
-    <string name="completar_perfil_error_usuario_clank_existente">Este Clank User ya está en uso</string>
-    <string name="completar_perfil_error_correo_existente">Este correo ya está registrado. Vuelve a inicio de sesión o usa otro correo.</string>
-    <string name="completar_perfil_error_datos_registro">No se han encontrado los datos del registro. Vuelve a registrarte.</string>
-    <string name="completar_perfil_error_registro">No se pudo crear la cuenta. Inténtalo de nuevo.</string>
-    <string name="completar_perfil_error_subir_foto">No se ha podido subir la foto de perfil. Inténtalo de nuevo.</string>
-    <string name="completar_perfil_error_guardar_usuario">No se pudo guardar tu perfil. Inténtalo de nuevo.</string>
-    <string name="completar_perfil_error_generico">No se pudo completar el perfil. Inténtalo de nuevo.</string>
-    <string name="completar_perfil_error_crear_archivo_foto">No se pudo preparar la cámara. Inténtalo de nuevo.</string>
-
+<string name="completar_perfil_error_usuario_clank_vacio">Introduce tu Clank User</string>
+<string name="completar_perfil_error_usuario_clank_existente">Este Clank User ya está en uso</string>
+<string name="completar_perfil_error_correo_existente">Este correo ya está registrado. Vuelve a inicio de sesión o usa otro correo.</string>
+<string name="completar_perfil_error_datos_registro">No se han encontrado los datos del registro. Vuelve a registrarte.</string>
+<string name="completar_perfil_error_registro">No se pudo crear la cuenta. Inténtalo de nuevo.</string>
+<string name="completar_perfil_error_subir_foto">No se ha podido subir la foto de perfil. Inténtalo de nuevo.</string>
+<string name="completar_perfil_error_guardar_usuario">No se pudo guardar tu perfil. Inténtalo de nuevo.</string>
+<string name="completar_perfil_error_generico">No se pudo completar el perfil. Inténtalo de nuevo.</string>
+<string name="completar_perfil_error_crear_archivo_foto">No se pudo preparar la cámara. Inténtalo de nuevo.</string>
+ 
     <!-- Popup completar perfil -->
-    <string name="popup_completar_perfil_titulo">¡Perfil creado!</string>
-    <string name="popup_completar_perfil_mensaje">Tu cuenta de Clank ya está lista.</string>
-    <string name="popup_completar_perfil_icono_desc">Icono de perfil completado</string>
-
+<string name="popup_completar_perfil_titulo">¡Perfil creado!</string>
+<string name="popup_completar_perfil_mensaje">Tu cuenta de Clank ya está lista.</string>
+<string name="popup_completar_perfil_icono_desc">Icono de perfil completado</string>
+ 
     <!-- Crear -->
-    <string name="crear_titulo">Crear Clank</string>
-    <string name="crear_publicar">Publicar</string>
-    <string name="crear_guardar_boceto">Guardar borrador</string>
-    <string name="crear_anyadir_portada">Añadir portada</string>
-    <string name="crear_campo_titulo">Título</string>
-    <string name="crear_campo_descripcion">Descripción</string>
-    <string name="crear_campo_tiempo">Tiempo</string>
-    <string name="crear_campo_materiales">Materiales</string>
-    <string name="crear_campo_herramientas">Herramientas</string>
-    <string name="crear_campo_instrucciones">Instrucciones</string>
-    <string name="crear_campo_categorias">Categorías</string>
-    <string name="crear_hint_titulo">Título de tu Clank</string>
-    <string name="crear_hint_descripcion">Describe brevemente en qué consiste…</string>
-    <string name="crear_hint_material">Nombre del material</string>
-    <string name="crear_hint_herramienta">Nombre de la herramienta</string>
-    <string name="crear_hint_instruccion">Explica este paso con detalle…</string>
-    <string name="crear_anyadir_material">+ Material</string>
-    <string name="crear_anyadir_herramienta">+ Herramienta</string>
-    <string name="crear_anyadir_instruccion">+ Instrucción</string>
-    <string name="crear_error_titulo_vacio">El título no puede estar vacío</string>
-    <string name="crear_error_descripcion_vacia">Añade una descripción</string>
-    <string name="crear_error_tiempo">Selecciona el nivel de dificultad</string>
-    <string name="crear_error_min_material">Añade al menos un material</string>
-    <string name="crear_error_min_instruccion">Añade al menos una instrucción</string>
-    <string name="crear_error_publicar">No se pudo publicar. Inténtalo de nuevo</string>
-    <string name="crear_boceto_proximamente">Pendiente añadir</string>
-    <string name="crear_confirmar_descartar_titulo">¿Descartar Clank?</string>
-    <string name="crear_confirmar_descartar_mensaje">Perderás todos los cambios sin guardar.</string>
-    <string name="crear_descartar">Descartar</string>
-    <string name="crear_seleccionar_imagen">Añadir imagen</string>
-    <string name="crear_desde_galeria">Elegir de la galería</string>
-    <string name="crear_desde_camara">Hacer una foto</string>
-    <string name="crear_anyadir_foto_paso">Añadir foto</string>
-    <string name="crear_ver_imagen">Ver imagen</string>
-    <string name="crear_eliminar_imagen">Eliminar imagen</string>
-
+<string name="crear_titulo">Crear Clank</string>
+<string name="crear_publicar">Publicar</string>
+<string name="crear_guardar_boceto">Guardar borrador</string>
+<string name="crear_anyadir_portada">Añadir portada</string>
+<string name="crear_campo_titulo">Título</string>
+<string name="crear_campo_descripcion">Descripción</string>
+<string name="crear_campo_tiempo">Tiempo</string>
+<string name="crear_campo_materiales">Materiales</string>
+<string name="crear_campo_herramientas">Herramientas</string>
+<string name="crear_campo_instrucciones">Instrucciones</string>
+<string name="crear_campo_categorias">Categorías</string>
+<string name="crear_hint_titulo">Título de tu Clank</string>
+<string name="crear_hint_descripcion">Describe brevemente en qué consiste…</string>
+<string name="crear_hint_material">Nombre del material</string>
+<string name="crear_hint_herramienta">Nombre de la herramienta</string>
+<string name="crear_hint_instruccion">Explica este paso con detalle…</string>
+<string name="crear_anyadir_material">+ Material</string>
+<string name="crear_anyadir_herramienta">+ Herramienta</string>
+<string name="crear_anyadir_instruccion">+ Instrucción</string>
+<string name="crear_error_titulo_vacio">El título no puede estar vacío</string>
+<string name="crear_error_descripcion_vacia">Añade una descripción</string>
+<string name="crear_error_tiempo">Selecciona el nivel de dificultad</string>
+<string name="crear_error_min_material">Añade al menos un material</string>
+<string name="crear_error_min_instruccion">Añade al menos una instrucción</string>
+<string name="crear_error_publicar">No se pudo publicar. Inténtalo de nuevo</string>
+<string name="crear_boceto_proximamente">Pendiente añadir</string>
+<string name="crear_confirmar_descartar_titulo">¿Descartar Clank?</string>
+<string name="crear_confirmar_descartar_mensaje">Perderás todos los cambios sin guardar.</string>
+<string name="crear_descartar">Descartar</string>
+<string name="crear_seleccionar_imagen">Añadir imagen</string>
+<string name="crear_desde_galeria">Elegir de la galería</string>
+<string name="crear_desde_camara">Hacer una foto</string>
+<string name="crear_anyadir_foto_paso">Añadir foto</string>
+<string name="crear_ver_imagen">Ver imagen</string>
+<string name="crear_eliminar_imagen">Eliminar imagen</string>
+ 
+    <!-- Editar Clank -->
+<string name="editar_titulo">Editar Clank</string>
+<string name="editar_descartar_cambios_titulo">¿Descartar cambios?</string>
+<string name="editar_descartar_cambios_mensaje">Los cambios que has hecho se perderán.</string>
+<string name="editar_descartar_confirmar">Descartar</string>
+ 
     <!-- Tarjeta Clank -->
-    <string name="tarjeta_portada_desc">Portada del Clank</string>
-    <string name="tarjeta_opciones_desc">Opciones del Clank</string>
-    <string name="tarjeta_tiempo_desc">Nivel de dificultad</string>
-    <string name="tarjeta_hint_titulo">Título del Clank</string>
-    <string name="tarjeta_hint_usuario">Nombre de usuario</string>
-    <string name="tarjeta_hint_descripcion">Descripción del Clank…</string>
-
+<string name="tarjeta_portada_desc">Portada del Clank</string>
+<string name="tarjeta_opciones_desc">Opciones del Clank</string>
+<string name="tarjeta_tiempo_desc">Nivel de dificultad</string>
+<string name="tarjeta_hint_titulo">Título del Clank</string>
+<string name="tarjeta_hint_usuario">Nombre de usuario</string>
+<string name="tarjeta_hint_descripcion">Descripción del Clank…</string>
+ 
     <!-- Perfil -->
-    <string name="perfil_hint_nombre">Nombre</string>
-    <string name="perfil_hint_uid">@usuario</string>
-    <string name="perfil_tab_clanks">Clanks</string>
-    <string name="perfil_tab_bocetos">Borradores</string>
-    <string name="perfil_editar">Editar perfil</string>
-    <string name="perfil_ajustes">Ajustes</string>
-
-    <!-- Placeholder -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+<string name="perfil_hint_nombre">Nombre</string>
+<string name="perfil_hint_uid">@usuario</string>
+<string name="perfil_tab_clanks">Clanks</string>
+<string name="perfil_tab_bocetos">Borradores</string>
+<string name="perfil_editar">Editar perfil</string>
+<string name="perfil_ajustes">Ajustes</string>
+ 
+ 
 </resources>
+ 
