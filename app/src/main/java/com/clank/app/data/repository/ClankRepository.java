@@ -23,7 +23,6 @@ public class ClankRepository {
   public DocumentReference crear(Clank clank) {
     CollectionReference col = dataSource.collection(COLLECTION);
     DocumentReference ref = col.document();
-    clank.setClankId(ref.getId());
     ref.set(clank);
     return ref;
   }
