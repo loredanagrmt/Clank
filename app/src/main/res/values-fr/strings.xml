@@ -34,7 +34,6 @@
     <string name="inicio_sesion_titulo">Connexion</string>
     <string name="correo_electronico">E-mail</string>
     <string name="ejemplo_correo">exemple@exemple.com</string>
-    <string name="contrasena">Mot de passe</string>
     <string name="contrasenya">Mot de passe</string>
     <string name="hint_contrasenya_oculta">••••••••</string>
     <string name="iniciar_sesion">Se connecter</string>
