@@ -39,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class CompletarPerfilFragment extends Fragment {
 
-    private static final long DURACION_POPUP_MILISEGUNDOS = 2300;
+    private static final long DURACION_POPUP_MILISEGUNDOS = 3000;
 
     private static final String CLAVE_URI_FOTO_PERFIL = "uriFotoPerfil";
     private static final String CLAVE_URI_FOTO_CAMARA_TEMPORAL = "uriFotoCamaraTemporal";

@@ -102,6 +102,8 @@ public class InicioSesionFragment extends Fragment {
     }
 
     private void configurarVista() {
+        configurarNavbar();
+
         binding.inputCorreo.tvInputTitulo.setText(getString(R.string.correo_electronico));
         binding.inputCorreo.customEditText.setHint(getString(R.string.ejemplo_correo));
         binding.inputCorreo.customEditText.setInputType(
@@ -121,7 +123,16 @@ public class InicioSesionFragment extends Fragment {
         binding.btnRegistrarse.btnSecundario.setText(getString(R.string.registrarse));
     }
 
+    private void configurarNavbar() {
+        binding.navbar.tvNavbarTitulo.setText(getString(R.string.inicio_sesion_titulo));
+        binding.navbar.btnNavbarAccion.setVisibility(View.GONE);
+    }
+
     private void configurarListeners() {
+        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
+                navegarBienvenida()
+        );
+
         binding.inputContrasenya.inputTrailingIcon.setOnClickListener(
                 vista -> alternarVisibilidadContrasenya()
         );
@@ -209,6 +220,17 @@ public class InicioSesionFragment extends Fragment {
         }
 
         navegarPerfil();
+    }
+
+    private void navegarBienvenida() {
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.inicioSesionFragment) {
+            return;
+        }
+
+        navegador.navigate(R.id.action_inicio_sesion_a_bienvenida);
     }
 
     private void navegarRegistro() {
