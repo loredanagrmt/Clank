@@ -63,7 +63,7 @@
   <!-- Crear -->
   <string name="crear_titulo">Crear Clank</string>
   <string name="crear_publicar">Publicar</string>
-  <string name="crear_guardar_boceto">Guardar borrador</string>
+  <string name="crear_guardar_boceto">Guardar boceto</string>
   <string name="crear_anyadir_portada">Añadir portada</string>
   <string name="crear_campo_titulo">Título</string>
   <string name="crear_campo_descripcion">Descripción</string>
@@ -98,6 +98,12 @@
   <string name="crear_eliminar_imagen">Eliminar imagen</string>
   <string name="error_permiso_camara">Se necesita permiso de cámara</string>
   <string name="error_camara">No se pudo abrir la cámara</string>
+
+  <!-- Editar Clank -->
+  <string name="editar_titulo">Editar Clank</string>
+  <string name="editar_descartar_cambios_titulo">¿Descartar cambios?</string>
+  <string name="editar_descartar_cambios_mensaje">Los cambios que has hecho se perderán.</string>
+  <string name="editar_descartar_confirmar">Descartar</string>
 
   <!-- Tarjeta Clank -->
   <string name="tarjeta_portada_desc">Portada del Clank</string>

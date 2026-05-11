@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import com.bumptech.glide.Glide;
 import com.clank.app.R;
@@ -24,7 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class PerfilFragment extends Fragment {
 
-  private static final String ID_USER = "idUser";
+  private static final String ID_USER    = "idUser";
+  private static final String TAB_INICIAL = "tabInicial";
+
   private FragmentPerfilBinding binding;
   private PerfilViewModel viewModel;
   private ClanksAdapter adapter;
@@ -53,12 +56,16 @@ public class PerfilFragment extends Fragment {
 
     viewModel = new ViewModelProvider(this).get(PerfilViewModel.class);
 
-    if (getArguments() != null) {
+    if (getArguments() != null)
       idUser = getArguments().getString(ID_USER, "");
-    }
-    if (idUser == null || idUser.isEmpty()) {
+    if (idUser == null || idUser.isEmpty())
       idUser = viewModel.getCurrentUserId();
-    }
+
+    //si venimos de editar/crear abre el tab indicado
+    String tabInicial = getArguments() != null
+      ? getArguments().getString(TAB_INICIAL, "clanks") : "clanks";
+    mostrandoClanks = !"bocetos".equals(tabInicial);
+
     configurarRecyclerView();
     configurarTabs();
     configurarBotones();
@@ -74,12 +81,6 @@ public class PerfilFragment extends Fragment {
   }
 
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    binding = null;
-  }
-
-  @Override
   public void onStart() {
     super.onStart();
     if (adapter != null) adapter.startListening();
@@ -91,7 +92,13 @@ public class PerfilFragment extends Fragment {
     if (adapter != null) adapter.stopListening();
   }
 
-  /////////////////////////recyclerView////////////////////////
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    binding = null;
+  }
+
+  /////////////////////////recyclerView/////////////////////////
   private void configurarRecyclerView() {
     binding.rvClanks.setLayoutManager(
       new GridLayoutManager(requireContext(), 2));
@@ -121,8 +128,10 @@ public class PerfilFragment extends Fragment {
         public void onGlobalLayout() {
           binding.indicadorTab.getViewTreeObserver()
             .removeOnGlobalLayoutListener(this);
-          ajustarAnchoIndicador(binding.tabClanks);
-          binding.indicadorTab.setTranslationX(binding.tabClanks.getLeft());
+          //indicador en el tab correcto
+          View tabActivo = mostrandoClanks ? binding.tabClanks : binding.tabBocetos;
+          ajustarAnchoIndicador(tabActivo);
+          binding.indicadorTab.setTranslationX(tabActivo.getLeft());
         }
       });
   }
@@ -163,6 +172,10 @@ public class PerfilFragment extends Fragment {
       true,
       clankId -> {
         // RECORDAR: pendiente de cambiar cuando haya hecho detallefragment
+        Bundle args = new Bundle();
+        args.putString("clankId", clankId);
+        Navigation.findNavController(requireView())
+          .navigate(R.id.action_perfil_a_editar_clank, args);
       }
     );
     binding.rvClanks.setAdapter(adapter);
@@ -204,7 +217,8 @@ public class PerfilFragment extends Fragment {
           .into(binding.civFotoPerfil);
       }
 
-      if (adapter == null) cargarAdapter(true);
+      //carga el adapter solo la primera vez
+      if (adapter == null) cargarAdapter(mostrandoClanks);
     });
 
     viewModel.getNumClanks().observe(getViewLifecycleOwner(), num ->

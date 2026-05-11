@@ -93,12 +93,19 @@
     android:name="com.clank.app.ui.perfil.PerfilFragment"
     android:label=""
     tools:layout="@layout/fragment_perfil">
+    <argument
+      android:name="tabInicial"
+      app:argType="string"
+      android:defaultValue="clanks" />
     <action
       android:id="@+id/action_perfil_a_ajustes"
       app:destination="@id/ajustesFragment" />
     <action
       android:id="@+id/action_perfil_a_crear"
       app:destination="@id/crearFragment" />
+    <action
+      android:id="@+id/action_perfil_a_editar_clank"
+      app:destination="@id/editarClankFragment" />
   </fragment>
 
   <fragment
@@ -118,5 +125,20 @@
     android:name="com.clank.app.ui.ajustes.AjustesFragment"
     android:label=""
     tools:layout="@layout/fragment_ajustes" />
+
+  <fragment
+    android:id="@+id/editarClankFragment"
+    android:name="com.clank.app.ui.editar.EditarClankFragment"
+    android:label=""
+    tools:layout="@layout/fragment_crear">
+    <argument
+      android:name="clankId"
+      app:argType="string" />
+    <action
+      android:id="@+id/action_editar_a_perfil"
+      app:destination="@id/perfilFragment"
+      app:popUpTo="@id/perfilFragment"
+      app:popUpToInclusive="true" />
+  </fragment>
 
 </navigation>
