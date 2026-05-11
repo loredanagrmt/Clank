@@ -2,6 +2,7 @@ package com.clank.app.data.model;
 
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.Exclude;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ public class Clank {
   public Clank() {}
 
   /////////////////////////Getters y setters/////////////////////////
+  @Exclude
   public String getClankId() { return clankId; }
   public void setClankId(String clankId) { this.clankId = clankId; }
   public String getUsuarioId() { return usuarioId; }
