@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/clank_background_light">
+
+    <include
+        android:id="@+id/navbar"
+        layout="@layout/navbar_superior"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/crear_cabecera_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTituloCompletarPerfil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
+        android:layout_marginTop="@dimen/completar_perfil_margen_superior_titulo"
+        android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/completar_perfil_tamanyo_titulo"
+        app:layout_constraintTop_toBottomOf="@id/navbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Termina de crear tu perfil" />
+
+    <FrameLayout
+        android:id="@+id/contenedorFotoPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/completar_perfil_espacio_titulo_foto"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloCompletarPerfil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imgFotoPerfil"
+            android:layout_width="@dimen/completar_perfil_tamanyo_foto"
+            android:layout_height="@dimen/completar_perfil_tamanyo_foto"
+            android:background="@drawable/bg_circulo_opciones_inactivo"
+            android:contentDescription="@string/imagen_foto_perfil"
+            android:padding="@dimen/completar_perfil_padding_foto"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_usuario_inactivo" />
+
+        <ImageButton
+            android:id="@+id/btnEditarFotoPerfil"
+            android:layout_width="@dimen/completar_perfil_tamanyo_boton_editar"
+            android:layout_height="@dimen/completar_perfil_tamanyo_boton_editar"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/bg_cuadrado_activo"
+            android:contentDescription="@string/editar_foto_perfil"
+            android:padding="@dimen/completar_perfil_padding_boton_editar"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_lapiz_activo" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/contenedorFormularioCompletarPerfil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
+        android:layout_marginTop="@dimen/completar_perfil_espacio_foto_formulario"
+        android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/contenedorFotoPerfil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/inputUsuarioClank"
+            layout="@layout/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/contenedorBotonContinuar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/completar_perfil_alto_boton"
+        android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
+        android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
+        android:layout_marginBottom="@dimen/completar_perfil_margen_inferior_boton"
+        app:layout_constraintWidth_percent="0.38"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/btnContinuar"
+            layout="@layout/bt_secundario"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/capaPopup"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/color_sombra_popup"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/popup"
+                layout="@layout/pop_up"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/popup_margen_horizontal"
+                android:layout_marginEnd="@dimen/popup_margen_horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

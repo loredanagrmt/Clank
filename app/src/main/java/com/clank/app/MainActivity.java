@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     R.id.bienvenidaFragment,
     R.id.inicioSesionFragment,
     R.id.registroFragment,
-//    R.id.completarPerfilFragment,
+    R.id.completarPerfilFragment,
     R.id.crearFragment
 //    R.id.detalleFragment,
 //    R.id.editarPerfilFragment
