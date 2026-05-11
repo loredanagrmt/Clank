@@ -34,12 +34,10 @@
     <string name="inicio_sesion_titulo">Accesso</string>
     <string name="correo_electronico">E-mail</string>
     <string name="ejemplo_correo">esempio@esempio.com</string>
-    <string name="contrasena">Password</string>
     <string name="contrasenya">Password</string>
     <string name="hint_contrasenya_oculta">••••••••</string>
     <string name="iniciar_sesion">Accedi</string>
     <string name="registrarse">Registrati</string>
-    <string name="olvido_contrasena">Password dimenticata? Clicca qui</string>
     <string name="olvido_contrasenya">Password dimenticata? Clicca qui</string>
     <string name="o_inicia_con">Oppure accedi con:</string>
     <string name="aun_sin_cuenta">Non hai ancora un account? Clicca qui</string>
