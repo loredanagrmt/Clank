@@ -34,7 +34,6 @@
     <string name="inicio_sesion_titulo">Log in</string>
     <string name="correo_electronico">Email</string>
     <string name="ejemplo_correo">example@example.com</string>
-    <string name="contrasena">Password</string>
     <string name="contrasenya">Password</string>
     <string name="hint_contrasenya_oculta">••••••••</string>
     <string name="iniciar_sesion">Log in</string>
