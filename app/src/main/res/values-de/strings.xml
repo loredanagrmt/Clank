@@ -34,7 +34,6 @@
     <string name="inicio_sesion_titulo">Anmelden</string>
     <string name="correo_electronico">E-Mail</string>
     <string name="ejemplo_correo">beispiel@beispiel.com</string>
-    <string name="contrasena">Passwort</string>
     <string name="contrasenya">Passwort</string>
     <string name="hint_contrasenya_oculta">••••••••</string>
     <string name="iniciar_sesion">Anmelden</string>
