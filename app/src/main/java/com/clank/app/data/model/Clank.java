@@ -3,10 +3,11 @@ package com.clank.app.data.model;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.Date;
 import java.util.List;
-
+@IgnoreExtraProperties
 public class Clank {
 
   /////////////////////////atributos documento/////////////////////////

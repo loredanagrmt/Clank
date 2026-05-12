@@ -165,17 +165,17 @@ public class PerfilFragment extends Fragment {
       ? viewModel.buildClankOptionsAcabados(idUser)
       : viewModel.buildClankOptionsBocetos(idUser);
 
+    //dentro de cargarAdapter(), sustituir el listener:
     adapter = new ClanksAdapter(
       options,
       requireContext(),
       viewModel.getUsuarioRepository(),
       true,
       clankId -> {
-        // RECORDAR: pendiente de cambiar cuando haya hecho detallefragment
         Bundle args = new Bundle();
         args.putString("clankId", clankId);
         Navigation.findNavController(requireView())
-          .navigate(R.id.action_perfil_a_editar_clank, args);
+          .navigate(R.id.action_perfil_a_detalle_clank, args);
       }
     );
     binding.rvClanks.setAdapter(adapter);
