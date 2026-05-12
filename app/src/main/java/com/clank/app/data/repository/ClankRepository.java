@@ -63,4 +63,10 @@ public Task<QuerySnapshot> getInstrucciones(String clankId) {
   return dataSource.collection(COLLECTION).document(clankId)
     .collection(INSTRUCCIONES).orderBy("orden").get();
 }
+  public Query getTodosAcabados() {
+    return dataSource.collection(COLLECTION)
+      .whereEqualTo("estadoAcabado", true)
+      .orderBy("fechaPublicacion", Query.Direction.DESCENDING);
+  }
+
 }
