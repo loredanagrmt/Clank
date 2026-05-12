@@ -56,4 +56,10 @@
   <dimen name="perfil_btn_editar_height">44dp</dimen>
   <dimen name="perfil_rv_padding_bottom">120dp</dimen>
 
+  <!-- ── Editar perfil ──────────────────────────── -->
+  <dimen name="editar_perfil_ancho_boton">280dp</dimen>
+
+  <!-- ── Navegación inferior ───────────────────── -->
+  <dimen name="bottombar_ancho">200dp</dimen>
+
 </resources>
