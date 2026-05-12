@@ -158,6 +158,10 @@
     <string name="editar_descartar_cambios_mensaje">Los cambios que has hecho se perderán.</string>
     <string name="editar_descartar_confirmar">Descartar</string>
 
+    <!-- Detalle Clank -->
+    <string name="detalle_titulo">Tus Clanks</string>
+    <string name="detalle_campo_detalles">Detalles</string>
+
     <!-- Tarjeta Clank -->
     <string name="tarjeta_portada_desc">Portada del Clank</string>
     <string name="tarjeta_opciones_desc">Opciones del Clank</string>
@@ -174,8 +178,14 @@
     <string name="perfil_editar">Editar perfil</string>
     <string name="perfil_ajustes">Ajustes</string>
 
-    <!-- Detalle Clank -->
-    <string name="detalle_titulo">Tus Clanks</string>
-    <string name="detalle_campo_detalles">Detalles</string>
+    <!-- Editar perfil -->
+    <string name="editar_perfil_titulo">Editar Tu Perfil</string>
+    <string name="editar_perfil_guardar">Guardar Cambios</string>
+    <string name="editar_perfil_cambiar_contrasenya">Cambiar Contraseña</string>
+
+    <!-- Popup editar perfil -->
+    <string name="popup_editar_perfil_titulo">¡Perfil actualizado!</string>
+    <string name="popup_editar_perfil_mensaje">Los cambios se han guardado correctamente.</string>
+    <string name="popup_editar_perfil_icono_desc">Icono de perfil actualizado</string>
 
 </resources>
