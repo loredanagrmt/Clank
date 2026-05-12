@@ -2,8 +2,8 @@
 <androidx.appcompat.widget.AppCompatButton
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/btnPrincipal"
-    android:layout_width="112dp"
-    android:layout_height="40dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:minWidth="0dp"
     android:minHeight="0dp"
     android:padding="0dp"
@@ -14,4 +14,4 @@
     android:text=""
     android:textAllCaps="false"
     android:textColor="@color/clank_background_light"
-    android:textSize="14sp" />
+    android:textSize="18sp" />
