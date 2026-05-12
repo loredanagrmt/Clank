@@ -16,6 +16,20 @@
   <dimen name="text_label">14sp</dimen>
   <dimen name="text_header_title">17sp</dimen>
 
+  <!-- ── Hoja de opciones ─────────────────────────────────── -->
+  <dimen name="hoja_opciones_padding_top">28dp</dimen>
+  <dimen name="hoja_opciones_padding_bottom">40dp</dimen>
+  <dimen name="hoja_opciones_padding_horizontal">28dp</dimen>
+
+  <dimen name="hoja_opciones_titulo_margin_bottom">16dp</dimen>
+  <dimen name="hoja_opciones_titulo_text_size">20sp</dimen>
+
+  <dimen name="hoja_opciones_confirmacion_margin_bottom">24dp</dimen>
+  <dimen name="hoja_opciones_confirmacion_text_size">14sp</dimen>
+
+  <dimen name="hoja_opciones_botones_alto">40dp</dimen>
+  <dimen name="hoja_opciones_botones_gap">16dp</dimen>
+
   <!-- ── Inspirar / Bienvenida ──────────────────── -->
   <dimen name="inspirar_gradient_height">150dp</dimen>
   <dimen name="inspirar_button_margin_bottom">32dp</dimen>

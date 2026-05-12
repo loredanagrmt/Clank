@@ -29,6 +29,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCrearBinding;
+import com.clank.app.ui.comun.HojaOpciones;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class CrearFragment extends Fragment {
 
 
 
-  /////////////////////////launchers/////////////////////////
+  ///////////////////////// launchers /////////////////////////
   private final ActivityResultLauncher<String> galeriaLauncher =
           registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
             if (uri != null) procesarImagenSeleccionada(uri);
@@ -70,7 +71,7 @@ public class CrearFragment extends Fragment {
 
 
 
-  /////////////////////////On create/////////////////////////
+  ///////////////////////// on create /////////////////////////
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class CrearFragment extends Fragment {
 
 
 
-  /////////////////////////on View Created/////////////////////////
+  ///////////////////////// on view created /////////////////////////
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -99,7 +100,7 @@ public class CrearFragment extends Fragment {
   }
 
 
-  /////////////////////////navbar/////////////////////////
+  ///////////////////////// navbar /////////////////////////
   private void configurarNavbar() {
     binding.navbar.tvNavbarTitulo.setText(getString(R.string.crear_titulo));
     binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_delete);
@@ -107,29 +108,44 @@ public class CrearFragment extends Fragment {
   }
 
 
-  /////////////////////////listeners/////////////////////////
+  ///////////////////////// listeners /////////////////////////
   private void configurarListeners(View v) {
     binding.navbar.btnNavbarVolver.setOnClickListener(b ->
             Navigation.findNavController(v).navigateUp());
 
-    binding.navbar.btnNavbarAccion.setOnClickListener(b -> mostrarConfirmarEliminar(v));
+    binding.navbar.btnNavbarAccion.setOnClickListener(b ->
+            mostrarConfirmarEliminar(v));
 
-    binding.framePortada.setOnClickListener(b -> mostrarDialogoSeleccionImagen(null));
+    binding.framePortada.setOnClickListener(b ->
+            mostrarDialogoSeleccionImagen(null));
 
-    binding.btnPublicar.setOnClickListener(b -> intentarPublicar(v));
-    binding.btnGuardarBoceto.setOnClickListener(b -> guardarBoceto());
+    binding.btnPublicar.setOnClickListener(b ->
+            intentarPublicar());
 
-    binding.btnTiempoCohete.setOnClickListener(b  -> seleccionarTiempo(0));
-    binding.btnTiempoLiebre.setOnClickListener(b  -> seleccionarTiempo(1));
-    binding.btnTiempoTortuga.setOnClickListener(b -> seleccionarTiempo(2));
+    binding.btnGuardarBoceto.setOnClickListener(b ->
+            guardarBoceto());
 
-    binding.btnAnyadirMaterial.setOnClickListener(b    -> anyadirFilaMaterial(false));
-    binding.btnAnyadirHerramienta.setOnClickListener(b -> anyadirFilaMaterial(true));
-    binding.btnAnyadirInstruccion.setOnClickListener(b -> anyadirFilaInstruccion());
+    binding.btnTiempoCohete.setOnClickListener(b ->
+            seleccionarTiempo(0));
+
+    binding.btnTiempoLiebre.setOnClickListener(b ->
+            seleccionarTiempo(1));
+
+    binding.btnTiempoTortuga.setOnClickListener(b ->
+            seleccionarTiempo(2));
+
+    binding.btnAnyadirMaterial.setOnClickListener(b ->
+            anyadirFilaMaterial(false));
+
+    binding.btnAnyadirHerramienta.setOnClickListener(b ->
+            anyadirFilaMaterial(true));
+
+    binding.btnAnyadirInstruccion.setOnClickListener(b ->
+            anyadirFilaInstruccion());
   }
 
 
-  /////////////////////////imagen/////////////////////////
+  ///////////////////////// imagen /////////////////////////
   private void mostrarDialogoSeleccionImagen(@Nullable View target) {
     targetActivo = target;
     new AlertDialog.Builder(requireContext())
@@ -139,7 +155,7 @@ public class CrearFragment extends Fragment {
                     getString(R.string.crear_desde_camara)
             }, (dialog, which) -> {
               if (which == 0) galeriaLauncher.launch("image/*");
-              else            solicitarPermisoCamara();
+              else solicitarPermisoCamara();
             })
             .show();
   }
@@ -157,13 +173,18 @@ public class CrearFragment extends Fragment {
     try {
       File dir = requireContext().getExternalFilesDir(
               android.os.Environment.DIRECTORY_PICTURES);
+
       if (dir != null) dir.mkdirs();
+
       File archivo = new File(dir, "foto_" + UUID.randomUUID() + ".jpg");
+
       uriFotoTemporal = FileProvider.getUriForFile(
               requireContext(),
               requireContext().getPackageName() + ".fileprovider",
               archivo);
+
       camaraLauncher.launch(uriFotoTemporal);
+
     } catch (Exception e) {
       Toast.makeText(requireContext(),
               getString(R.string.error_camara), Toast.LENGTH_SHORT).show();
@@ -177,12 +198,14 @@ public class CrearFragment extends Fragment {
       binding.llAnyadirPortada.setVisibility(View.GONE);
       Glide.with(this).load(uri).centerCrop().into(binding.ivPortadaPreview);
     } else {
-      View fila         = targetActivo;
-      View boton        = fila.findViewById(R.id.llBotonImagenInstruccion);
+      View fila = targetActivo;
+      View boton = fila.findViewById(R.id.llBotonImagenInstruccion);
       ImageView preview = fila.findViewById(R.id.ivPreviewInstruccion);
+
       fila.setTag(R.id.ivPreviewInstruccion, uri);
       boton.setVisibility(View.GONE);
       preview.setVisibility(View.VISIBLE);
+
       Glide.with(this).load(uri).centerCrop().into(preview);
     }
   }
@@ -197,7 +220,8 @@ public class CrearFragment extends Fragment {
                 mostrarImagenCompleta(uri);
               } else {
                 ImageView preview = fila.findViewById(R.id.ivPreviewInstruccion);
-                View boton        = fila.findViewById(R.id.llBotonImagenInstruccion);
+                View boton = fila.findViewById(R.id.llBotonImagenInstruccion);
+
                 fila.setTag(R.id.ivPreviewInstruccion, null);
                 preview.setImageDrawable(null);
                 preview.setVisibility(View.GONE);
@@ -210,48 +234,74 @@ public class CrearFragment extends Fragment {
   private void mostrarImagenCompleta(Uri uri) {
     Dialog dialog = new Dialog(requireContext(),
             android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+
     ImageView iv = new ImageView(requireContext());
     iv.setLayoutParams(new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT));
+
     iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
     iv.setBackgroundColor(Color.BLACK);
+
     Glide.with(this).load(uri).into(iv);
+
     iv.setOnClickListener(v -> dialog.dismiss());
+
     dialog.setContentView(iv);
     dialog.show();
   }
 
 
-  ///////////////////////// Tiempo enum/////////////////////////
+  ///////////////////////// tiempo /////////////////////////
   private void seleccionarTiempo(int indice) {
     tiempoSeleccionado = indice;
+
     android.widget.ImageButton[] botones = {
             binding.btnTiempoCohete,
             binding.btnTiempoLiebre,
             binding.btnTiempoTortuga
     };
+
     for (int i = 0; i < botones.length; i++) {
       if (i == indice) {
         botones[i].setBackground(ContextCompat.getDrawable(requireContext(),
                 R.drawable.bg_boton_principal));
+
         botones[i].setImageTintList(ContextCompat.getColorStateList(requireContext(),
                 R.color.clank_background_light));
       } else {
         botones[i].setBackground(ContextCompat.getDrawable(requireContext(),
-                R.drawable.bg_input));
+                R.drawable.bg_boton_tiempo));
+
         botones[i].setImageTintList(ContextCompat.getColorStateList(requireContext(),
                 R.color.color_texto_inactivo));
       }
     }
   }
 
+  private void restablecerBotonesTiempo() {
+    android.widget.ImageButton[] botones = {
+            binding.btnTiempoCohete,
+            binding.btnTiempoLiebre,
+            binding.btnTiempoTortuga
+    };
 
-  /////////////////////////Añadir filas/////////////////////////
+    for (android.widget.ImageButton boton : botones) {
+      boton.setBackground(ContextCompat.getDrawable(requireContext(),
+              R.drawable.bg_boton_tiempo));
 
+      boton.setImageTintList(ContextCompat.getColorStateList(requireContext(),
+              R.color.color_texto_inactivo));
+    }
+  }
+
+
+  ///////////////////////// añadir filas /////////////////////////
   private void anyadirFilaMaterial(boolean esHerramienta) {
     LinearLayout contenedor = esHerramienta
-            ? binding.llContenedorHerramientas : binding.llContenedorMateriales;
+            ? binding.llContenedorHerramientas
+            : binding.llContenedorMateriales;
+
     View fila = LayoutInflater.from(requireContext())
             .inflate(R.layout.item_material, contenedor, false);
 
@@ -298,10 +348,10 @@ public class CrearFragment extends Fragment {
     binding.llContenedorInstrucciones.addView(fila);
   }
 
-  /////////////////////////publicar/////////////////////////
 
-  private void intentarPublicar(View v) {
-    String titulo      = binding.etTitulo.getText().toString().trim();
+  ///////////////////////// publicar /////////////////////////
+  private void intentarPublicar() {
+    String titulo = binding.etTitulo.getText().toString().trim();
     String descripcion = binding.etDescripcion.getText().toString().trim();
 
     if (titulo.isEmpty()) {
@@ -309,24 +359,49 @@ public class CrearFragment extends Fragment {
       binding.etTitulo.requestFocus();
       return;
     }
+
     if (descripcion.isEmpty()) {
       binding.etDescripcion.setError(getString(R.string.crear_error_descripcion_vacia));
       binding.etDescripcion.requestFocus();
       return;
     }
+
     if (tiempoSeleccionado == -1) {
       Toast.makeText(requireContext(),
               getString(R.string.crear_error_tiempo), Toast.LENGTH_SHORT).show();
       return;
     }
 
-    List<String> textosInstrucciones   = new ArrayList<>();
-    List<Uri>    imagenesInstrucciones = new ArrayList<>();
+    mostrarConfirmarPublicar();
+  }
+
+  private void mostrarConfirmarPublicar() {
+    HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
+            getString(R.string.crear_publicar_clank_titulo),
+            getString(R.string.crear_publicar_clank_mensaje),
+            getString(R.string.cancelar),
+            getString(R.string.crear_publicar_clank_confirmar),
+            () -> {
+            },
+            this::publicarClankConfirmado
+    );
+
+    hoja.show(getChildFragmentManager(), "hoja_publicar_clank");
+  }
+
+  private void publicarClankConfirmado() {
+    String titulo = binding.etTitulo.getText().toString().trim();
+    String descripcion = binding.etDescripcion.getText().toString().trim();
+
+    List<String> textosInstrucciones = new ArrayList<>();
+    List<Uri> imagenesInstrucciones = new ArrayList<>();
 
     for (int i = 0; i < binding.llContenedorInstrucciones.getChildCount(); i++) {
-      View fila    = binding.llContenedorInstrucciones.getChildAt(i);
+      View fila = binding.llContenedorInstrucciones.getChildAt(i);
+
       String texto = ((EditText) fila.findViewById(R.id.etTextoInstruccion))
               .getText().toString().trim();
+
       if (!texto.isEmpty()) {
         textosInstrucciones.add(texto);
         imagenesInstrucciones.add((Uri) fila.getTag(R.id.ivPreviewInstruccion));
@@ -351,78 +426,152 @@ public class CrearFragment extends Fragment {
             getString(R.string.crear_boceto_proximamente), Toast.LENGTH_SHORT).show();
   }
 
+
+  ///////////////////////// hoja descartar clank /////////////////////////
   private void mostrarConfirmarEliminar(View v) {
-    new AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.crear_confirmar_descartar_titulo))
-            .setMessage(getString(R.string.crear_confirmar_descartar_mensaje))
-            .setPositiveButton(getString(R.string.crear_descartar), (d, w) ->
-                    Navigation.findNavController(v).navigateUp())
-            .setNegativeButton(getString(R.string.cancelar), null)
-            .show();
+    HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
+            getString(R.string.crear_descartar_clank_titulo),
+            getString(R.string.crear_descartar_clank_mensaje),
+            getString(R.string.cancelar),
+            getString(R.string.crear_descartar_clank_confirmar),
+            () -> {
+              ////// al presionar cancelar la hoja se cierra y el formulario permanece intacto //////
+            },
+            () -> {
+              limpiarFormularioCrear();
+              Navigation.findNavController(v).navigate(R.id.action_crear_a_perfil);
+            }
+    );
+
+    hoja.show(getChildFragmentManager(), "hoja_descartar_clank");
   }
 
-  /////////////////////////Recoger datos clank/////////////////////////
+  private void limpiarFormularioCrear() {
+    ////// limpia los inputs y fotos //////
+    binding.etTitulo.setText("");
+    binding.etDescripcion.setText("");
+
+    binding.etTitulo.setError(null);
+    binding.etDescripcion.setError(null);
+
+    uriPortadaSeleccionada = null;
+    uriFotoTemporal = null;
+    targetActivo = null;
+
+    binding.ivPortadaPreview.setImageDrawable(null);
+    binding.ivPortadaPreview.setVisibility(View.GONE);
+    binding.llAnyadirPortada.setVisibility(View.VISIBLE);
+
+    tiempoSeleccionado = -1;
+    restablecerBotonesTiempo();
+
+    binding.llContenedorMateriales.removeAllViews();
+    anyadirFilaMaterial(false);
+
+    binding.llContenedorHerramientas.removeAllViews();
+
+    binding.llContenedorInstrucciones.removeAllViews();
+    anyadirFilaInstruccion();
+
+    limpiarCategoriasSeleccionadas();
+
+    binding.btnPublicar.setEnabled(true);
+  }
+
+  private void limpiarCategoriasSeleccionadas() {
+    for (int i = 0; i < binding.flexboxCategorias.getChildCount(); i++) {
+      View chip = binding.flexboxCategorias.getChildAt(i);
+
+      if (chip instanceof Button) {
+        chip.setSelected(false);
+        chip.setBackgroundResource(R.drawable.bg_boton_secundario);
+
+        ((Button) chip).setTextColor(ContextCompat.getColor(
+                requireContext(),
+                R.color.color_texto_inactivo
+        ));
+      }
+    }
+  }
+
+
+  ///////////////////////// recoger datos clank /////////////////////////
   private List<String[]> recogerMateriales() {
     List<String[]> lista = new ArrayList<>();
-    for (int i = 0; i < binding.llContenedorMateriales.getChildCount(); i++) {
-      View fila     = binding.llContenedorMateriales.getChildAt(i);
-      String cant   = ((EditText) fila.findViewById(R.id.etCantidad))
-        .getText().toString().trim();
-      String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
-        .getText().toString().trim();
 
-      //valida que sea entero positivo. si no, usa 1 por defecto
-      int cantNum;
-      try {
-        cantNum = Integer.parseInt(cant);
-        if (cantNum <= 0) cantNum = 1;
-      } catch (NumberFormatException e) {
-        cantNum = 1;
-      }
-      if (!nombre.isEmpty()) lista.add(new String[]{String.valueOf(cantNum), nombre});
+    for (int i = 0; i < binding.llContenedorMateriales.getChildCount(); i++) {
+      View fila = binding.llContenedorMateriales.getChildAt(i);
+
+      String cant = ((EditText) fila.findViewById(R.id.etCantidad))
+              .getText().toString().trim();
+
+      String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
+              .getText().toString().trim();
+
+      if (cant.isEmpty()) cant = "1";
+      if (!nombre.isEmpty()) lista.add(new String[]{cant, nombre});
     }
+
     return lista;
   }
 
   private List<String> recogerHerramientas() {
     List<String> lista = new ArrayList<>();
+
     for (int i = 0; i < binding.llContenedorHerramientas.getChildCount(); i++) {
-      View fila     = binding.llContenedorHerramientas.getChildAt(i);
+      View fila = binding.llContenedorHerramientas.getChildAt(i);
+
       String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
               .getText().toString().trim();
+
       if (!nombre.isEmpty()) lista.add(nombre);
     }
+
     return lista;
   }
 
   private List<String> recogerCategoriasSeleccionadas() {
     List<String> seleccionadas = new ArrayList<>();
+
     for (int i = 0; i < binding.flexboxCategorias.getChildCount(); i++) {
       View chip = binding.flexboxCategorias.getChildAt(i);
+
       if (chip.isSelected() && chip instanceof Button) {
         Object tag = chip.getTag();
-        if (tag instanceof String) seleccionadas.add((String) tag);
+
+        if (tag instanceof String) {
+          seleccionadas.add((String) tag);
+        }
       }
     }
+
     return seleccionadas;
   }
 
-  /////////////////////////Observadores/////////////////////////
+
+  ///////////////////////// observadores /////////////////////////
   private void observarViewModel() {
     viewModel.getEstadoPublicacion().observe(getViewLifecycleOwner(), estado -> {
       if (estado == null) return;
+
       switch (estado.estado) {
         case CARGANDO:
           binding.btnPublicar.setEnabled(false);
           break;
+
         case EXITO:
           binding.btnPublicar.setEnabled(true);
+          Navigation.findNavController(requireView())
+                  .navigate(R.id.action_crear_a_perfil);
           break;
+
         case ERROR:
           binding.btnPublicar.setEnabled(true);
+
           String msg = estado.mensaje != null
                   ? estado.mensaje
                   : getString(R.string.crear_error_publicar);
+
           Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
           break;
       }
@@ -435,29 +584,39 @@ public class CrearFragment extends Fragment {
 
   private void cargarChipsCategorias(List<String[]> categorias) {
     if (categorias == null || categorias.isEmpty()) return;
+
     binding.flexboxCategorias.removeAllViews();
+
     for (String[] cat : categorias) {
-      String catId     = cat[0];
+      String catId = cat[0];
       String catNombre = cat[1];
 
       Button chip = (Button) LayoutInflater.from(requireContext())
               .inflate(R.layout.bt_secundario, binding.flexboxCategorias, false);
+
       chip.setText(catNombre);
       chip.setTag(catId);
 
       ViewGroup.MarginLayoutParams lp =
               (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
+
       lp.setMargins(0, 0, 8, 8);
       chip.setLayoutParams(lp);
 
       chip.setOnClickListener(b -> {
         boolean activo = chip.isSelected();
+
         chip.setSelected(!activo);
+
         chip.setBackgroundResource(
-                !activo ? R.drawable.bg_boton_principal
-                        : R.drawable.bg_boton_secundario);
+                !activo
+                        ? R.drawable.bg_boton_principal
+                        : R.drawable.bg_boton_secundario
+        );
+
         chip.setTextColor(ContextCompat.getColor(requireContext(),
-                !activo ? R.color.clank_background_light
+                !activo
+                        ? R.color.clank_background_light
                         : R.color.color_texto_inactivo));
       });
 

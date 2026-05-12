@@ -168,7 +168,7 @@
     <action
       android:id="@+id/action_crear_a_perfil"
       app:destination="@id/perfilFragment"
-      app:popUpTo="@id/perfilFragment"
+      app:popUpTo="@id/crearFragment"
       app:popUpToInclusive="true" />
   </fragment>
 
