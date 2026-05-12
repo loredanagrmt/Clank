@@ -165,7 +165,6 @@ public class PerfilFragment extends Fragment {
       ? viewModel.buildClankOptionsAcabados(idUser)
       : viewModel.buildClankOptionsBocetos(idUser);
 
-    //dentro de cargarAdapter(), sustituir el listener:
     adapter = new ClanksAdapter(
       options,
       requireContext(),
