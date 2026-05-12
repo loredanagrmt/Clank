@@ -21,6 +21,8 @@ import com.clank.app.ui.comun.NavbarHost;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import android.graphics.Rect;
+import androidx.recyclerview.widget.RecyclerView;
 
 @AndroidEntryPoint
 public class PerfilFragment extends Fragment {
@@ -103,6 +105,20 @@ public class PerfilFragment extends Fragment {
     binding.rvClanks.setLayoutManager(
       new GridLayoutManager(requireContext(), 2));
     binding.rvClanks.setHasFixedSize(false);
+
+    int spacing = (int) getResources().getDimension(R.dimen.perfil_grid_spacing);
+    binding.rvClanks.addItemDecoration(new RecyclerView.ItemDecoration() {
+      @Override
+      public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                 @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        int pos = parent.getChildAdapterPosition(view);
+        int col = pos % 2;
+
+        outRect.left   = col == 0 ? 0 : spacing / 2;
+        outRect.right  = col == 0 ? spacing / 2 : 0;
+        outRect.bottom = spacing;
+      }
+    });
   }
 
   /////////////////////////tabs clanks y borradores/////////////////////////
@@ -201,11 +217,11 @@ public class PerfilFragment extends Fragment {
     viewModel.getPerfil().observe(getViewLifecycleOwner(), perfil -> {
       if (perfil == null) return;
 
-      binding.tvNombrePerfil.setText(perfil.nombre);
-      binding.tvUidPerfil.setText(
-        !perfil.correo.isEmpty()
-          ? "@" + perfil.correo.split("@")[0]
-          : "");
+      binding.tvNombrePerfil.setText(perfil.nombre != null && !perfil.nombre.isEmpty() ? perfil.nombre : "");
+
+      String handle = perfil.usuarioClank != null
+        ? perfil.usuarioClank.replace("@", "").trim() : "";
+      binding.tvUidPerfil.setText(!handle.isEmpty() ? "@" + handle : "");
 
       if (!perfil.fotoPerfil.isEmpty()) {
         Glide.with(this)
