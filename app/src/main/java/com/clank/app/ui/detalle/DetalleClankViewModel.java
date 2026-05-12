@@ -43,8 +43,6 @@ public class DetalleClankViewModel extends ViewModel {
   private final MutableLiveData<DetalleData> detalle = new MutableLiveData<>();
   private final MutableLiveData<String>      error   = new MutableLiveData<>();
 
-  //contador de tareas pendientes — 5: clank+categorias, materiales, herramientas,
-  //instrucciones, nombre usuario
   private DetalleData datosEnConstruccion;
   private int         pendientes = 0;
 
@@ -63,11 +61,8 @@ public class DetalleClankViewModel extends ViewModel {
   public void cargarClank(String clankId) {
     datosEnConstruccion         = new DetalleData();
     datosEnConstruccion.clankId = clankId;
-    //5 tareas: documento raíz, nombre usuario, categorías, materiales,
-    //herramientas, instrucciones
     pendientes = 6;
 
-    //documento raíz
     clankRepository.getPorId(clankId).addOnSuccessListener(doc -> {
       if (!doc.exists()) {
         error.setValue("Clank no encontrado");
@@ -85,9 +80,8 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.tiempo      = clank.getTiempo();
       datosEnConstruccion.esAcabado   = clank.isEstadoAcabado();
 
-      reducirPendientes(); //tarea 1: documento raíz listo
+      reducirPendientes(); 
 
-      //tarea 2: nombre de usuario
       String uid = clank.getUsuarioId();
       if (uid != null && !uid.isEmpty()) {
         usuarioRepository.getUsuario(uid).addOnSuccessListener(userDoc -> {
@@ -95,13 +89,12 @@ public class DetalleClankViewModel extends ViewModel {
             String nombre = userDoc.getString("nombre");
             datosEnConstruccion.nombreUsuario = nombre != null ? nombre : "";
           }
-          reducirPendientes(); //tarea 2
+          reducirPendientes();
         }).addOnFailureListener(e -> reducirPendientes());
       } else {
-        reducirPendientes(); //tarea 2 sin usuario
+        reducirPendientes();
       }
 
-      //tarea 3: categorías — cruza los IDs del clank con los nombres de Firestore
       List<String> catIds = clank.getCategorias();
       if (catIds != null && !catIds.isEmpty()) {
         categoriaRepository.getTodas().addOnSuccessListener(catSnap -> {
@@ -116,17 +109,16 @@ public class DetalleClankViewModel extends ViewModel {
             }
           });
           datosEnConstruccion.categorias = catNombres;
-          reducirPendientes(); //tarea 3
+          reducirPendientes(); 
         }).addOnFailureListener(e -> reducirPendientes());
       } else {
-        reducirPendientes(); //tarea 3 sin categorías
+        reducirPendientes(); 
       }
 
     }).addOnFailureListener(e -> {
       error.setValue(e.getMessage());
     });
 
-    //tarea 4: materiales
     clankRepository.getMateriales(clankId).addOnSuccessListener(snap -> {
       List<Material> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
@@ -137,7 +129,6 @@ public class DetalleClankViewModel extends ViewModel {
       reducirPendientes();
     }).addOnFailureListener(e -> reducirPendientes());
 
-    //tarea 5: herramientas
     clankRepository.getHerramientas(clankId).addOnSuccessListener(snap -> {
       List<Herramienta> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
@@ -148,7 +139,6 @@ public class DetalleClankViewModel extends ViewModel {
       reducirPendientes();
     }).addOnFailureListener(e -> reducirPendientes());
 
-    //tarea 6: instrucciones
     clankRepository.getInstrucciones(clankId).addOnSuccessListener(snap -> {
       List<Instruccion> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
@@ -160,7 +150,6 @@ public class DetalleClankViewModel extends ViewModel {
     }).addOnFailureListener(e -> reducirPendientes());
   }
 
-  //emite los datos cuando TODAS las tareas han terminado
   private synchronized void reducirPendientes() {
     pendientes--;
     if (pendientes <= 0) detalle.postValue(datosEnConstruccion);
