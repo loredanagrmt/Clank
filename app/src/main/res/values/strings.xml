@@ -84,7 +84,7 @@
     <!-- Popup registro -->
     <string name="popup_boton_continuar">Continuar</string>
     <string name="popup_icono_desc">Icono informativo del popup</string>
-    <string name="popup_registro_perfil_titulo">¡Listo! Ahora Vamos Con Tu Perfil De Clank</string>
+    <string name="popup_registro_perfil_titulo">¡Listo! Ahora&#10;Vamos Con&#10;Tu Perfil De&#10;Clank</string>
     <string name="popup_registro_perfil_mensaje">Estos son los datos que verás en tu panel personal</string>
 
     <!-- Completar perfil -->
@@ -131,5 +131,51 @@
     <string name="crear_hint_descripcion">Describe brevemente en qué consiste…</string>
     <string name="crear_hint_material">Nombre del material</string>
     <string name="crear_hint_herramienta">Nombre de la herramienta</string>
+    <string name="crear_hint_instruccion">Explica este paso con detalle…</string>
+    <string name="crear_anyadir_material">+ Material</string>
+    <string name="crear_anyadir_herramienta">+ Herramienta</string>
+    <string name="crear_anyadir_instruccion">+ Instrucción</string>
+    <string name="crear_error_titulo_vacio">El título no puede estar vacío</string>
+    <string name="crear_error_descripcion_vacia">Añade una descripción</string>
+    <string name="crear_error_tiempo">Selecciona el nivel de dificultad</string>
+    <string name="crear_error_min_material">Añade al menos un material</string>
+    <string name="crear_error_min_instruccion">Añade al menos una instrucción</string>
+    <string name="crear_error_publicar">No se pudo publicar. Inténtalo de nuevo</string>
+    <string name="crear_boceto_proximamente">Pendiente añadir</string>
+    <string name="crear_confirmar_descartar_titulo">¿Descartar Clank?</string>
+    <string name="crear_confirmar_descartar_mensaje">Perderás todos los cambios sin guardar.</string>
+    <string name="crear_descartar">Descartar</string>
+    <string name="crear_seleccionar_imagen">Añadir imagen</string>
+    <string name="crear_desde_galeria">Elegir de la galería</string>
+    <string name="crear_desde_camara">Hacer una foto</string>
+    <string name="crear_anyadir_foto_paso">Añadir foto</string>
+    <string name="crear_ver_imagen">Ver imagen</string>
+    <string name="crear_eliminar_imagen">Eliminar imagen</string>
+
+    <!-- Editar Clank -->
+    <string name="editar_titulo">Editar Clank</string>
+    <string name="editar_descartar_cambios_titulo">¿Descartar cambios?</string>
+    <string name="editar_descartar_cambios_mensaje">Los cambios que has hecho se perderán.</string>
+    <string name="editar_descartar_confirmar">Descartar</string>
+
+    <!-- Tarjeta Clank -->
+    <string name="tarjeta_portada_desc">Portada del Clank</string>
+    <string name="tarjeta_opciones_desc">Opciones del Clank</string>
+    <string name="tarjeta_tiempo_desc">Nivel de dificultad</string>
+    <string name="tarjeta_hint_titulo">Título del Clank</string>
+    <string name="tarjeta_hint_usuario">Nombre de usuario</string>
+    <string name="tarjeta_hint_descripcion">Descripción del Clank…</string>
+
+    <!-- Perfil -->
+    <string name="perfil_hint_nombre">Nombre</string>
+    <string name="perfil_hint_uid">@usuario</string>
+    <string name="perfil_tab_clanks">Clanks</string>
+    <string name="perfil_tab_bocetos">Borradores</string>
+    <string name="perfil_editar">Editar perfil</string>
+    <string name="perfil_ajustes">Ajustes</string>
+
+    <!-- Detalle Clank -->
+    <string name="detalle_titulo">Tus Clanks</string>
+    <string name="detalle_campo_detalles">Detalles</string>
 
 </resources>
