@@ -23,6 +23,7 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import com.google.firebase.Timestamp;
 
 @HiltViewModel
 public class CompletarPerfilViewModel extends AndroidViewModel {
@@ -139,7 +140,7 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
         usuario.setUsuarioClank(usuarioClank);
         usuario.setFotoPerfil(fotoPerfil);
         usuario.setFechaCreacion(obtenerFechaActual());
-        usuario.setUltimaConexion(System.currentTimeMillis());
+        usuario.setUltimaConexion(Timestamp.now());
         usuario.setEnLinea(true);
         repositorioUsuario.crear(usuario).addOnCompleteListener(tareaBaseDatos -> {
             if (tareaBaseDatos.isSuccessful()) {
