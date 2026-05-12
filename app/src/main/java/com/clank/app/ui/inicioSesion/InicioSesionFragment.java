@@ -254,7 +254,7 @@ public class InicioSesionFragment extends Fragment {
             return;
         }
 
-        navegador.navigate(R.id.action_inicio_sesion_a_perfil);
+        navegador.navigate(R.id.action_inicio_sesion_a_feed);
     }
 
     private void mostrarCargando(boolean cargando) {

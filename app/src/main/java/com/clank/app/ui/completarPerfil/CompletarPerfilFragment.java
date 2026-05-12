@@ -482,7 +482,7 @@ public class CompletarPerfilFragment extends Fragment {
             return;
         }
 
-        navegador.navigate(R.id.action_completar_perfil_a_perfil);
+        navegador.navigate(R.id.action_completar_perfil_a_feed);
     }
 
     @Override
