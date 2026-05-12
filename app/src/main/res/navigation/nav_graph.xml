@@ -154,6 +154,10 @@
     <action
       android:id="@+id/action_perfil_a_detalle_clank"
       app:destination="@id/detalleClankFragment" />
+
+    <action
+      android:id="@+id/action_perfil_a_editar_perfil"
+      app:destination="@id/editarPerfilFragment" />
   </fragment>
 
   <fragment
@@ -197,6 +201,16 @@
     <argument
       android:name="clankId"
       app:argType="string" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/editarPerfilFragment"
+    android:name="com.clank.app.ui.editarPerfil.EditarPerfilFragment"
+    android:label=""
+    tools:layout="@layout/fragment_editar_perfil">
+    <action
+      android:id="@+id/action_editar_perfil_a_cambiar_contrasenya"
+      app:destination="@id/ajustesFragment" />
   </fragment>
 
 </navigation>
