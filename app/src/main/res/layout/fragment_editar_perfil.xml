@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/clank_background_light">
+
+  <include
+    android:id="@+id/navbar"
+    layout="@layout/navbar_superior"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/crear_cabecera_height"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+  <androidx.core.widget.NestedScrollView
+    android:id="@+id/scrollEditar"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:fillViewport="true"
+    app:layout_constraintTop_toBottomOf="@id/navbar"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/bottom_nav_height">
+
+      <!-- Foto de perfil -->
+      <FrameLayout
+        android:id="@+id/contenedorFotoPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/completar_perfil_espacio_titulo_foto">
+
+        <ImageView
+          android:id="@+id/imgFotoPerfil"
+          android:layout_width="@dimen/completar_perfil_tamanyo_foto"
+          android:layout_height="@dimen/completar_perfil_tamanyo_foto"
+          android:background="@drawable/bg_circulo_opciones_inactivo"
+          android:contentDescription="@string/imagen_foto_perfil"
+          android:padding="@dimen/completar_perfil_padding_foto"
+          android:scaleType="centerInside"
+          android:src="@drawable/ic_usuario_inactivo" />
+
+        <ImageButton
+          android:id="@+id/btnEditarFotoPerfil"
+          android:layout_width="@dimen/completar_perfil_tamanyo_boton_editar"
+          android:layout_height="@dimen/completar_perfil_tamanyo_boton_editar"
+          android:layout_gravity="bottom|end"
+          android:background="@drawable/bg_cuadrado_activo"
+          android:contentDescription="@string/editar_foto_perfil"
+          android:padding="@dimen/completar_perfil_padding_boton_editar"
+          android:scaleType="centerInside"
+          android:src="@drawable/ic_lapiz_activo" />
+
+      </FrameLayout>
+
+      <!-- Formulario -->
+      <LinearLayout
+        android:id="@+id/contenedorFormulario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
+        android:layout_marginTop="@dimen/completar_perfil_espacio_foto_formulario"
+        android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
+        android:orientation="vertical">
+
+        <include
+          android:id="@+id/inputNombre"
+          layout="@layout/input"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+
+        <include
+          android:id="@+id/inputUsuarioClank"
+          layout="@layout/input"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/registro_margen_inferior_input" />
+
+        <include
+          android:id="@+id/inputTelefono"
+          layout="@layout/input"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/registro_margen_inferior_input" />
+
+        <include
+          android:id="@+id/inputCorreo"
+          layout="@layout/input"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/registro_margen_inferior_input" />
+
+        <include
+          android:id="@+id/inputFechaNacimiento"
+          layout="@layout/input"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/registro_margen_inferior_input" />
+
+      </LinearLayout>
+
+      <!-- Cambiar contraseña -->
+      <TextView
+        android:id="@+id/tvCambiarContrasenya"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/crear_seccion_margin_top"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/editar_perfil_cambiar_contrasenya"
+        android:textColor="@color/color_clank_activo"
+        android:textSize="@dimen/text_body"
+        android:textStyle="bold" />
+
+      <!-- Botón Guardar Cambios -->
+      <FrameLayout
+        android:id="@+id/contenedorBotonGuardar"
+        android:layout_width="@dimen/editar_perfil_ancho_boton"
+        android:layout_height="@dimen/completar_perfil_alto_boton"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/crear_seccion_margin_top"
+        android:layout_marginBottom="@dimen/completar_perfil_margen_inferior_boton">
+
+        <include
+          android:id="@+id/btnGuardar"
+          layout="@layout/bt_principal"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent" />
+
+      </FrameLayout>
+
+    </LinearLayout>
+
+  </androidx.core.widget.NestedScrollView>
+
+  <!-- Capa popup -->
+  <FrameLayout
+    android:id="@+id/capaPopup"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:background="@color/color_sombra_popup"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    tools:visibility="gone">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+      <include
+        android:id="@+id/popup"
+        layout="@layout/pop_up"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/popup_margen_horizontal"
+        android:layout_marginEnd="@dimen/popup_margen_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,4 +57,11 @@ public class UsuarioRepository {
                 .document(usuario.getUid())
                 .set(datosUsuario);
     }
+
+  public Task<Void> actualizar(String uid, Map<String, Object> campos) {
+    return baseDatos
+      .collection(COLECCION_USUARIOS)
+      .document(uid)
+      .update(campos);
+  }
 }

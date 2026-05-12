@@ -183,15 +183,14 @@ public class PerfilFragment extends Fragment {
 
   /////////////////////////botones/////////////////////////
   private void configurarBotones() {
-    binding.btnAjustes.setOnClickListener(v -> {
-      //RECORDAR: cuando lore acabe ajustes, añadir la navegación
-    });
+    binding.btnAjustes.setOnClickListener(v ->
+      Navigation.findNavController(v).navigate(R.id.action_perfil_a_ajustes));
 
     if (viewModel.esPerfilPropio(idUser)) {
       binding.tvEditarPerfil.setVisibility(View.VISIBLE);
-      binding.tvEditarPerfil.setOnClickListener(v -> {
-        //RECORDAR: para cuando acabemos editar perfil
-      });
+      binding.tvEditarPerfil.setOnClickListener(v ->
+        Navigation.findNavController(v)
+          .navigate(R.id.action_perfil_a_editar_perfil));
     } else {
       binding.tvEditarPerfil.setVisibility(View.GONE);
     }

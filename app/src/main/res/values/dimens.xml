@@ -69,6 +69,27 @@
 
   <dimen name="registro_margen_inferior_input">8dp</dimen>
 
+  <!-- ── Navegación inferior ───────────────────── -->
+  <dimen name="bottom_nav_height">64dp</dimen>
+  <dimen name="bottombar_ancho">210dp</dimen>
+
+  <!-- ── Tokens genéricos de espaciado ─────────── -->
+  <dimen name="spacing_xs">4dp</dimen>
+  <dimen name="spacing_sm">8dp</dimen>
+  <dimen name="spacing_md">16dp</dimen>
+  <dimen name="spacing_lg">24dp</dimen>
+
+  <!-- ── Tokens genéricos de texto ─────────────── -->
+  <dimen name="text_sm">12sp</dimen>
+  <dimen name="text_subtitle">14sp</dimen>
+  <dimen name="text_brand">20sp</dimen>
+
+  <!-- ── Topbar ────────────────────────────────── -->
+  <dimen name="topbar_height">56dp</dimen>
+
+  <!-- ── Detalle post ──────────────────────────── -->
+  <dimen name="tarjeta_username_margin_top">4dp</dimen>
+
   <dimen name="registro_espacio_formulario_boton">44dp</dimen>
   <dimen name="registro_ancho_boton">194dp</dimen>
   <dimen name="registro_alto_boton">45dp</dimen>
@@ -140,5 +161,8 @@
   <dimen name="perfil_btn_ajustes_size">40dp</dimen>
   <dimen name="perfil_btn_editar_height">36dp</dimen>
   <dimen name="perfil_rv_padding_bottom">100dp</dimen>
+
+  <!-- ── Editar perfil ──────────────────────────── -->
+  <dimen name="editar_perfil_ancho_boton">200dp</dimen>
 
 </resources>
