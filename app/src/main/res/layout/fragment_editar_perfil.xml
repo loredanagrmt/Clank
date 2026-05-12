@@ -16,7 +16,6 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent" />
 
-  <!-- scroll único que contiene todo, incluido el botón -->
   <androidx.core.widget.NestedScrollView
     android:id="@+id/scrollEditar"
     android:layout_width="0dp"
