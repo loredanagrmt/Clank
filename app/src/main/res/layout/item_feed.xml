@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/clank_background_light"
+  android:orientation="vertical">
+
+  <!-- cabecera de usuario -->
+  <LinearLayout
+    android:id="@+id/llCabeceraUsuario"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/tarjeta_margin_horizontal"
+    android:paddingTop="@dimen/feed_cabecera_padding_vertical"
+    android:paddingBottom="@dimen/feed_cabecera_padding_vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+      android:id="@+id/civAvatarUsuario"
+      android:layout_width="@dimen/feed_avatar_size"
+      android:layout_height="@dimen/feed_avatar_size"
+      android:layout_marginEnd="@dimen/feed_avatar_margin_end"
+      android:src="@drawable/ic_usuario_inactivo" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/tvUsernameItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/feed_username_text_size"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+      <TextView
+        android:id="@+id/tvFechaItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_family"
+        android:textColor="@color/color_texto_inactivo"
+        android:textSize="@dimen/feed_fecha_text_size"
+        android:maxLines="1" />
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <!-- tarjeta clank -->
+  <include
+    android:id="@+id/tarjeta"
+    layout="@layout/tarjeta_clank"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+</LinearLayout>
