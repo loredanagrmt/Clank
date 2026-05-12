@@ -367,11 +367,19 @@ public class CrearFragment extends Fragment {
     for (int i = 0; i < binding.llContenedorMateriales.getChildCount(); i++) {
       View fila     = binding.llContenedorMateriales.getChildAt(i);
       String cant   = ((EditText) fila.findViewById(R.id.etCantidad))
-              .getText().toString().trim();
+        .getText().toString().trim();
       String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
-              .getText().toString().trim();
-      if (cant.isEmpty()) cant = "1";
-      if (!nombre.isEmpty()) lista.add(new String[]{cant, nombre});
+        .getText().toString().trim();
+
+      //valida que sea entero positivo. si no, usa 1 por defecto
+      int cantNum;
+      try {
+        cantNum = Integer.parseInt(cant);
+        if (cantNum <= 0) cantNum = 1;
+      } catch (NumberFormatException e) {
+        cantNum = 1;
+      }
+      if (!nombre.isEmpty()) lista.add(new String[]{String.valueOf(cantNum), nombre});
     }
     return lista;
   }

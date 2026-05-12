@@ -171,11 +171,10 @@ public class PerfilFragment extends Fragment {
       viewModel.getUsuarioRepository(),
       true,
       clankId -> {
-        // RECORDAR: pendiente de cambiar cuando haya hecho detallefragment
         Bundle args = new Bundle();
         args.putString("clankId", clankId);
         Navigation.findNavController(requireView())
-          .navigate(R.id.action_perfil_a_editar_clank, args);
+          .navigate(R.id.action_perfil_a_detalle_clank, args);
       }
     );
     binding.rvClanks.setAdapter(adapter);

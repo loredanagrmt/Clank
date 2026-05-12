@@ -1,16 +1,20 @@
 package com.clank.app.data.model;
 
-import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
+@IgnoreExtraProperties
 public class Herramienta {
 
     /////////////////////////atributos documento/////////////////////////
-    @DocumentId
     private String herrId;
     private String herramienta;
 
 
     public Herramienta() {}
+  public Herramienta(String herrId, String herramienta) {
+    this.herrId      = herrId;
+    this.herramienta = herramienta;
+  }
 
 
     /////////////////////////Getters y setters/////////////////////////
