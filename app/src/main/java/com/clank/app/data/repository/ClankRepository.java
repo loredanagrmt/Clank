@@ -42,24 +42,25 @@ public class ClankRepository {
       .whereEqualTo("usuarioId", usuarioId);
   }
 
-  /////////////////////////lectura de un clank por id/////////////////////////
-  public Task<DocumentSnapshot> getPorId(String clankId) {
-    return dataSource.collection(COLLECTION).document(clankId).get();
-  }
 
-  //subcolecciones de un clank
-  public Task<QuerySnapshot> getMateriales(String clankId) {
-    return dataSource.collection(COLLECTION).document(clankId)
-      .collection(MATERIALES).orderBy("matId").get();
-  }
+/////////////////////////lectura de un clank por id/////////////////////////
+public Task<DocumentSnapshot> getPorId(String clankId) {
+  return dataSource.collection(COLLECTION).document(clankId).get();
+}
 
-  public Task<QuerySnapshot> getHerramientas(String clankId) {
-    return dataSource.collection(COLLECTION).document(clankId)
-      .collection(HERRAMIENTAS).orderBy("herrId").get();
-  }
+//subcolecciones de un clank
+public Task<QuerySnapshot> getMateriales(String clankId) {
+  return dataSource.collection(COLLECTION).document(clankId)
+    .collection(MATERIALES).get();
+}
 
-  public Task<QuerySnapshot> getInstrucciones(String clankId) {
-    return dataSource.collection(COLLECTION).document(clankId)
-      .collection(INSTRUCCIONES).orderBy("orden").get();
-  }
+public Task<QuerySnapshot> getHerramientas(String clankId) {
+  return dataSource.collection(COLLECTION).document(clankId)
+    .collection(HERRAMIENTAS).get();
+}
+
+public Task<QuerySnapshot> getInstrucciones(String clankId) {
+  return dataSource.collection(COLLECTION).document(clankId)
+    .collection(INSTRUCCIONES).orderBy("orden").get();
+}
 }
