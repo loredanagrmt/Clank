@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/clank_background_light"
+  android:fillViewport="true">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/crear_padding_bottom">
+
+    <include
+      android:id="@+id/navbar"
+      layout="@layout/navbar_superior" />
+
+    <!-- Portada con título encima -->
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/crear_portada_height">
+
+      <ImageView
+        android:id="@+id/ivPortada"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/tarjeta_portada_desc" />
+
+      <!-- Título encima de la portada -->
+      <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
+        android:paddingBottom="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/clank_background_light"
+        android:textSize="@dimen/text_screen_title"
+        android:shadowColor="@color/color_circulo_opciones"
+        android:shadowRadius="4"
+        android:shadowDx="0"
+        android:shadowDy="1" />
+
+    </FrameLayout>
+
+    <TextView
+      android:id="@+id/tvDescripcion"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+      android:layout_marginTop="@dimen/crear_campo_margin_top"
+      android:fontFamily="@font/poppins_family"
+      android:textColor="@color/color_negrita"
+      android:textSize="@dimen/text_body"
+      android:lineSpacingMultiplier="1.4" />
+
+    <!-- Tiempo -->
+    <TextView
+      style="@style/Crear.LabelSeccion"
+      android:layout_marginTop="@dimen/crear_primera_seccion_margin_top"
+      android:text="@string/crear_campo_tiempo" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+      android:layout_marginTop="@dimen/crear_campo_margin_top"
+      android:orientation="horizontal"
+      android:gravity="center_vertical">
+
+      <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="2" />
+
+      <ImageButton
+        android:id="@+id/btnTiempoCohete"
+        android:layout_width="@dimen/crear_btn_tiempo_size"
+        android:layout_height="@dimen/crear_btn_tiempo_size"
+        android:background="@drawable/bg_boton_tiempo"
+        android:padding="@dimen/crear_btn_tiempo_padding"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_cohete"
+        android:clickable="false"
+        android:focusable="false"
+        app:tint="@color/color_texto_inactivo" />
+
+      <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1.5" />
+
+      <ImageButton
+        android:id="@+id/btnTiempoLiebre"
+        android:layout_width="@dimen/crear_btn_tiempo_size"
+        android:layout_height="@dimen/crear_btn_tiempo_size"
+        android:background="@drawable/bg_boton_tiempo"
+        android:padding="@dimen/crear_btn_tiempo_padding"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_liebre"
+        android:clickable="false"
+        android:focusable="false"
+        app:tint="@color/color_texto_inactivo" />
+
+      <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1.5" />
+
+      <ImageButton
+        android:id="@+id/btnTiempoTortuga"
+        android:layout_width="@dimen/crear_btn_tiempo_size"
+        android:layout_height="@dimen/crear_btn_tiempo_size"
+        android:background="@drawable/bg_boton_tiempo"
+        android:padding="@dimen/crear_btn_tiempo_padding"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_tortuga"
+        android:clickable="false"
+        android:focusable="false"
+        app:tint="@color/color_texto_inactivo" />
+
+      <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="2" />
+
+    </LinearLayout>
+
+    <!-- Materiales -->
+    <TextView
+      style="@style/Crear.LabelSeccion"
+      android:layout_marginTop="@dimen/crear_seccion_margin_top"
+      android:text="@string/crear_campo_materiales" />
+
+    <LinearLayout
+      android:id="@+id/llContenedorMateriales"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+      android:layout_marginTop="@dimen/crear_campo_margin_top"
+      android:orientation="vertical" />
+
+    <!-- Herramientas -->
+    <TextView
+      style="@style/Crear.LabelSeccion"
+      android:layout_marginTop="@dimen/crear_seccion_margin_top"
+      android:text="@string/crear_campo_herramientas" />
+
+    <LinearLayout
+      android:id="@+id/llContenedorHerramientas"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+      android:layout_marginTop="@dimen/crear_campo_margin_top"
+      android:orientation="vertical" />
+
+    <!-- Instrucciones -->
+    <TextView
+      style="@style/Crear.LabelSeccion"
+      android:layout_marginTop="@dimen/crear_seccion_margin_top"
+      android:text="@string/crear_campo_instrucciones" />
+
+    <LinearLayout
+      android:id="@+id/llContenedorInstrucciones"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+      android:layout_marginTop="@dimen/crear_campo_margin_top"
+      android:orientation="vertical" />
+
+    <!-- Categorías -->
+    <TextView
+      style="@style/Crear.LabelSeccion"
+      android:layout_marginTop="@dimen/crear_seccion_margin_top"
+      android:text="@string/crear_campo_categorias" />
+
+    <com.google.android.flexbox.FlexboxLayout
+      android:id="@+id/flexboxCategorias"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+      android:layout_marginTop="@dimen/crear_campo_margin_top"
+      app:alignItems="center"
+      app:flexWrap="wrap"
+      app:justifyContent="flex_start" />
+
+  </LinearLayout>
+</androidx.core.widget.NestedScrollView>
