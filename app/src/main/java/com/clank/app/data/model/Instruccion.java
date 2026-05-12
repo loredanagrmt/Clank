@@ -14,7 +14,6 @@ public class Instruccion {
 
     public Instruccion() {}
 
-
     /////////////////////////Getters y setters/////////////////////////
     public String getInstruccionId() { return instruccionId; }
     public void setInstruccionId(String instruccionId) { this.instruccionId = instruccionId; }

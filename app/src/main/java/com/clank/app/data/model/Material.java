@@ -1,17 +1,22 @@
 package com.clank.app.data.model;
 
-import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
+@IgnoreExtraProperties
 public class Material {
 
     /////////////////////////atributos documento/////////////////////////
-    @DocumentId
     private String matId;
     private int cantidad;
     private String material;
 
 
     public Material() {}
+  public Material(String matId, int cantidad, String material) {
+    this.matId    = matId;
+    this.cantidad = cantidad;
+    this.material = material;
+  }
 
     /////////////////////////Getters y setters/////////////////////////
     public String getMatId() { return matId; }
