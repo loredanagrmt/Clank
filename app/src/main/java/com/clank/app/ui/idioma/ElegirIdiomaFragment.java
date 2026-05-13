@@ -39,6 +39,7 @@ public class ElegirIdiomaFragment extends Fragment {
                 getString(R.string.elige_tu_idioma),
                 obtenerIdiomasDisponibles(),
                 codigoIdioma -> {
+                    GestorIdioma.getInstance(requireContext()).aplicarIdioma(codigoIdioma);
                     GestorIdioma.getInstance(requireContext()).aplicarIdiomaSinGuardar(codigoIdioma);
 
                     NavController navController = Navigation.findNavController(view);
