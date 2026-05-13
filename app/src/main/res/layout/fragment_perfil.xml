@@ -193,7 +193,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:paddingTop="8dp"
+    android:paddingHorizontal="@dimen/perfil_grid_padding_horizontal"
+    android:paddingTop="@dimen/perfil_grid_padding_top"
     android:paddingBottom="@dimen/perfil_rv_padding_bottom"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

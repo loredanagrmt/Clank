@@ -3,28 +3,21 @@ package com.clank.app;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.clank.app.util.GestorIdioma;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.DrawableRes;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import com.clank.app.databinding.ActivityMainBinding;
 import com.clank.app.databinding.NavbarSuperiorBinding;
 import com.clank.app.ui.comun.NavbarHost;
-
-
 import dagger.hilt.android.AndroidEntryPoint;
+import androidx.navigation.NavOptions;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavbarHost {
@@ -94,18 +87,33 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
 
     /////////////////////////listeners/////////////////////////
     binding.bottomBar.btnNavFeed.setOnClickListener(v -> {
-      if (fragmentActual() != R.id.feedFragment)
-        nav.navigate(R.id.feedFragment);
+      if (fragmentActual() != R.id.feedFragment) {
+        NavOptions opciones = new NavOptions.Builder()
+          .setPopUpTo(R.id.feedFragment, true)
+          .setLaunchSingleTop(true)
+          .build();
+        nav.navigate(R.id.feedFragment, null, opciones);
+      }
     });
 
     binding.bottomBar.btnNavCrear.setOnClickListener(v -> {
-      if (fragmentActual() != R.id.crearFragment)
-        nav.navigate(R.id.crearFragment);
+      if (fragmentActual() != R.id.crearFragment) {
+        NavOptions opciones = new NavOptions.Builder()
+          .setPopUpTo(R.id.feedFragment, false)
+          .setLaunchSingleTop(true)
+          .build();
+        nav.navigate(R.id.crearFragment, null, opciones);
+      }
     });
 
     binding.bottomBar.btnNavPerfil.setOnClickListener(v -> {
-      if (fragmentActual() != R.id.perfilFragment)
-        nav.navigate(R.id.perfilFragment);
+      if (fragmentActual() != R.id.perfilFragment) {
+        NavOptions opciones = new NavOptions.Builder()
+          .setPopUpTo(R.id.feedFragment, false)
+          .setLaunchSingleTop(true)
+          .build();
+        nav.navigate(R.id.perfilFragment, null, opciones);
+      }
     });
   }
 

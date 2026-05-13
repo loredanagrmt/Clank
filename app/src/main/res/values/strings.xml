@@ -188,4 +188,13 @@
     <string name="popup_editar_perfil_mensaje">Los cambios se han guardado correctamente.</string>
     <string name="popup_editar_perfil_icono_desc">Icono de perfil actualizado</string>
 
+  <!-- Feed -->
+  <string name="feed_vacio">Aún no hay publicaciones</string>
+  <string name="feed_ahora">Ahora mismo</string>
+  <string name="feed_hace_minutos">Hace %d min</string>
+  <string name="feed_hace_horas">Hace %d h</string>
+  <string name="feed_hace_dias">Hace %d días</string>
+  <string name="feed_hace_meses">Hace %d meses</string>
+  <string name="feed_hace_anyos">Hace %d años</string>
+
 </resources>

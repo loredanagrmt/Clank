@@ -22,6 +22,7 @@ public class PerfilViewModel extends ViewModel {
   public static class PerfilData {
     public String nombre = "";
     public String correo = "";
+    public String usuarioClank = "";
     public String fotoPerfil = "";
   }
   private final UsuarioRepository usuarioRepository;
@@ -94,6 +95,7 @@ public class PerfilViewModel extends ViewModel {
       datos.nombre = obtenerCampo(doc, "nombre");
       datos.correo = obtenerCampo(doc, "correo");
       datos.fotoPerfil = obtenerCampo(doc, "fotoPerfil");
+      datos.usuarioClank = obtenerCampo(doc, "usuarioClank");
       perfil.setValue(datos);
     });
   }
