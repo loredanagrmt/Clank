@@ -75,8 +75,8 @@
     android:label=""
     tools:layout="@layout/fragment_inicio_sesion">
     <action
-      android:id="@+id/action_inicio_sesion_a_perfil"
-      app:destination="@id/perfilFragment"
+      android:id="@+id/action_inicio_sesion_a_feed"
+      app:destination="@id/feedFragment"
       app:popUpTo="@id/inicioSesionFragment"
       app:popUpToInclusive="true" />
     <action
@@ -127,8 +127,8 @@
       app:popUpTo="@id/completarPerfilFragment"
       app:popUpToInclusive="true" />
     <action
-      android:id="@+id/action_completar_perfil_a_perfil"
-      app:destination="@id/perfilFragment"
+      android:id="@+id/action_completar_perfil_a_feed"
+      app:destination="@id/feedFragment"
       app:popUpTo="@id/registroFragment"
       app:popUpToInclusive="true" />
   </fragment>
@@ -214,6 +214,15 @@
     <action
       android:id="@+id/action_editar_perfil_a_cambiar_contrasenya"
       app:destination="@id/ajustesFragment" />
+  </fragment>
+  <fragment
+    android:id="@+id/feedFragment"
+    android:name="com.clank.app.ui.feed.FeedFragment"
+    android:label=""
+    tools:layout="@layout/fragment_feed">
+    <action
+      android:id="@+id/action_feed_a_detalle_clank"
+      app:destination="@id/detalleClankFragment" />
   </fragment>
 
 </navigation>

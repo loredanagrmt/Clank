@@ -2,21 +2,19 @@ package com.clank.app.data.repository;
 
 import com.clank.app.data.model.Clank;
 import com.clank.app.data.source.FirestoreDataSource;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,6 +36,7 @@ public class ClankRepository {
         this.dataSource = dataSource;
         this.storage = storage;
     }
+
     public DocumentReference crear(Clank clank) {
         CollectionReference col = dataSource.collection(COLLECTION);
         DocumentReference ref = col.document();
@@ -54,26 +53,34 @@ public class ClankRepository {
                 .whereEqualTo("usuarioId", usuarioId);
     }
 
-
-    /// //////////////////////lectura de un clank por id/////////////////////////
+    /// ////////////////////// lectura de un clank por id /////////////////////////
     public Task<DocumentSnapshot> getPorId(String clankId) {
-        return dataSource.collection(COLLECTION).document(clankId).get();
+        return dataSource.collection(COLLECTION)
+                .document(clankId)
+                .get();
     }
 
-    //subcolecciones de un clank
+    // Subcolecciones de un clank
     public Task<QuerySnapshot> getMateriales(String clankId) {
-        return dataSource.collection(COLLECTION).document(clankId)
-                .collection(MATERIALES).get();
+        return dataSource.collection(COLLECTION)
+                .document(clankId)
+                .collection(MATERIALES)
+                .get();
     }
 
     public Task<QuerySnapshot> getHerramientas(String clankId) {
-        return dataSource.collection(COLLECTION).document(clankId)
-                .collection(HERRAMIENTAS).get();
+        return dataSource.collection(COLLECTION)
+                .document(clankId)
+                .collection(HERRAMIENTAS)
+                .get();
     }
 
     public Task<QuerySnapshot> getInstrucciones(String clankId) {
-        return dataSource.collection(COLLECTION).document(clankId)
-                .collection(INSTRUCCIONES).orderBy("orden").get();
+        return dataSource.collection(COLLECTION)
+                .document(clankId)
+                .collection(INSTRUCCIONES)
+                .orderBy("orden")
+                .get();
     }
 
     public Query getTodosAcabados() {
@@ -82,7 +89,7 @@ public class ClankRepository {
                 .orderBy("fechaPublicacion", Query.Direction.DESCENDING);
     }
 
-    /// //////////////////////eliminar clank completo/////////////////////////
+    /// ////////////////////// eliminar clank completo /////////////////////////
     public Task<Void> eliminarCompletoPorId(String clankId) {
         TaskCompletionSource<Void> resultado = new TaskCompletionSource<>();
 
@@ -233,5 +240,4 @@ public class ClankRepository {
 
         return resultado.getTask();
     }
-
 }

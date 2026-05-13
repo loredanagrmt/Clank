@@ -200,4 +200,13 @@
     <string name="perfil_clank_eliminado">Clank eliminado</string>
     <string name="perfil_error_eliminar_clank">No se ha podido eliminar el Clank</string>
 
+    <!-- Feed -->
+    <string name="feed_vacio">Aún no hay publicaciones</string>
+    <string name="feed_ahora">Ahora mismo</string>
+    <string name="feed_hace_minutos">Hace %d min</string>
+    <string name="feed_hace_horas">Hace %d h</string>
+    <string name="feed_hace_dias">Hace %d días</string>
+    <string name="feed_hace_meses">Hace %d meses</string>
+    <string name="feed_hace_anyos">Hace %d años</string>
+
 </resources>

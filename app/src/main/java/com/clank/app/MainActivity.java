@@ -3,26 +3,23 @@ package com.clank.app;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.clank.app.util.GestorIdioma;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.clank.app.databinding.ActivityMainBinding;
 import com.clank.app.databinding.NavbarSuperiorBinding;
 import com.clank.app.ui.comun.NavbarHost;
+import com.clank.app.util.GestorIdioma;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -40,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     private View btnNavFeed, btnNavCrear, btnNavPerfil;
     private View indicadorFeed, indicadorCrear, indicadorPerfil;
 
-    //  (RECORDAR: ocultar en Logo e Idioma, Portada, Bienvenida, InicioSesion,
-//  Registro, EditarPerfil, CompletarPerfil, CambiarContrasenia, BorrarCuenta, CerrarSesion, OpcionesClankPerfil,
-//  OpcionesCLankDetalle, OpcionesColeccion, Borrar y  Publicar)
+    // (RECORDAR: ocultar en Logo e Idioma, Portada, Bienvenida, InicioSesion,
+    // Registro, EditarPerfil, CompletarPerfil, CambiarContrasenia, BorrarCuenta, CerrarSesion, OpcionesClankPerfil,
+    // OpcionesCLankDetalle, OpcionesColeccion, Borrar y Publicar)
     private static final Set<Integer> FRAGMENTS_SIN_BOTTOMBAR = new HashSet<>(Arrays.asList(
             R.id.logoFragment,
             R.id.elegirIdiomaFragment,
@@ -53,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
             R.id.completarPerfilFragment,
             R.id.crearFragment,
             R.id.editarClankFragment
-//    R.id.detalleFragment,
-//    R.id.editarPerfilFragment
+            // R.id.detalleFragment,
+            // R.id.editarPerfilFragment
     ));
 
     @Override
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     private void configurarBottombar() {
         NavController nav = obtenerNavController();
 
-        /////////////////////////mostrar/ocultar y marcar pulsado/////////////////////////
+        ///////////////////////// mostrar/ocultar y marcar pulsado /////////////////////////
         nav.addOnDestinationChangedListener((controller, destination, args) -> {
             if (FRAGMENTS_SIN_BOTTOMBAR.contains(destination.getId())) {
                 binding.frameBottomBar.setVisibility(View.GONE);
@@ -93,35 +90,54 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
             }
         });
 
-        /////////////////////////listeners/////////////////////////
+        ///////////////////////// listeners /////////////////////////
         binding.bottomBar.btnNavFeed.setOnClickListener(v -> {
-            if (fragmentActual() != R.id.feedFragment)
-                nav.navigate(R.id.feedFragment);
+            if (fragmentActual() != R.id.feedFragment) {
+                NavOptions opciones = new NavOptions.Builder()
+                        .setPopUpTo(R.id.feedFragment, true)
+                        .setLaunchSingleTop(true)
+                        .build();
+
+                nav.navigate(R.id.feedFragment, null, opciones);
+            }
         });
 
         binding.bottomBar.btnNavCrear.setOnClickListener(v -> {
-            if (fragmentActual() != R.id.crearFragment)
-                nav.navigate(R.id.crearFragment);
+            if (fragmentActual() != R.id.crearFragment) {
+                NavOptions opciones = new NavOptions.Builder()
+                        .setPopUpTo(R.id.feedFragment, false)
+                        .setLaunchSingleTop(true)
+                        .build();
+
+                nav.navigate(R.id.crearFragment, null, opciones);
+            }
         });
 
         binding.bottomBar.btnNavPerfil.setOnClickListener(v -> {
-            if (fragmentActual() != R.id.perfilFragment)
-                nav.navigate(R.id.perfilFragment);
+            if (fragmentActual() != R.id.perfilFragment) {
+                NavOptions opciones = new NavOptions.Builder()
+                        .setPopUpTo(R.id.feedFragment, false)
+                        .setLaunchSingleTop(true)
+                        .build();
+
+                nav.navigate(R.id.perfilFragment, null, opciones);
+            }
         });
     }
 
-    /// //////////////////////indicador al pulsar botones/////////////////////////
+    ///////////////////////// indicador al pulsar botones /////////////////////////
     private void actualizarIndicador(int fragmentId) {
         binding.bottomBar.indicadorFeed.setVisibility(View.INVISIBLE);
         binding.bottomBar.indicadorCrear.setVisibility(View.INVISIBLE);
         binding.bottomBar.indicadorPerfil.setVisibility(View.INVISIBLE);
 
-        if (fragmentId == R.id.feedFragment)
+        if (fragmentId == R.id.feedFragment) {
             binding.bottomBar.indicadorFeed.setVisibility(View.VISIBLE);
-        else if (fragmentId == R.id.crearFragment)
+        } else if (fragmentId == R.id.crearFragment) {
             binding.bottomBar.indicadorCrear.setVisibility(View.VISIBLE);
-        else if (fragmentId == R.id.perfilFragment)
+        } else if (fragmentId == R.id.perfilFragment) {
             binding.bottomBar.indicadorPerfil.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
