@@ -8,17 +8,17 @@
     <TextView
         android:id="@+id/etiquetaOpcion"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="@dimen/hoja_opcion_altura"
         android:gravity="center_vertical"
-        android:paddingHorizontal="4dp"
-        android:textColor="@color/color_clank_activo"
-        android:textSize="16sp"
+        android:paddingHorizontal="@dimen/hoja_opcion_padding_horizontal"
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/hoja_opcion_text_size"
         android:fontFamily="@font/poppins_semibold" />
 
     <View
         android:id="@+id/separador"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/hoja_opcion_separador_altura"
         android:background="@color/clank_background_light" />
 
 </LinearLayout>

@@ -165,4 +165,11 @@
   <!-- ── Editar perfil ──────────────────────────── -->
   <dimen name="editar_perfil_ancho_boton">200dp</dimen>
 
+  <!-- ── Hoja de opciones - items ──────────────────────────── -->
+
+  <dimen name="hoja_opcion_altura">52dp</dimen>
+  <dimen name="hoja_opcion_padding_horizontal">4dp</dimen>
+  <dimen name="hoja_opcion_text_size">16sp</dimen>
+  <dimen name="hoja_opcion_separador_altura">1dp</dimen>
+
 </resources>
