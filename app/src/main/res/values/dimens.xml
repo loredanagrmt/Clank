@@ -138,7 +138,7 @@
   <dimen name="tarjeta_footer_margin_bottom">12dp</dimen>
   <dimen name="tarjeta_icono_size">28dp</dimen>
 
-  <!-- ──  Completar perfil ─────────────────────────────────── -->
+  <!-- ── Completar perfil ─────────────────────────────────── -->
   <dimen name="completar_perfil_margen_lateral">31dp</dimen>
   <dimen name="completar_perfil_margen_superior_titulo">28dp</dimen>
   <dimen name="completar_perfil_tamanyo_titulo">20sp</dimen>
@@ -161,6 +161,7 @@
   <dimen name="perfil_btn_ajustes_size">40dp</dimen>
   <dimen name="perfil_btn_editar_height">36dp</dimen>
   <dimen name="perfil_rv_padding_bottom">100dp</dimen>
+
   <!-- grid de tarjetas -->
   <dimen name="perfil_grid_padding_horizontal">32dp</dimen>
   <dimen name="perfil_grid_spacing">12dp</dimen>
@@ -168,6 +169,12 @@
 
   <!-- ── Editar perfil ──────────────────────────── -->
   <dimen name="editar_perfil_ancho_boton">200dp</dimen>
+
+  <!-- ── Hoja de opciones - items ──────────────────────────── -->
+  <dimen name="hoja_opcion_altura">52dp</dimen>
+  <dimen name="hoja_opcion_padding_horizontal">4dp</dimen>
+  <dimen name="hoja_opcion_text_size">16sp</dimen>
+  <dimen name="hoja_opcion_separador_altura">1dp</dimen>
 
   <!-- ── Feed ──────────────────────────────────── -->
   <dimen name="feed_avatar_size">40dp</dimen>

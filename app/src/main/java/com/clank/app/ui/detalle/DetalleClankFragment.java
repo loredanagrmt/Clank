@@ -23,6 +23,13 @@ import com.clank.app.data.model.Material;
 import com.clank.app.databinding.FragmentDetalleClankBinding;
 import com.clank.app.ui.comun.NavbarHost;
 
+import androidx.navigation.Navigation;
+
+import com.clank.app.ui.comun.HojaOpciones;
+import com.clank.app.ui.comun.ItemOpcion;
+
+import java.util.Arrays;
+
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -35,6 +42,7 @@ public class DetalleClankFragment extends Fragment {
   private FragmentDetalleClankBinding binding;
   private DetalleClankViewModel viewModel;
   private String clankId;
+  private String tituloClankActual = "";
 
   /////////////////////////instancia/////////////////////////
 
@@ -81,14 +89,11 @@ public class DetalleClankFragment extends Fragment {
   private void configurarNavbar() {
     NavbarHost host = (NavbarHost) requireActivity();
 
-    /////////////////////////RECORDAR: cambiar cuando Lore acabe hoja/////////////////////////
     host.mostrarNavbar(
-      getString(R.string.detalle_titulo),
-      R.drawable.ic_opciones_activo,
-      v -> Toast.makeText(requireContext(),
-        "RECORDAR: cambiar cuando Lore acabe hoja", Toast.LENGTH_SHORT).show()
+            getString(R.string.detalle_titulo),
+            R.drawable.ic_opciones_activo,
+            v -> mostrarOpcionesClank()
     );
-    /////////////////////////RECORDAR: cambiar cuando Lore acabe hoja/////////////////////////
   }
 
   /////////////////////////observadores/////////////////////////
@@ -108,6 +113,7 @@ public class DetalleClankFragment extends Fragment {
   /////////////////////////rellenar vista/////////////////////////
 
   private void rellenarVista(DetalleClankViewModel.DetalleData datos) {
+    tituloClankActual = datos.titulo != null ? datos.titulo : "";
     //título en overlay de portada
     binding.tvTitulo.setText(datos.titulo);
 
@@ -241,4 +247,65 @@ public class DetalleClankFragment extends Fragment {
       binding.flexboxCategorias.addView(chip);
     }
   }
+  /////////////////////////hoja de opciones de clank/////////////////////////
+  private void mostrarOpcionesClank() {
+    HojaOpciones hoja = HojaOpciones.nuevaLista(
+            tituloClankActual,
+            Arrays.asList(
+                    new ItemOpcion("editar", getString(R.string.perfil_opcion_editar_clank)),
+                    new ItemOpcion("eliminar", getString(R.string.perfil_opcion_eliminar_clank))
+            ),
+            opcionSeleccionada -> {
+              if ("editar".equals(opcionSeleccionada)) {
+                navegarAEditarClank();
+              } else if ("eliminar".equals(opcionSeleccionada)) {
+                requireView().post(() ->
+                        mostrarConfirmarEliminarClank()
+                );
+              }
+            }
+    );
+
+    hoja.show(getParentFragmentManager(), "hoja_opciones_clank_detalle");
+  }
+
+  private void navegarAEditarClank() {
+    Bundle args = new Bundle();
+    args.putString("clankId", clankId);
+
+    Navigation.findNavController(requireView())
+            .navigate(R.id.action_detalle_a_editar_clank, args);
+  }
+
+  private void mostrarConfirmarEliminarClank() {
+    HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
+            getString(R.string.perfil_eliminar_clank_titulo),
+            getString(R.string.perfil_eliminar_clank_mensaje, tituloClankActual),
+            getString(R.string.cancelar),
+            getString(R.string.perfil_eliminar_clank_confirmar),
+            null,
+            this::eliminarClankDesdeDetalle
+    );
+
+    hoja.show(getParentFragmentManager(), "hoja_confirmar_eliminar_clank_detalle");
+  }
+
+  private void eliminarClankDesdeDetalle() {
+    viewModel.eliminarClank(clankId)
+            .addOnSuccessListener(unused -> {
+              if (!isAdded()) return;
+
+              Navigation.findNavController(requireView()).navigateUp();
+            })
+            .addOnFailureListener(error -> {
+              if (!isAdded()) return;
+
+              Toast.makeText(
+                      requireContext(),
+                      getString(R.string.perfil_error_eliminar_clank),
+                      Toast.LENGTH_LONG
+              ).show();
+            });
+  }
+
 }

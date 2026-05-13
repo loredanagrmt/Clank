@@ -201,6 +201,9 @@
     <argument
       android:name="clankId"
       app:argType="string" />
+    <action
+        android:id="@+id/action_detalle_a_editar_clank"
+        app:destination="@id/editarClankFragment" />
   </fragment>
 
   <fragment

@@ -421,14 +421,22 @@ public class EditarClankFragment extends Fragment {
       recogerCategoriasSeleccionadas());
   }
 
-  /////////////////////////diálogos (opcional; cambiar a estilo clank)/////////////////////////
   private void mostrarConfirmarEliminar(View v) {
     new AlertDialog.Builder(requireContext())
       .setTitle(getString(R.string.crear_confirmar_descartar_titulo))
       .setMessage(getString(R.string.crear_confirmar_descartar_mensaje))
       .setPositiveButton(getString(R.string.crear_descartar), (d, w) -> {
-        viewModel.eliminarClank();
-        Navigation.findNavController(v).navigateUp();
+        viewModel.eliminarClank()
+                .addOnSuccessListener(unused ->
+                        Navigation.findNavController(v).navigateUp()
+                )
+                .addOnFailureListener(error ->
+                        Toast.makeText(
+                                requireContext(),
+                                getString(R.string.perfil_error_eliminar_clank),
+                                Toast.LENGTH_LONG
+                        ).show()
+                );
       })
       .setNegativeButton(getString(R.string.cancelar), null)
       .show();
@@ -505,8 +513,14 @@ public class EditarClankFragment extends Fragment {
   private void observarViewModel() {
     viewModel.getDatosClank().observe(getViewLifecycleOwner(), datos -> {
       if (datos == null) return;
+
       urlPortadaActual = datos.portadaUrl;
       rellenarFormulario(datos);
+
+      List<String[]> categoriasDisponibles = viewModel.getCategorias().getValue();
+      if (categoriasDisponibles != null && !categoriasDisponibles.isEmpty()) {
+        cargarChipsCategorias(categoriasDisponibles);
+      }
     });
 
     viewModel.getEstadoGuardar().observe(getViewLifecycleOwner(), recurso -> {

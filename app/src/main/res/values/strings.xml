@@ -188,13 +188,25 @@
     <string name="popup_editar_perfil_mensaje">Los cambios se han guardado correctamente.</string>
     <string name="popup_editar_perfil_icono_desc">Icono de perfil actualizado</string>
 
-  <!-- Feed -->
-  <string name="feed_vacio">Aún no hay publicaciones</string>
-  <string name="feed_ahora">Ahora mismo</string>
-  <string name="feed_hace_minutos">Hace %d min</string>
-  <string name="feed_hace_horas">Hace %d h</string>
-  <string name="feed_hace_dias">Hace %d días</string>
-  <string name="feed_hace_meses">Hace %d meses</string>
-  <string name="feed_hace_anyos">Hace %d años</string>
+    <!-- Opciones Clank -->
+    <string name="perfil_opcion_editar_clank">Editar</string>
+    <string name="perfil_opcion_eliminar_clank">Eliminar</string>
+
+    <!-- Eliminar Clank -->
+    <string name="perfil_eliminar_clank_titulo">Eliminar Clank</string>
+    <string name="perfil_eliminar_clank_mensaje">¿Seguro que quieres eliminar “%1$s”? Esta acción no se puede deshacer.</string>
+    <string name="perfil_eliminar_clank_confirmar">Eliminar</string>
+
+    <string name="perfil_clank_eliminado">Clank eliminado</string>
+    <string name="perfil_error_eliminar_clank">No se ha podido eliminar el Clank</string>
+
+    <!-- Feed -->
+    <string name="feed_vacio">Aún no hay publicaciones</string>
+    <string name="feed_ahora">Ahora mismo</string>
+    <string name="feed_hace_minutos">Hace %d min</string>
+    <string name="feed_hace_horas">Hace %d h</string>
+    <string name="feed_hace_dias">Hace %d días</string>
+    <string name="feed_hace_meses">Hace %d meses</string>
+    <string name="feed_hace_anyos">Hace %d años</string>
 
 </resources>
