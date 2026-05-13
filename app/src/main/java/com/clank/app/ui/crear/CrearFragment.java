@@ -368,7 +368,18 @@ public class CrearFragment extends Fragment {
 
     if (tiempoSeleccionado == -1) {
       Toast.makeText(requireContext(),
-              getString(R.string.crear_error_tiempo), Toast.LENGTH_SHORT).show();
+              getString(R.string.crear_error_tiempo),
+              Toast.LENGTH_SHORT).show();
+      return;
+    }
+
+    if (!hayAlMenosUnMaterialValido()) {
+      mostrarErrorPrimerMaterial();
+      return;
+    }
+
+    if (!hayAlMenosUnaInstruccionValida()) {
+      mostrarErrorPrimeraInstruccion();
       return;
     }
 
@@ -621,6 +632,63 @@ public class CrearFragment extends Fragment {
       });
 
       binding.flexboxCategorias.addView(chip);
+    }
+  }
+  private boolean hayAlMenosUnMaterialValido() {
+    for (int i = 0; i < binding.llContenedorMateriales.getChildCount(); i++) {
+      View fila = binding.llContenedorMateriales.getChildAt(i);
+
+      EditText etNombreMaterial = fila.findViewById(R.id.etNombreElemento);
+
+      if (etNombreMaterial != null &&
+              !etNombreMaterial.getText().toString().trim().isEmpty()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private void mostrarErrorPrimerMaterial() {
+    if (binding.llContenedorMateriales.getChildCount() == 0) {
+      return;
+    }
+
+    View primeraFila = binding.llContenedorMateriales.getChildAt(0);
+    EditText etNombreMaterial = primeraFila.findViewById(R.id.etNombreElemento);
+
+    if (etNombreMaterial != null) {
+      etNombreMaterial.setError(getString(R.string.crear_error_min_material));
+      etNombreMaterial.requestFocus();
+    }
+  }
+
+  private boolean hayAlMenosUnaInstruccionValida() {
+    for (int i = 0; i < binding.llContenedorInstrucciones.getChildCount(); i++) {
+      View fila = binding.llContenedorInstrucciones.getChildAt(i);
+
+      EditText etTextoInstruccion = fila.findViewById(R.id.etTextoInstruccion);
+
+      if (etTextoInstruccion != null &&
+              !etTextoInstruccion.getText().toString().trim().isEmpty()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private void mostrarErrorPrimeraInstruccion() {
+    if (binding.llContenedorInstrucciones.getChildCount() == 0) {
+      return;
+    }
+
+    View primeraFila = binding.llContenedorInstrucciones.getChildAt(0);
+    EditText etTextoInstruccion = primeraFila.findViewById(R.id.etTextoInstruccion);
+
+    if (etTextoInstruccion != null) {
+      etTextoInstruccion.setError(getString(R.string.crear_error_min_instruccion));
+      etTextoInstruccion.requestFocus();
     }
   }
 }
