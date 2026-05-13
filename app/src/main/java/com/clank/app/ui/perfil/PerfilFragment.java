@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,7 +20,11 @@ import com.clank.app.adapters.ClanksAdapter;
 import com.clank.app.data.model.Clank;
 import com.clank.app.databinding.FragmentPerfilBinding;
 import com.clank.app.ui.comun.NavbarHost;
+import com.clank.app.ui.comun.HojaOpciones;
+import com.clank.app.ui.comun.ItemOpcion;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
+import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -63,7 +69,7 @@ public class PerfilFragment extends Fragment {
 
     //si venimos de editar/crear abre el tab indicado
     String tabInicial = getArguments() != null
-      ? getArguments().getString(TAB_INICIAL, "clanks") : "clanks";
+            ? getArguments().getString(TAB_INICIAL, "clanks") : "clanks";
     mostrandoClanks = !"bocetos".equals(tabInicial);
 
     configurarRecyclerView();
@@ -101,7 +107,7 @@ public class PerfilFragment extends Fragment {
   /////////////////////////recyclerView/////////////////////////
   private void configurarRecyclerView() {
     binding.rvClanks.setLayoutManager(
-      new GridLayoutManager(requireContext(), 2));
+            new GridLayoutManager(requireContext(), 2));
     binding.rvClanks.setHasFixedSize(false);
   }
 
@@ -123,17 +129,17 @@ public class PerfilFragment extends Fragment {
     });
 
     binding.indicadorTab.getViewTreeObserver().addOnGlobalLayoutListener(
-      new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-          binding.indicadorTab.getViewTreeObserver()
-            .removeOnGlobalLayoutListener(this);
-          //indicador en el tab correcto
-          View tabActivo = mostrandoClanks ? binding.tabClanks : binding.tabBocetos;
-          ajustarAnchoIndicador(tabActivo);
-          binding.indicadorTab.setTranslationX(tabActivo.getLeft());
-        }
-      });
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+              @Override
+              public void onGlobalLayout() {
+                binding.indicadorTab.getViewTreeObserver()
+                        .removeOnGlobalLayoutListener(this);
+                //indicador en el tab correcto
+                View tabActivo = mostrandoClanks ? binding.tabClanks : binding.tabBocetos;
+                ajustarAnchoIndicador(tabActivo);
+                binding.indicadorTab.setTranslationX(tabActivo.getLeft());
+              }
+            });
   }
 
   private void animarIndicador(boolean haciaClanks) {
@@ -141,10 +147,10 @@ public class PerfilFragment extends Fragment {
     float destino = tabDestino.getLeft();
 
     ValueAnimator anim = ValueAnimator.ofFloat(
-      binding.indicadorTab.getTranslationX(), destino);
+            binding.indicadorTab.getTranslationX(), destino);
     anim.setDuration(200);
     anim.addUpdateListener(a ->
-      binding.indicadorTab.setTranslationX((float) a.getAnimatedValue()));
+            binding.indicadorTab.setTranslationX((float) a.getAnimatedValue()));
     anim.start();
 
     ajustarAnchoIndicador(tabDestino);
@@ -162,21 +168,23 @@ public class PerfilFragment extends Fragment {
     if (adapter != null) adapter.stopListening();
 
     FirestoreRecyclerOptions<Clank> options = soloAcabados
-      ? viewModel.buildClankOptionsAcabados(idUser)
-      : viewModel.buildClankOptionsBocetos(idUser);
+            ? viewModel.buildClankOptionsAcabados(idUser)
+            : viewModel.buildClankOptionsBocetos(idUser);
 
     adapter = new ClanksAdapter(
-      options,
-      requireContext(),
-      viewModel.getUsuarioRepository(),
-      true,
-      clankId -> {
-        Bundle args = new Bundle();
-        args.putString("clankId", clankId);
-        Navigation.findNavController(requireView())
-          .navigate(R.id.action_perfil_a_detalle_clank, args);
-      }
+            options,
+            requireContext(),
+            viewModel.getUsuarioRepository(),
+            viewModel.esPerfilPropio(idUser),
+            clankId -> {
+              Bundle args = new Bundle();
+              args.putString("clankId", clankId);
+              Navigation.findNavController(requireView())
+                      .navigate(R.id.action_perfil_a_detalle_clank, args);
+            },
+            this::mostrarOpcionesClank
     );
+
     binding.rvClanks.setAdapter(adapter);
     adapter.startListening();
   }
@@ -184,13 +192,13 @@ public class PerfilFragment extends Fragment {
   /////////////////////////botones/////////////////////////
   private void configurarBotones() {
     binding.btnAjustes.setOnClickListener(v ->
-      Navigation.findNavController(v).navigate(R.id.action_perfil_a_ajustes));
+            Navigation.findNavController(v).navigate(R.id.action_perfil_a_ajustes));
 
     if (viewModel.esPerfilPropio(idUser)) {
       binding.tvEditarPerfil.setVisibility(View.VISIBLE);
       binding.tvEditarPerfil.setOnClickListener(v ->
-        Navigation.findNavController(v)
-          .navigate(R.id.action_perfil_a_editar_perfil));
+              Navigation.findNavController(v)
+                      .navigate(R.id.action_perfil_a_editar_perfil));
     } else {
       binding.tvEditarPerfil.setVisibility(View.GONE);
     }
@@ -203,16 +211,16 @@ public class PerfilFragment extends Fragment {
 
       binding.tvNombrePerfil.setText(perfil.nombre);
       binding.tvUidPerfil.setText(
-        !perfil.correo.isEmpty()
-          ? "@" + perfil.correo.split("@")[0]
-          : "");
+              !perfil.correo.isEmpty()
+                      ? "@" + perfil.correo.split("@")[0]
+                      : "");
 
       if (!perfil.fotoPerfil.isEmpty()) {
         Glide.with(this)
-          .load(perfil.fotoPerfil)
-          .circleCrop()
-          .placeholder(R.drawable.ic_usuario_inactivo)
-          .into(binding.civFotoPerfil);
+                .load(perfil.fotoPerfil)
+                .circleCrop()
+                .placeholder(R.drawable.ic_usuario_inactivo)
+                .into(binding.civFotoPerfil);
       }
 
       //carga el adapter solo la primera vez
@@ -220,9 +228,69 @@ public class PerfilFragment extends Fragment {
     });
 
     viewModel.getNumClanks().observe(getViewLifecycleOwner(), num ->
-      binding.tvNumClanks.setText(String.valueOf(num != null ? num : 0)));
+            binding.tvNumClanks.setText(String.valueOf(num != null ? num : 0)));
 
     viewModel.getNumBocetos().observe(getViewLifecycleOwner(), num ->
-      binding.tvNumBocetos.setText(String.valueOf(num != null ? num : 0)));
+            binding.tvNumBocetos.setText(String.valueOf(num != null ? num : 0)));
   }
+
+  /////////////////////////hoja de opciones de clank/////////////////////////
+  private void mostrarOpcionesClank(String clankId, String tituloClank) {
+    HojaOpciones hoja = HojaOpciones.nuevaLista(
+            tituloClank,
+            Arrays.asList(
+                    new ItemOpcion("editar", getString(R.string.perfil_opcion_editar_clank)),
+                    new ItemOpcion("eliminar", getString(R.string.perfil_opcion_eliminar_clank))
+            ),
+            opcionSeleccionada -> {
+              if ("editar".equals(opcionSeleccionada)) {
+                navegarAEditarClank(clankId);
+              } else if ("eliminar".equals(opcionSeleccionada)) {
+                requireView().post(() ->
+                        mostrarConfirmarEliminarClank(clankId, tituloClank)
+                );
+              }
+            }
+    );
+
+    hoja.show(getParentFragmentManager(), "hoja_opciones_clank");
+  }
+
+  private void navegarAEditarClank(String clankId) {
+    Bundle args = new Bundle();
+    args.putString("clankId", clankId);
+
+    Navigation.findNavController(requireView())
+            .navigate(R.id.action_perfil_a_editar_clank, args);
+  }
+
+  private void mostrarConfirmarEliminarClank(String clankId, String tituloClank) {
+    HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
+            getString(R.string.perfil_eliminar_clank_titulo),
+            getString(R.string.perfil_eliminar_clank_mensaje, tituloClank),
+            getString(R.string.cancelar),
+            getString(R.string.perfil_eliminar_clank_confirmar),
+            null,
+            () -> eliminarClankDesdePerfil(clankId)
+    );
+
+    hoja.show(getParentFragmentManager(), "hoja_confirmar_eliminar_clank");
+  }
+
+  private void eliminarClankDesdePerfil(String clankId) {
+    viewModel.eliminarClank(clankId)
+            .addOnSuccessListener(unused -> {
+              if (!isAdded()) return;
+            })
+            .addOnFailureListener(error -> {
+              if (!isAdded()) return;
+
+              Toast.makeText(
+                      requireContext(),
+                      getString(R.string.perfil_error_eliminar_clank),
+                      Toast.LENGTH_LONG
+              ).show();
+            });
+  }
+
 }

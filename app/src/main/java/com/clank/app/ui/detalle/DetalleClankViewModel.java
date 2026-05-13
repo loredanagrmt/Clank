@@ -11,6 +11,7 @@ import com.clank.app.data.model.Material;
 import com.clank.app.data.repository.CategoriaRepository;
 import com.clank.app.data.repository.ClankRepository;
 import com.clank.app.data.repository.UsuarioRepository;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,5 +154,10 @@ public class DetalleClankViewModel extends ViewModel {
   private synchronized void reducirPendientes() {
     pendientes--;
     if (pendientes <= 0) detalle.postValue(datosEnConstruccion);
+  }
+
+  /////////////////////////eliminar clank/////////////////////////
+  public Task<Void> eliminarClank(String clankId) {
+    return clankRepository.eliminarCompletoPorId(clankId);
   }
 }

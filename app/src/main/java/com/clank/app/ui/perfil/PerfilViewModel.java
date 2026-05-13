@@ -12,6 +12,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.android.gms.tasks.Task;
 
 import javax.inject.Inject;
 
@@ -66,18 +67,23 @@ public class PerfilViewModel extends ViewModel {
   /////////////////////////queries/////////////////////////
   public FirestoreRecyclerOptions<Clank> buildClankOptionsAcabados(String idUser) {
     Query query = clankRepository.getPorUsuario(idUser)
-      .whereEqualTo("estadoAcabado", true);
+            .whereEqualTo("estadoAcabado", true);
     return new FirestoreRecyclerOptions.Builder<Clank>()
-      .setQuery(query, Clank.class)
-      .build();
+            .setQuery(query, Clank.class)
+            .build();
   }
 
   public FirestoreRecyclerOptions<Clank> buildClankOptionsBocetos(String idUser) {
     Query query = clankRepository.getPorUsuario(idUser)
-      .whereEqualTo("estadoAcabado", false);
+            .whereEqualTo("estadoAcabado", false);
     return new FirestoreRecyclerOptions.Builder<Clank>()
-      .setQuery(query, Clank.class)
-      .build();
+            .setQuery(query, Clank.class)
+            .build();
+  }
+
+  /// //////////////////////eliminar clank/////////////////////////
+  public Task<Void> eliminarClank(String clankId) {
+    return clankRepository.eliminarCompletoPorId(clankId);
   }
 
   /////////////////////////carga de datos/////////////////////////
@@ -100,16 +106,16 @@ public class PerfilViewModel extends ViewModel {
   //carga en tiempo real
   private void cargarContadores(String idUser) {
     listenerClanks = clankRepository.getPorUsuario(idUser)
-      .whereEqualTo("estadoAcabado", true)
-      .addSnapshotListener((snap, e) -> {
-        if (snap != null) numClanks.setValue(snap.size());
-      });
+            .whereEqualTo("estadoAcabado", true)
+            .addSnapshotListener((snap, e) -> {
+              if (snap != null) numClanks.setValue(snap.size());
+            });
 
     listenerBocetos = clankRepository.getPorUsuario(idUser)
-      .whereEqualTo("estadoAcabado", false)
-      .addSnapshotListener((snap, e) -> {
-        if (snap != null) numBocetos.setValue(snap.size());
-      });
+            .whereEqualTo("estadoAcabado", false)
+            .addSnapshotListener((snap, e) -> {
+              if (snap != null) numBocetos.setValue(snap.size());
+            });
   }
   private String obtenerCampo(DocumentSnapshot doc, String campo) {
     if (!doc.contains(campo)) return "";
