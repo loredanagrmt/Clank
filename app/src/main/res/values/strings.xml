@@ -209,4 +209,8 @@
     <string name="feed_hace_meses">Hace %d meses</string>
     <string name="feed_hace_anyos">Hace %d años</string>
 
+  <!-- Búsqueda -->
+  <string name="busqueda_hint">Buscar clanks o @usuario…</string>
+  <string name="busqueda_sin_resultados">Sin resultados para "%1$s"</string>
+
 </resources>
