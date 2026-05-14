@@ -240,4 +240,8 @@ public class ClankRepository {
 
         return resultado.getTask();
     }
+  public Task<QuerySnapshot> getClanksAcabadosRecientes(int limite) {
+    return dataSource.collection(COLLECTION).whereEqualTo("estadoAcabado", true)
+      .orderBy("fechaPublicacion", Query.Direction.DESCENDING).limit(limite).get();
+  }
 }
