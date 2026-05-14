@@ -84,14 +84,12 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
     holder.binding.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
     Glide.with(context).clear(holder.binding.civAvatarUsuario);
 
-    // Primero intentar caché del ViewModel (ya cargado en la búsqueda)
     String usuarioId = clank.getUsuarioId();
     if (usuarioId != null && !usuarioId.isEmpty()) {
       Usuario cached = getCacheUsuario.apply(usuarioId);
       if (cached != null) {
         bindUsuario(holder, cached);
       } else {
-        // fallback: petición individual si no está en caché
         usuarioRepository.getUsuario(usuarioId).addOnSuccessListener(doc -> {
           if (!doc.exists()) return;
           String foto = doc.getString("fotoPerfil");
