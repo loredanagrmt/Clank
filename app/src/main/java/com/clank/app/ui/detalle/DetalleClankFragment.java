@@ -99,14 +99,35 @@ public class DetalleClankFragment extends Fragment {
   /////////////////////////observadores/////////////////////////
 
   private void observarViewModel() {
+    viewModel.getCargando().observe(getViewLifecycleOwner(), cargando -> {
+      boolean estaCargando = Boolean.TRUE.equals(cargando);
+
+      binding.overlayCargando.setVisibility(
+              estaCargando ? View.VISIBLE : View.GONE
+      );
+    });
+
+    viewModel.getCargando().observe(getViewLifecycleOwner(), cargando -> {
+      boolean estaCargando = Boolean.TRUE.equals(cargando);
+
+      binding.overlayCargando.setVisibility(
+              estaCargando ? View.VISIBLE : View.GONE
+      );
+    });
+
     viewModel.getDetalle().observe(getViewLifecycleOwner(), datos -> {
       if (datos == null) return;
       rellenarVista(datos);
     });
 
     viewModel.getError().observe(getViewLifecycleOwner(), msg -> {
-      if (msg != null)
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
+      if (msg != null) {
+        Toast.makeText(
+                requireContext(),
+                msg,
+                Toast.LENGTH_LONG
+        ).show();
+      }
     });
   }
 
