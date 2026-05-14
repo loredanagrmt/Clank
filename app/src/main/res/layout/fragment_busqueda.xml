@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/clank_background_light">
+
+  <!-- barra de busqueda-->
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/barraBusqueda"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/crear_cabecera_height"
+    android:paddingStart="@dimen/space_xs"
+    android:paddingEnd="@dimen/spacing_sm"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <!-- volver -->
+    <ImageButton
+      android:id="@+id/btnBusquedaVolver"
+      android:layout_width="44dp"
+      android:layout_height="44dp"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="10dp"
+      android:src="@drawable/ic_flecha_atras"
+      app:tint="@color/color_texto_btprincipal"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!--campo de texto -->
+    <EditText
+      android:id="@+id/etBusqueda"
+      android:layout_width="0dp"
+      android:layout_height="36dp"
+      android:layout_marginStart="@dimen/spacing_sm"
+      android:layout_marginEnd="@dimen/spacing_sm"
+      android:background="@drawable/bg_campo_busqueda"
+      android:fontFamily="@font/poppins_family"
+      android:hint="@string/busqueda_hint"
+      android:imeOptions="actionSearch"
+      android:inputType="text"
+      android:maxLines="1"
+      android:paddingStart="@dimen/spacing_md"
+      android:paddingEnd="@dimen/spacing_md"
+      android:singleLine="true"
+      android:textColor="@color/color_negrita"
+      android:textColorHint="@color/color_texto_inactivo"
+      android:textSize="@dimen/text_body"
+      app:layout_constraintStart_toEndOf="@id/btnBusquedaVolver"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <!-- separador-->
+  <View
+    android:id="@+id/separadorBusqueda"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/feed_separador_height"
+    android:background="@color/color_boton_inactivo"
+    app:layout_constraintTop_toBottomOf="@id/barraBusqueda"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+  <!-- sin resultados-->
+  <TextView
+    android:id="@+id/tvBusquedaVacio"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:fontFamily="@font/poppins_family"
+    android:gravity="center"
+    android:textColor="@color/color_texto_inactivo"
+    android:textSize="@dimen/text_body"
+    android:visibility="gone"
+    app:layout_constraintTop_toBottomOf="@id/separadorBusqueda"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+  <!--spinner de carga -->
+  <ProgressBar
+    android:id="@+id/progressBusqueda"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:layout_constraintTop_toBottomOf="@id/separadorBusqueda"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+  <!--resultados -->
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rvBusqueda"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:clipToPadding="false"
+    android:paddingHorizontal="@dimen/feed_padding_horizontal"
+    android:paddingTop="@dimen/feed_padding_top"
+    android:paddingBottom="@dimen/bottom_nav_height"
+    app:layout_constraintTop_toBottomOf="@id/separadorBusqueda"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

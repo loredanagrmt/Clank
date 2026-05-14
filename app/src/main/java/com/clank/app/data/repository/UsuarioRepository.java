@@ -64,4 +64,7 @@ public class UsuarioRepository {
       .document(uid)
       .update(campos);
   }
+  public Task<QuerySnapshot> getTodosUsuarios() {
+    return baseDatos.collection(COLECCION_USUARIOS).get();
+  }
 }

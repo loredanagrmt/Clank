@@ -223,6 +223,19 @@
     <action
       android:id="@+id/action_feed_a_detalle_clank"
       app:destination="@id/detalleClankFragment" />
+    <action
+      android:id="@+id/action_feed_a_busqueda"
+      app:destination="@id/busquedaFragment" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/busquedaFragment"
+    android:name="com.clank.app.ui.busqueda.BusquedaFragment"
+    android:label=""
+    tools:layout="@layout/fragment_busqueda">
+    <action
+      android:id="@+id/action_busqueda_a_detalle_clank"
+      app:destination="@id/detalleClankFragment" />
   </fragment>
 
 </navigation>
