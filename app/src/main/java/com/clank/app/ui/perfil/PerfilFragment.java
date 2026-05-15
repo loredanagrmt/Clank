@@ -209,6 +209,7 @@ public class PerfilFragment extends Fragment {
     // RECORDAR: comprobar si diferencia clank de boceto
     ///////////////////////// adapter /////////////////////////
     private void cargarAdapter(boolean soloAcabados) {
+        mostrarCargandoPerfil();
         if (adapter != null) {
             adapter.stopListening();
         }
@@ -229,7 +230,18 @@ public class PerfilFragment extends Fragment {
                     Navigation.findNavController(requireView())
                             .navigate(R.id.action_perfil_a_detalle_clank, args);
                 },
-                this::mostrarOpcionesClank
+                this::mostrarOpcionesClank,
+                new ClanksAdapter.OnPreparacionTarjetasListener() {
+                    @Override
+                    public void alIniciarPreparacion() {
+                        mostrarCargandoPerfil();
+                    }
+
+                    @Override
+                    public void alFinalizarPreparacion() {
+                        ocultarCargandoPerfil();
+                    }
+                }
         );
 
         binding.rvClanks.setAdapter(adapter);
@@ -375,5 +387,19 @@ public class PerfilFragment extends Fragment {
                             Toast.LENGTH_LONG
                     ).show();
                 });
+    }
+    private void mostrarCargandoPerfil() {
+        if (binding == null) {
+            return;
+        }
+
+        binding.overlayCargandoPerfil.setVisibility(View.VISIBLE);
+    }
+    private void ocultarCargandoPerfil() {
+        if (binding == null) {
+            return;
+        }
+
+        binding.overlayCargandoPerfil.setVisibility(View.GONE);
     }
 }
