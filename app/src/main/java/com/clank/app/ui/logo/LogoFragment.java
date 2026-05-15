@@ -11,19 +11,32 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.lifecycle.ViewModelProvider;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import com.clank.app.R;
 import com.clank.app.util.GestorIdioma;
 
+@AndroidEntryPoint
 public class LogoFragment extends Fragment {
 
+    private LogoViewModel vistaModelo;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable navegarRunnable = new Runnable() {
         @Override
         public void run() {
-            View view = getView();
-            if (view != null) {
-                Navigation.findNavController(view).navigate(R.id.action_logo_a_idioma);
+            View vista = getView();
+
+            if (vista == null) {
+                return;
+            }
+
+            if (vistaModelo.haySesionIniciada()) {
+                Navigation.findNavController(vista)
+                        .navigate(R.id.action_logo_a_feed);
+            } else {
+                Navigation.findNavController(vista)
+                        .navigate(R.id.action_logo_a_idioma);
             }
         }
     };
@@ -38,6 +51,9 @@ public class LogoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        vistaModelo = new ViewModelProvider(this).get(LogoViewModel.class);
+
         GestorIdioma.getInstance(requireContext()).aplicarIdiomaSinGuardar("es");
         handler.postDelayed(navegarRunnable, 1000);
     }
