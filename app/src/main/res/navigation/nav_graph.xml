@@ -16,6 +16,12 @@
       app:destination="@id/elegirIdiomaFragment"
       app:popUpTo="@id/logoFragment"
       app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_logo_a_feed"
+        app:destination="@id/feedFragment"
+        app:popUpTo="@id/logoFragment"
+        app:popUpToInclusive="true" />
   </fragment>
 
   <fragment
