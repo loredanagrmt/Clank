@@ -203,7 +203,7 @@
         android:id="@+id/overlayCargando"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_sombra_popup"
+        android:background="@color/clank_background_light"
         android:clickable="true"
         android:focusable="true"
         android:visibility="visible">

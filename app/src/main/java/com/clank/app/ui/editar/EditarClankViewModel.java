@@ -17,6 +17,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import com.clank.app.util.TraductorCategorias;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +46,7 @@ public class EditarClankViewModel extends ViewModel {
     private final FirebaseFirestore db;
     private final FirebaseStorage storage;
     private final AuthRepository authRepository;
+    private final TraductorCategorias traductorCategorias;
     private final MutableLiveData<DatosClank> datosClank = new MutableLiveData<>();
     private final MutableLiveData<Recurso<Void>> estadoGuardar = new MutableLiveData<>();
     private final MutableLiveData<List<String[]>> categorias = new MutableLiveData<>();
@@ -55,11 +58,13 @@ public class EditarClankViewModel extends ViewModel {
     public EditarClankViewModel(FirebaseFirestore db,
                                 FirebaseStorage storage,
                                 AuthRepository authRepository,
-                                ClankRepository clankRepository) {
+                                ClankRepository clankRepository,
+                                TraductorCategorias traductorCategorias) {
         this.db = db;
         this.storage = storage;
         this.authRepository = authRepository;
         this.clankRepository = clankRepository;
+        this.traductorCategorias = traductorCategorias;
         cargarCategorias();
     }
 
@@ -342,10 +347,30 @@ public class EditarClankViewModel extends ViewModel {
         db.collection("categorias").get()
                 .addOnSuccessListener(snap -> {
                     List<String[]> lista = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : snap)
-                        lista.add(new String[]{doc.getId(), strOrEmpty(doc.getString("categoria"))});
-                    categorias.postValue(lista);
-                });
+
+                    for (QueryDocumentSnapshot doc : snap) {
+                        String nombreCategoria =
+                                strOrEmpty(doc.getString("categoria"));
+
+                        if (!nombreCategoria.isEmpty()) {
+                            lista.add(new String[]{
+                                    doc.getId(),
+                                    nombreCategoria
+                            });
+                        }
+                    }
+
+                    traductorCategorias.traducirSiProcede(lista)
+                            .addOnSuccessListener(listaTraducida ->
+                                    categorias.postValue(listaTraducida)
+                            )
+                            .addOnFailureListener(error ->
+                                    categorias.postValue(lista)
+                            );
+                })
+                .addOnFailureListener(error ->
+                        categorias.postValue(new ArrayList<>())
+                );
     }
 
     private String strOrEmpty(String valor) {

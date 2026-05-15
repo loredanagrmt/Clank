@@ -12,7 +12,10 @@ import com.clank.app.data.repository.CategoriaRepository;
 import com.clank.app.data.repository.ClankRepository;
 import com.clank.app.data.repository.UsuarioRepository;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import android.util.Log;
+
+import com.clank.app.util.TraductorCategorias;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,7 @@ public class DetalleClankViewModel extends ViewModel {
   private final UsuarioRepository   usuarioRepository;
   private final CategoriaRepository categoriaRepository;
   private final TraductorDetalleClank traductorDetalleClank;
-
+  private final TraductorCategorias traductorCategorias;
   private final MutableLiveData<DetalleData> detalle = new MutableLiveData<>();
   private final MutableLiveData<String>      error   = new MutableLiveData<>();
 
@@ -59,11 +62,13 @@ public class DetalleClankViewModel extends ViewModel {
   public DetalleClankViewModel(ClankRepository clankRepository,
                                UsuarioRepository usuarioRepository,
                                CategoriaRepository categoriaRepository,
-                               TraductorDetalleClank traductorDetalleClank) {
+                               TraductorDetalleClank traductorDetalleClank,
+                               TraductorCategorias traductorCategorias) {
     this.clankRepository       = clankRepository;
     this.usuarioRepository     = usuarioRepository;
     this.categoriaRepository   = categoriaRepository;
     this.traductorDetalleClank = traductorDetalleClank;
+    this.traductorCategorias = traductorCategorias;
   }
 
   public LiveData<DetalleData> getDetalle() { return detalle; }
@@ -213,25 +218,31 @@ public class DetalleClankViewModel extends ViewModel {
   }
 
   private void traducirYPublicarDetalle() {
-    Log.d(TAG, "Llamada a TraductorDetalleClank.traducirSiProcede()");
+    Task<Boolean> tareaContenido =
+            traductorDetalleClank.traducirSiProcede(datosEnConstruccion);
 
-    traductorDetalleClank.traducirSiProcede(datosEnConstruccion)
-            .addOnSuccessListener(resultado -> {
-              Log.d(TAG, "Traducción terminada. Se tradujo: " + resultado);
-            })
-            .addOnFailureListener(errorTraduccion -> {
-              Log.e(TAG, "Fallo en traducción", errorTraduccion);
-            })
-            .addOnCompleteListener(tarea -> {
-              Log.d(TAG, "Proceso de traducción completado. Se publica detalle.");
+    Task<List<String[]>> tareaCategorias =
+            traductorCategorias.traducirSiProcede(
+                    datosEnConstruccion.categorias
+            );
 
-              if (cargaCancelada) {
-                return;
-              }
+    Tasks.whenAllComplete(
+            tareaContenido,
+            tareaCategorias
+    ).addOnCompleteListener(tareaFinal -> {
+      if (cargaCancelada) {
+        return;
+      }
 
-              detalle.postValue(datosEnConstruccion);
-              cargando.postValue(false);
-            });
+      if (tareaCategorias.isSuccessful()
+              && tareaCategorias.getResult() != null) {
+        datosEnConstruccion.categorias =
+                tareaCategorias.getResult();
+      }
+
+      detalle.postValue(datosEnConstruccion);
+      cargando.postValue(false);
+    });
   }
 
   /////////////////////////eliminar clank/////////////////////////

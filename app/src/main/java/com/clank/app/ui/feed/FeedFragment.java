@@ -104,17 +104,43 @@ public class FeedFragment extends Fragment {
     FirestoreRecyclerOptions<Clank> options = viewModel.buildFeedOptions();
 
     adapter = new FeedAdapter(
-      options,
-      requireContext(),
-      viewModel.getUsuarioRepository(),
-      clankId -> {
-        Bundle args = new Bundle();
-        args.putString("clankId", clankId);
-        Navigation.findNavController(requireView())
-          .navigate(R.id.action_feed_a_detalle_clank, args);
-      }
+            options,
+            requireContext(),
+            viewModel.getUsuarioRepository(),
+            clankId -> {
+              Bundle args = new Bundle();
+              args.putString("clankId", clankId);
+              Navigation.findNavController(requireView())
+                      .navigate(R.id.action_feed_a_detalle_clank, args);
+            },
+            new FeedAdapter.OnPreparacionTarjetasListener() {
+              @Override
+              public void alIniciarPreparacion() {
+                mostrarCargandoFeed();
+              }
+
+              @Override
+              public void alFinalizarPreparacion() {
+                ocultarCargandoFeed();
+              }
+            }
     );
 
     binding.rvFeed.setAdapter(adapter);
+  }
+  private void mostrarCargandoFeed() {
+    if (binding == null) {
+      return;
+    }
+
+    binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+  }
+
+  private void ocultarCargandoFeed() {
+    if (binding == null) {
+      return;
+    }
+
+    binding.overlayCargandoFeed.setVisibility(View.GONE);
   }
 }

@@ -17,6 +17,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.clank.app.util.TraductorCategorias;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +34,7 @@ public class CrearViewModel extends ViewModel {
   private final FirebaseFirestore db;
   private final FirebaseStorage storage;
   private final AuthRepository authRepository;
-
+  private final TraductorCategorias traductorCategorias;
   private final MutableLiveData<Recurso<Void>> estadoPublicacion = new MutableLiveData<>();
   private final MutableLiveData<List<String[]>> categorias = new MutableLiveData<>();
   private FirebaseAuth.AuthStateListener authStateListener;
@@ -41,10 +43,12 @@ public class CrearViewModel extends ViewModel {
   @Inject
   public CrearViewModel(FirebaseFirestore db,
                         FirebaseStorage storage,
-                        AuthRepository authRepository) {
+                        AuthRepository authRepository,
+                        TraductorCategorias traductorCategorias) {
     this.db = db;
     this.storage = storage;
     this.authRepository = authRepository;
+    this.traductorCategorias = traductorCategorias;
     cargarCategoriasEsperandoAuth();
   }
 
@@ -81,16 +85,28 @@ public class CrearViewModel extends ViewModel {
   // Consulta categorias y carga resultado
   private void ejecutarCargaCategorias() {
     db.collection("categorias").get()
-      .addOnSuccessListener(snapshot -> {
-        List<String[]> lista = new ArrayList<>();
-        for (var doc : snapshot.getDocuments()) {
-          String nombre = doc.getString("categoria");
-          if (nombre != null && !nombre.isEmpty())
-            lista.add(new String[]{doc.getId(), nombre});
-        }
-        categorias.setValue(lista);
-      })
-      .addOnFailureListener(e -> categorias.setValue(new ArrayList<>()));
+            .addOnSuccessListener(snapshot -> {
+              List<String[]> lista = new ArrayList<>();
+
+              for (var doc : snapshot.getDocuments()) {
+                String nombre = doc.getString("categoria");
+
+                if (nombre != null && !nombre.isEmpty()) {
+                  lista.add(new String[]{doc.getId(), nombre});
+                }
+              }
+
+              traductorCategorias.traducirSiProcede(lista)
+                      .addOnSuccessListener(listaTraducida ->
+                              categorias.setValue(listaTraducida)
+                      )
+                      .addOnFailureListener(e ->
+                              categorias.setValue(lista)
+                      );
+            })
+            .addOnFailureListener(e ->
+                    categorias.setValue(new ArrayList<>())
+            );
   }
 
   /// //////////////////////publicar clank/////////////////////////
