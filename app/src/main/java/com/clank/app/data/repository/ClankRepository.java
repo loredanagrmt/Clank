@@ -82,11 +82,9 @@ public class ClankRepository {
                 .orderBy("orden")
                 .get();
     }
-    public Query getPorCategoria(String categorias) {
-        return dataSource.collection(COLLECTION)
-                .whereEqualTo("estadoAcabado", true)
-                .whereEqualTo("categorias", categorias)
-                .orderBy("fechaPublicacion", Query.Direction.DESCENDING);
+    public Query getPorCategoria(String categoria) {
+        return dataSource.collection(COLLECTION).whereEqualTo("estadoAcabado", true)
+                .whereArrayContains("categorias", categoria).orderBy("fechaPublicacion", Query.Direction.DESCENDING);
     }
 
     public Query getTodosAcabados() {

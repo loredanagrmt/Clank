@@ -599,32 +599,23 @@ public class CrearFragment extends Fragment {
     binding.flexboxCategorias.removeAllViews();
 
     for (String[] cat : categorias) {
-      String catId = cat[0];
       String catNombre = cat[1];
 
       Button chip = (Button) LayoutInflater.from(requireContext())
               .inflate(R.layout.bt_secundario, binding.flexboxCategorias, false);
 
       chip.setText(catNombre);
-      chip.setTag(catId);
+      chip.setTag(catNombre);
 
       ViewGroup.MarginLayoutParams lp =
               (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
-
       lp.setMargins(0, 0, 8, 8);
       chip.setLayoutParams(lp);
 
       chip.setOnClickListener(b -> {
         boolean activo = chip.isSelected();
-
         chip.setSelected(!activo);
-
-        chip.setBackgroundResource(
-                !activo
-                        ? R.drawable.bg_boton_principal
-                        : R.drawable.bg_boton_secundario
-        );
-
+        chip.setBackgroundResource(!activo ? R.drawable.bg_boton_principal : R.drawable.bg_boton_secundario);
         chip.setTextColor(ContextCompat.getColor(requireContext(),
                 !activo
                         ? R.color.clank_background_light
