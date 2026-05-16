@@ -82,6 +82,13 @@ public class FeedFragment extends Fragment {
     binding.navbar.btnNavbarAccion.setVisibility(View.VISIBLE);
     binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_buscar);
     binding.navbar.btnNavbarAccion.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_feed_a_busqueda));
+
+    //botón filtrar solo en feed
+    binding.navbar.btnNavbarFiltrar.setVisibility(View.VISIBLE);
+    binding.navbar.btnNavbarFiltrar.setOnClickListener(v ->
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_feedFragment_to_filtrosFragment)
+    );
   }
 
   /////////////////////////recyclerView/////////////////////////
