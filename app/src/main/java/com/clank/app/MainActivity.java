@@ -1,5 +1,7 @@
 package com.clank.app;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,6 +21,7 @@ import com.clank.app.util.GestorIdioma;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -53,6 +56,22 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
             // R.id.detalleFragment,
             // R.id.editarPerfilFragment
     ));
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String idioma = newBase.getSharedPreferences("clank_prefs", Context.MODE_PRIVATE)
+                .getString("idioma_seleccionado", "es");
+
+        Locale locale = Locale.forLanguageTag(idioma);
+        Locale.setDefault(locale);
+
+        Configuration config = newBase.getResources().getConfiguration();
+        config = new Configuration(config);
+        config.setLocale(locale);
+
+        Context contextConLocale = newBase.createConfigurationContext(config);
+        super.attachBaseContext(contextConLocale);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
