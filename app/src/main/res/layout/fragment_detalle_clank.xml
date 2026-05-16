@@ -51,6 +51,11 @@
 
             </FrameLayout>
 
+            <!-- Cabecera del usuario que publicó el clank -->
+            <include
+                android:id="@+id/cabeceraUsuario"
+                layout="@layout/item_cabecera_usuario" />
+
             <TextView
                 android:id="@+id/tvDescripcion"
                 android:layout_width="match_parent"

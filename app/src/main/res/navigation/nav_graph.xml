@@ -148,6 +148,11 @@
       android:name="tabInicial"
       app:argType="string"
       android:defaultValue="clanks" />
+    <argument
+        android:name="usuarioId"
+        app:argType="string"
+        android:defaultValue="@null"
+        app:nullable="true" />
     <action
       android:id="@+id/action_perfil_a_ajustes"
       app:destination="@id/ajustesFragment" />
@@ -218,6 +223,9 @@
     <action
         android:id="@+id/action_detalle_a_editar_clank"
         app:destination="@id/editarClankFragment" />
+    <action
+        android:id="@+id/action_detalle_a_perfil"
+        app:destination="@id/perfilFragment" />
   </fragment>
 
   <fragment
@@ -240,6 +248,9 @@
     <action
       android:id="@+id/action_feed_a_busqueda"
       app:destination="@id/busquedaFragment" />
+    <action
+        android:id="@+id/action_feed_a_perfil"
+        app:destination="@id/perfilFragment" />
   </fragment>
 
   <fragment
@@ -250,6 +261,9 @@
     <action
       android:id="@+id/action_busqueda_a_detalle_clank"
       app:destination="@id/detalleClankFragment" />
+    <action
+        android:id="@+id/action_busqueda_a_perfil"
+        app:destination="@id/perfilFragment" />
   </fragment>
 
 </navigation>

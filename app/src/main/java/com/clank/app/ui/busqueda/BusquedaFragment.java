@@ -72,11 +72,22 @@ public class BusquedaFragment extends Fragment {
       requireContext(),
       usuarioRepository,
       uid -> viewModel.getUsuarioCacheado(uid),
-      clankId -> {
-        Bundle args = new Bundle();
-        args.putString("clankId", clankId);
-        Navigation.findNavController(requireView()).navigate(R.id.action_busqueda_a_detalle_clank, args);
-      }
+          new BusquedaAdapter.OnClankClickListener() {
+            @Override
+            public void onClankClick(String clankId) {
+            Bundle args = new Bundle();
+            args.putString("clankId", clankId);
+            Navigation.findNavController(requireView()).navigate(R.id.action_busqueda_a_detalle_clank, args);
+          }
+
+            @Override
+            public void onUsuarioClick(String usuarioId) {
+              Bundle args = new Bundle();
+              args.putString("usuarioId", usuarioId);
+              Navigation.findNavController(requireView())
+                      .navigate(R.id.action_busqueda_a_perfil, args);
+            }
+          }
     );
 
     binding.rvBusqueda.setLayoutManager(

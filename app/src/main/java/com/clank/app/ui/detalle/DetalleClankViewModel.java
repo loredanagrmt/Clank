@@ -18,6 +18,7 @@ import android.util.Log;
 import com.clank.app.util.TraductorCategorias;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,6 +38,11 @@ public class DetalleClankViewModel extends ViewModel {
     public int    tiempo         = -1;
     public boolean esAcabado     = true;
     public String  nombreUsuario = "";
+    public String  usuarioId     = "";
+    public String  fotoPerfil    = "";
+    public String  usuarioClank  = "";
+    public Date fechaPublicacion = null;
+
     public List<Material>    materiales    = new ArrayList<>();
     public List<Herramienta> herramientas  = new ArrayList<>();
     public List<Instruccion> instrucciones = new ArrayList<>();
@@ -81,7 +87,7 @@ public class DetalleClankViewModel extends ViewModel {
 
     datosEnConstruccion         = new DetalleData();
     datosEnConstruccion.clankId = clankId;
-    pendientes = 6;
+    pendientes = 5;
 
     procesoFinalLanzado = false;
     cargaCancelada = false;
@@ -103,16 +109,20 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.portadaUrl  = clank.getPortada()     != null ? clank.getPortada()     : "";
       datosEnConstruccion.tiempo      = clank.getTiempo();
       datosEnConstruccion.esAcabado   = clank.isEstadoAcabado();
-
-      reducirPendientes(); 
+      datosEnConstruccion.fechaPublicacion = clank.getFechaPublicacion();
 
       String uid = clank.getUsuarioId();
+      datosEnConstruccion.usuarioId = uid != null ? uid : "";
       if (uid != null && !uid.isEmpty()) {
         usuarioRepository.getUsuario(uid).addOnSuccessListener(userDoc -> {
           Log.d(TAG, "Usuario cargado");
           if (userDoc.exists()) {
             String nombre = userDoc.getString("nombre");
             datosEnConstruccion.nombreUsuario = nombre != null ? nombre : "";
+            String foto = userDoc.getString("fotoPerfil");
+            datosEnConstruccion.fotoPerfil = foto != null ? foto : "";
+            String clankId2 = userDoc.getString("usuarioClank");
+            datosEnConstruccion.usuarioClank = clankId2 != null ? clankId2 : "";
           }
           reducirPendientes();
         }).addOnFailureListener(e -> {

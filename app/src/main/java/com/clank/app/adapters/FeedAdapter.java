@@ -32,6 +32,7 @@ import java.util.Objects;
 public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.ViewHolder> {
   public interface OnClankClickListener {
     void onClankClick(String clankId);
+    void onUsuarioClick(String usuarioId);
   }
 
   public interface OnPreparacionTarjetasListener {
@@ -101,26 +102,20 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     holder.binding.tarjeta.tvDescripcionClank.setText(textos.descripcion);
     //icono tiempo
     int tiempo = clank.getTiempo();
-    int iconoTiempo = tiempo == 0 ? R.drawable.ic_cohete
-      : tiempo == 1 ? R.drawable.ic_liebre
-      : R.drawable.ic_tortuga;
-    holder.binding.tarjeta.ivTiempo.setImageDrawable(
-      ContextCompat.getDrawable(context, iconoTiempo));
+    int iconoTiempo = tiempo == 0 ? R.drawable.ic_cohete : tiempo == 1 ? R.drawable.ic_liebre : R.drawable.ic_tortuga;
+    holder.binding.tarjeta.ivTiempo.setImageDrawable(ContextCompat.getDrawable(context, iconoTiempo));
 
     //portada
     if (clank.getPortada() != null && !clank.getPortada().isEmpty()) {
-      Glide.with(context)
-        .load(clank.getPortada())
-        .centerCrop()
-        .into(holder.binding.tarjeta.ivPortada);
+      Glide.with(context).load(clank.getPortada()).centerCrop().into(holder.binding.tarjeta.ivPortada);
     } else {
       holder.binding.tarjeta.ivPortada.setImageDrawable(null);
     }
 
     /////////////////////////cabecera usuario/////////////////////////
-    holder.binding.tvUsernameItem.setText("");
-    holder.binding.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
-    Glide.with(context).clear(holder.binding.civAvatarUsuario);
+    holder.binding.cabeceraUsuario.tvUsernameItem.setText("");
+    holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+    Glide.with(context).clear(holder.binding.cabeceraUsuario.civAvatarUsuario);
 
     String usuarioId = clank.getUsuarioId();
     if (usuarioId != null && !usuarioId.isEmpty()) {
@@ -129,23 +124,29 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
         String foto = doc.contains("fotoPerfil") ? doc.getString("fotoPerfil") : "";
         String usuarioClank = doc.contains("usuarioClank") ? doc.getString("usuarioClank") : "";
         String handle = usuarioClank != null ? usuarioClank.replace("@", "").trim() : "";
-        holder.binding.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
+        holder.binding.cabeceraUsuario.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
 
         if (foto != null && !foto.isEmpty()) {
           Glide.with(context)
             .load(foto)
             .circleCrop()
             .placeholder(R.drawable.ic_usuario_inactivo)
-            .into(holder.binding.civAvatarUsuario);
+            .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
         } else {
-          holder.binding.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+          holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
         }
+      });
+      holder.binding.cabeceraUsuario.civAvatarUsuario.setOnClickListener(v -> {
+        if (listener != null) listener.onUsuarioClick(usuarioId);
+      });
+      holder.binding.cabeceraUsuario.tvUsernameItem.setOnClickListener(v -> {
+        if (listener != null) listener.onUsuarioClick(usuarioId);
       });
     }
 
     //fecha
     if (clank.getFechaPublicacion() != null) {
-      holder.binding.tvFechaItem.setText(formatearFechaRelativa(clank.getFechaPublicacion()));
+      holder.binding.cabeceraUsuario.tvFechaItem.setText(formatearFechaRelativa(clank.getFechaPublicacion()));
     }
 
     /////////////////////////click/////////////////////////
