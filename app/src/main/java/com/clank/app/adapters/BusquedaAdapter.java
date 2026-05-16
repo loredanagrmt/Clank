@@ -25,6 +25,7 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
 
   public interface OnClankClickListener {
     void onClankClick(String clankId);
+    void onUsuarioClick(String usuarioId);
   }
 
   private final Context context;
@@ -80,9 +81,9 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
     }
 
     /////////////////////////cabecera usuario/////////////////////////
-    holder.binding.tvUsernameItem.setText("");
-    holder.binding.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
-    Glide.with(context).clear(holder.binding.civAvatarUsuario);
+    holder.binding.cabeceraUsuario.tvUsernameItem.setText("");
+    holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+    Glide.with(context).clear(holder.binding.cabeceraUsuario.civAvatarUsuario);
 
     String usuarioId = clank.getUsuarioId();
     if (usuarioId != null && !usuarioId.isEmpty()) {
@@ -95,22 +96,28 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
           String foto = doc.getString("fotoPerfil");
           String handle = doc.getString("usuarioClank");
           handle = handle != null ? handle.replace("@", "").trim() : "";
-          holder.binding.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
+          holder.binding.cabeceraUsuario.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
           if (foto != null && !foto.isEmpty()) {
             Glide.with(context).load(foto).circleCrop()
               .placeholder(R.drawable.ic_usuario_inactivo)
-              .into(holder.binding.civAvatarUsuario);
+              .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
           }
         });
       }
+
+      holder.binding.cabeceraUsuario.civAvatarUsuario.setOnClickListener(v -> {
+        if (listener != null) listener.onUsuarioClick(usuarioId);
+      });
+      holder.binding.cabeceraUsuario.tvUsernameItem.setOnClickListener(v -> {
+        if (listener != null) listener.onUsuarioClick(usuarioId);
+      });
     }
 
     /////////////////////////fecha/////////////////////////
     if (clank.getFechaPublicacion() != null) {
-      holder.binding.tvFechaItem.setText(
-        formatearFechaRelativa(clank.getFechaPublicacion()));
+      holder.binding.cabeceraUsuario.tvFechaItem.setText(formatearFechaRelativa(clank.getFechaPublicacion()));
     } else {
-      holder.binding.tvFechaItem.setText("");
+      holder.binding.cabeceraUsuario.tvFechaItem.setText("");
     }
 
     /////////////////////////click/////////////////////////
@@ -122,16 +129,14 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
   }
 
   private void bindUsuario(@NonNull ViewHolder holder, Usuario usuario) {
-    String handle = usuario.getUsuarioClank() != null
-      ? usuario.getUsuarioClank().replace("@", "").trim() : "";
-    holder.binding.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
+    String handle = usuario.getUsuarioClank() != null ? usuario.getUsuarioClank().replace("@", "").trim() : "";
+    holder.binding.cabeceraUsuario.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
     String foto = usuario.getFotoPerfil();
     if (foto != null && !foto.isEmpty()) {
-      Glide.with(context).load(foto).circleCrop()
-        .placeholder(R.drawable.ic_usuario_inactivo)
-        .into(holder.binding.civAvatarUsuario);
+      Glide.with(context).load(foto).circleCrop().placeholder(R.drawable.ic_usuario_inactivo)
+              .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
     } else {
-      holder.binding.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+      holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
     }
   }
 
