@@ -209,4 +209,8 @@
   <dimen name="ajustes_texto_opcion">16sp</dimen>
   <dimen name="ajustes_texto_borrar_cuenta">14sp</dimen>
 
+  <!-- Filtros  -->
+  <dimen name="chip_margin">8dp</dimen>
+
+
 </resources>

@@ -224,4 +224,10 @@
     <string name="ajustes_cerrar_sesion">Cerrar sesión</string>
     <string name="ajustes_borrar_cuenta">Borrar cuenta</string>
 
+    <!-- Filtrar por categoría -->
+    <string name="filtrar_titulo">Filtrar</string>
+    <string name="resultados_vacio">No hay clanks en esta categoría</string>
+
+
+
 </resources>
