@@ -179,10 +179,18 @@
   </fragment>
 
   <fragment
-    android:id="@+id/ajustesFragment"
-    android:name="com.clank.app.ui.ajustes.AjustesFragment"
-    android:label=""
-    tools:layout="@layout/fragment_ajustes" />
+      android:id="@+id/ajustesFragment"
+      android:name="com.clank.app.ui.ajustes.AjustesFragment"
+      android:label=""
+      tools:layout="@layout/fragment_ajustes">
+
+    <action
+        android:id="@+id/action_ajustes_a_inicio_sesion"
+        app:destination="@id/inicioSesionFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
+  </fragment>
 
   <fragment
     android:id="@+id/editarClankFragment"

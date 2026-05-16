@@ -30,9 +30,13 @@ public class GestorIdioma {
     }
 
     public void aplicarIdioma(String codigoIdioma) {
-        prefs.edit().putString(KEY_IDIOMA, codigoIdioma).apply();
+        prefs.edit().putString(KEY_IDIOMA, codigoIdioma).commit();
         LocaleListCompat localeList = LocaleListCompat.forLanguageTags(codigoIdioma);
         AppCompatDelegate.setApplicationLocales(localeList);
+    }
+
+    public void guardarIdioma(String codigoIdioma) {
+        prefs.edit().putString(KEY_IDIOMA, codigoIdioma).commit();
     }
 
     public void aplicarIdiomaSinGuardar(String codigoIdioma) {

@@ -1,6 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Theme.Clank" parent="Theme.Material3.DayNight.NoActionBar">
-
+        <item name="android:windowBackground">@color/clank_background_light</item>
+        <item name="android:colorBackground">@color/clank_background_light</item>
+        <item name="colorSurface">@color/clank_background_light</item>
+        <item name="colorOnSurface">@color/color_negrita</item>
     </style>
+
+    <style name="Theme.Clank" parent="Base.Theme.Clank">
+        <item name="android:fontFamily">@font/poppins_family</item>
+        <item name="fontFamily">@font/poppins_family</item>
+    </style>
+
 </resources>
