@@ -34,7 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class PerfilFragment extends Fragment {
 
-    private static final String ID_USER = "idUser";
+    private static final String ID_USER = "usuarioId";
     private static final String TAB_INICIAL = "tabInicial";
 
     private FragmentPerfilBinding binding;
@@ -46,7 +46,7 @@ public class PerfilFragment extends Fragment {
     public static PerfilFragment newInstance(String idUser) {
         PerfilFragment f = new PerfilFragment();
         Bundle args = new Bundle();
-        args.putString(ID_USER, idUser);
+        args.putString("usuarioId", idUser);
         f.setArguments(args);
         return f;
     }
@@ -92,7 +92,15 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((NavbarHost) requireActivity()).ocultarNavbar();
+        if (viewModel.esPerfilPropio()) {
+            ((NavbarHost) requireActivity()).ocultarNavbar();
+        }else {
+            ((NavbarHost) requireActivity()).mostrarNavbar(
+                    "",
+                    0,
+                    null
+            );
+        }
     }
 
     @Override
@@ -144,6 +152,11 @@ public class PerfilFragment extends Fragment {
 
     ///////////////////////// tabs clanks y borradores /////////////////////////
     private void configurarTabs() {
+        if (!viewModel.esPerfilPropio(idUser)) {
+            binding.tabBocetos.setVisibility(View.GONE);
+            binding.tvNumBocetos.setVisibility(View.GONE);
+        }
+
         binding.tabClanks.setOnClickListener(v -> {
             if (!mostrandoClanks) {
                 mostrandoClanks = true;
@@ -250,18 +263,18 @@ public class PerfilFragment extends Fragment {
 
     ///////////////////////// botones /////////////////////////
     private void configurarBotones() {
-        binding.btnAjustes.setOnClickListener(v ->
-                Navigation.findNavController(v)
-                        .navigate(R.id.action_perfil_a_ajustes)
-        );
-
         if (viewModel.esPerfilPropio(idUser)) {
+            binding.btnAjustes.setOnClickListener(v ->
+                    Navigation.findNavController(v)
+                            .navigate(R.id.action_perfil_a_ajustes)
+            );
             binding.tvEditarPerfil.setVisibility(View.VISIBLE);
             binding.tvEditarPerfil.setOnClickListener(v ->
                     Navigation.findNavController(v)
                             .navigate(R.id.action_perfil_a_editar_perfil)
             );
         } else {
+            binding.btnAjustes.setVisibility(View.GONE);
             binding.tvEditarPerfil.setVisibility(View.GONE);
         }
     }
@@ -285,6 +298,12 @@ public class PerfilFragment extends Fragment {
                 handle = perfil.usuarioClank.replace("@", "").trim();
             } else if (perfil.correo != null && !perfil.correo.trim().isEmpty()) {
                 handle = perfil.correo.split("@")[0].trim();
+            }
+
+            if (!viewModel.esPerfilPropio(idUser)) {
+                ((NavbarHost) requireActivity()).mostrarNavbar(
+                        !handle.isEmpty() ? "@" + handle : ""
+                );
             }
 
             binding.tvUidPerfil.setText(
