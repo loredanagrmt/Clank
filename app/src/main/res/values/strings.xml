@@ -210,8 +210,18 @@
     <string name="feed_hace_meses">Hace %d meses</string>
     <string name="feed_hace_anyos">Hace %d años</string>
 
-  <!-- Búsqueda -->
-  <string name="busqueda_hint">Buscar clanks o @usuario…</string>
-  <string name="busqueda_sin_resultados">Sin resultados para "%1$s"</string>
+    <!-- Búsqueda -->
+    <string name="busqueda_hint">Buscar clanks o @usuario…</string>
+    <string name="busqueda_sin_resultados">Sin resultados para "%1$s"</string>
+
+    <!-- Ajustes -->
+    <string name="ajustes_notificaciones">Notificaciones</string>
+    <string name="ajustes_contactar">Contacta con nosotr@s</string>
+    <string name="ajustes_alto_contraste">Alto contraste</string>
+    <string name="ajustes_tema_oscuro">Tema oscuro</string>
+    <string name="ajustes_lenguaje">Idioma</string>
+    <string name="ajustes_cambiar_contrasenya">Cambiar contraseña</string>
+    <string name="ajustes_cerrar_sesion">Cerrar sesión</string>
+    <string name="ajustes_borrar_cuenta">Borrar cuenta</string>
 
 </resources>

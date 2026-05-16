@@ -190,4 +190,23 @@
   <dimen name="feed_padding_horizontal">32dp</dimen>
   <dimen name="feed_item_spacing">32dp</dimen>
   <dimen name="feed_padding_top">12dp</dimen>
+
+  <!-- ── Ajustes ──────────────────────────────────── -->
+  <dimen name="ajustes_dimension_cero">0dp</dimen>
+
+  <dimen name="ajustes_padding_horizontal">20dp</dimen>
+  <dimen name="ajustes_padding_superior">8dp</dimen>
+  <dimen name="ajustes_padding_inferior">24dp</dimen>
+
+  <dimen name="ajustes_padding_vertical_fila">14dp</dimen>
+  <dimen name="ajustes_padding_vertical_borrar_cuenta">10dp</dimen>
+
+  <dimen name="ajustes_icono_principal">40dp</dimen>
+  <dimen name="ajustes_icono_flecha">24dp</dimen>
+
+  <dimen name="ajustes_margen_inicio_texto">12dp</dimen>
+
+  <dimen name="ajustes_texto_opcion">16sp</dimen>
+  <dimen name="ajustes_texto_borrar_cuenta">14sp</dimen>
+
 </resources>

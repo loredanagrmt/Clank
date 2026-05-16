@@ -26,6 +26,10 @@ public class AuthRepository {
         return autenticacion.signInWithEmailAndPassword(correo, contrasenya);
     }
 
+    public void cerrarSesion() {
+        autenticacion.signOut();
+    }
+
     public Task<AuthResult> registrar(String correo, String contrasenya) {
         return autenticacion.createUserWithEmailAndPassword(correo, contrasenya);
     }
