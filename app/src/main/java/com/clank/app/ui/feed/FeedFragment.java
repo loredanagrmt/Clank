@@ -107,11 +107,22 @@ public class FeedFragment extends Fragment {
             options,
             requireContext(),
             viewModel.getUsuarioRepository(),
-            clankId -> {
+            new FeedAdapter.OnClankClickListener() {
+              @Override
+              public void onClankClick(String clankId) {
               Bundle args = new Bundle();
               args.putString("clankId", clankId);
               Navigation.findNavController(requireView())
                       .navigate(R.id.action_feed_a_detalle_clank, args);
+              }
+
+              @Override
+              public void onUsuarioClick(String usuarioId) {
+                Bundle args = new Bundle();
+                args.putString("usuarioId", usuarioId);
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.action_feed_a_perfil, args);
+              }
             },
             new FeedAdapter.OnPreparacionTarjetasListener() {
               @Override
