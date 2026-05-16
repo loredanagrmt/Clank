@@ -33,6 +33,7 @@ public class PerfilViewModel extends ViewModel {
   private final MutableLiveData<Integer> numClanks = new MutableLiveData<>(0);
   private final MutableLiveData<Integer> numBocetos = new MutableLiveData<>(0);
   private boolean datosCargados = false;
+  private String idUser;
 
   //listeners en tiempo real
   private ListenerRegistration listenerClanks;
@@ -65,6 +66,10 @@ public class PerfilViewModel extends ViewModel {
     String uid = authRepository.getUid();
     return uid != null && uid.equals(idUser);
   }
+  public boolean esPerfilPropio() {
+    return idUser != null && esPerfilPropio(idUser);
+  }
+
   /////////////////////////queries/////////////////////////
   public FirestoreRecyclerOptions<Clank> buildClankOptionsAcabados(String idUser) {
     Query query = clankRepository.getPorUsuario(idUser)
@@ -91,6 +96,7 @@ public class PerfilViewModel extends ViewModel {
   public void cargarDatos(String idUser) {
     if (datosCargados) return;
     datosCargados = true;
+    this.idUser = idUser;
     cargarPerfil(idUser);
     cargarContadores(idUser);
   }
