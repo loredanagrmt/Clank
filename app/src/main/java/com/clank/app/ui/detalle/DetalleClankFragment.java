@@ -29,8 +29,9 @@ import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
 
 import java.util.Arrays;
-
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -107,14 +108,6 @@ public class DetalleClankFragment extends Fragment {
       );
     });
 
-    viewModel.getCargando().observe(getViewLifecycleOwner(), cargando -> {
-      boolean estaCargando = Boolean.TRUE.equals(cargando);
-
-      binding.overlayCargando.setVisibility(
-              estaCargando ? View.VISIBLE : View.GONE
-      );
-    });
-
     viewModel.getDetalle().observe(getViewLifecycleOwner(), datos -> {
       if (datos == null) return;
       rellenarVista(datos);
@@ -154,6 +147,54 @@ public class DetalleClankFragment extends Fragment {
     rellenarHerramientas(datos.herramientas);
     rellenarInstrucciones(datos.instrucciones);
     rellenarCategorias(datos.categorias);
+
+    //cabecera de usuario
+    String handle = datos.usuarioClank != null && !datos.usuarioClank.trim().isEmpty()
+            ? "@" + datos.usuarioClank.replace("@", "").trim()
+            : datos.nombreUsuario;
+    binding.cabeceraUsuario.tvUsernameItem.setText(handle);
+
+    if (datos.fechaPublicacion != null) {
+      binding.cabeceraUsuario.tvFechaItem.setText(
+              formatearFechaRelativa(datos.fechaPublicacion));
+      binding.cabeceraUsuario.tvFechaItem.setVisibility(View.VISIBLE);
+    } else {
+      binding.cabeceraUsuario.tvFechaItem.setVisibility(View.GONE);
+    }
+
+    if (datos.fotoPerfil != null && !datos.fotoPerfil.isEmpty()) {
+      Glide.with(this)
+              .load(datos.fotoPerfil)
+              .circleCrop()
+              .placeholder(R.drawable.ic_usuario_inactivo)
+              .into(binding.cabeceraUsuario.civAvatarUsuario);
+    } else {
+      binding.cabeceraUsuario.civAvatarUsuario
+              .setImageResource(R.drawable.ic_usuario_inactivo);
+    }
+
+    binding.cabeceraUsuario.civAvatarUsuario
+            .setOnClickListener(v -> navegarAPerfilAutor());
+    binding.cabeceraUsuario.tvUsernameItem
+            .setOnClickListener(v -> navegarAPerfilAutor());
+  }
+
+  /////////////////////////fecha relativa/////////////////////////
+
+  private String formatearFechaRelativa(Date fecha) {
+    long diferencia = System.currentTimeMillis() - fecha.getTime();
+    long minutos = TimeUnit.MILLISECONDS.toMinutes(diferencia);
+    long horas   = TimeUnit.MILLISECONDS.toHours(diferencia);
+    long dias    = TimeUnit.MILLISECONDS.toDays(diferencia);
+    long meses   = dias / 30;
+    long anyos   = dias / 365;
+
+    if (minutos < 1)  return getString(R.string.feed_ahora);
+    if (minutos < 60) return getString(R.string.feed_hace_minutos, minutos);
+    if (horas < 24)   return getString(R.string.feed_hace_horas, horas);
+    if (dias < 30)    return getString(R.string.feed_hace_dias, dias);
+    if (meses < 12)   return getString(R.string.feed_hace_meses, meses);
+    return getString(R.string.feed_hace_anyos, anyos);
   }
 
   /////////////////////////tiempo (solo visual, no clickable)/////////////////////////
@@ -329,4 +370,16 @@ public class DetalleClankFragment extends Fragment {
             });
   }
 
+  /////////////////////////navegar a perfil del autor/////////////////////////
+
+  private void navegarAPerfilAutor() {
+    DetalleClankViewModel.DetalleData datos = viewModel.getDetalle().getValue();
+    if (datos == null) return;
+    String uid = datos.usuarioId;
+    if (uid == null || uid.isEmpty()) return;
+    Bundle args = new Bundle();
+    args.putString("usuarioId", uid);
+    Navigation.findNavController(requireView())
+            .navigate(R.id.action_detalle_a_perfil, args);
+  }
 }
