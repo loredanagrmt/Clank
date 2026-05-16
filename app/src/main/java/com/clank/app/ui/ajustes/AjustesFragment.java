@@ -63,11 +63,10 @@ public class AjustesFragment extends Fragment {
                 getString(R.string.elige_tu_idioma),
                 obtenerIdiomasDisponibles(),
                 codigoIdioma -> {
-                    GestorIdioma.getInstance(requireContext()).guardarIdioma(codigoIdioma);
+                    GestorIdioma.getInstance(requireContext()).aplicarIdioma(codigoIdioma);
                     reiniciarAppTrasCambioIdioma();
                 }
         );
-
         hoja.show(getChildFragmentManager(), "selector_idioma_ajustes");
     }
 
