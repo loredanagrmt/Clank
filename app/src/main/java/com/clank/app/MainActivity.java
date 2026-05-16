@@ -159,19 +159,43 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
         }
     }
 
+    ///////////////////////// métodos NavbarHost/////////////////////////
     @Override
     public void mostrarNavbar(String titulo) {
         navbarBinding.tvNavbarTitulo.setText(titulo);
+        navbarBinding.btnNavbarVolver.setVisibility(View.GONE);
         navbarBinding.btnNavbarAccion.setVisibility(View.GONE);
+        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
         binding.navbar.getRoot().setVisibility(View.VISIBLE);
     }
 
     @Override
     public void mostrarNavbar(String titulo, @DrawableRes int iconoAccion, View.OnClickListener onAccion) {
         navbarBinding.tvNavbarTitulo.setText(titulo);
+        navbarBinding.btnNavbarVolver.setVisibility(View.GONE);
         navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
         navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
         navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
+        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
+        binding.navbar.getRoot().setVisibility(View.VISIBLE);
+    }
+    @Override
+    public void mostrarNavbarConVolver(String titulo) {
+        navbarBinding.tvNavbarTitulo.setText(titulo);
+        navbarBinding.btnNavbarVolver.setVisibility(View.VISIBLE);
+        navbarBinding.btnNavbarAccion.setVisibility(View.GONE);
+        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
+        binding.navbar.getRoot().setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void mostrarNavbarConVolver(String titulo, @DrawableRes int iconoAccion, View.OnClickListener onAccion) {
+        navbarBinding.tvNavbarTitulo.setText(titulo);
+        navbarBinding.btnNavbarVolver.setVisibility(View.VISIBLE);
+        navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
+        navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
+        navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
+        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
         binding.navbar.getRoot().setVisibility(View.VISIBLE);
     }
 
