@@ -228,6 +228,8 @@
     <string name="filtrar_titulo">Filtrar</string>
     <string name="resultados_vacio">No hay clanks en esta categoría</string>
 
+  <!-- Likes -->
+  <string name="tarjeta_likes_desc">Likes</string>
 
 
 </resources>
