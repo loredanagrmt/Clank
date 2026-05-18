@@ -14,6 +14,7 @@ import com.clank.app.data.repository.UsuarioRepository;
 import com.clank.app.databinding.ItemFeedBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.clank.app.data.repository.ClankRepository;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -42,46 +43,46 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   private final Context context;
   private final UsuarioRepository usuarioRepository;
+  private final ClankRepository clankRepository;
+  private final String uidUsuario;
   private final OnClankClickListener listener;
   @Nullable
   private final OnPreparacionTarjetasListener listenerPreparacion;
   private final TraductorTarjetaClank traductorTarjetaClank;
-  private final Map<String, TraductorTarjetaClank.TextoTarjetaTraducido>
-          cacheTraducciones = new HashMap<>();
+  private final Map<String, TraductorTarjetaClank.TextoTarjetaTraducido> cacheTraducciones = new HashMap<>();
+  private final Map<String, Boolean> cacheLikes = new HashMap<>();
   private int versionPreparacion = 0;
 
   public FeedAdapter(
-          @NonNull FirestoreRecyclerOptions<Clank> options,
-          Context context,
-          UsuarioRepository usuarioRepository,
-          OnClankClickListener listener
+    @NonNull FirestoreRecyclerOptions<Clank> options,
+    Context context,
+    UsuarioRepository usuarioRepository,
+    ClankRepository clankRepository,
+    String uidUsuario,
+    OnClankClickListener listener
   ) {
-    this(
-            options,
-            context,
-            usuarioRepository,
-            listener,
-            null
-    );
+    this(options, context, usuarioRepository, clankRepository, uidUsuario, listener, null);
   }
 
   public FeedAdapter(
-          @NonNull FirestoreRecyclerOptions<Clank> options,
-          Context context,
-          UsuarioRepository usuarioRepository,
-          OnClankClickListener listener,
-          @Nullable OnPreparacionTarjetasListener listenerPreparacion
+    @NonNull FirestoreRecyclerOptions<Clank> options,
+    Context context,
+    UsuarioRepository usuarioRepository,
+    ClankRepository clankRepository,
+    String uidUsuario,
+    OnClankClickListener listener,
+    @Nullable OnPreparacionTarjetasListener listenerPreparacion
   ) {
     super(options);
     this.context = context;
     this.usuarioRepository = usuarioRepository;
+    this.clankRepository = clankRepository;
+    this.uidUsuario = uidUsuario;
     this.listener = listener;
     this.listenerPreparacion = listenerPreparacion;
-    this.traductorTarjetaClank =
-            new TraductorTarjetaClank(context);
+    this.traductorTarjetaClank = new TraductorTarjetaClank(context);
   }
 
-  /////////////////////////inflate/////////////////////////
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -94,27 +95,55 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Clank clank) {
     String clankId = getSnapshots().getSnapshot(position).getId();
 
-    /////////////////////////tarjeta/////////////////////////
-    TraductorTarjetaClank.TextoTarjetaTraducido textos =
-            obtenerTextoTarjeta(clankId, clank);
-
+    //título y descripción
+    TraductorTarjetaClank.TextoTarjetaTraducido textos = obtenerTextoTarjeta(clankId, clank);
     holder.binding.tarjeta.tvTituloClank.setText(textos.titulo);
     holder.binding.tarjeta.tvDescripcionClank.setText(textos.descripcion);
     //icono tiempo
     int tiempo = clank.getTiempo();
-    int iconoTiempo = tiempo == 0 ? R.drawable.ic_cohete : tiempo == 1 ? R.drawable.ic_liebre : R.drawable.ic_tortuga;
-    holder.binding.tarjeta.ivTiempo.setImageDrawable(ContextCompat.getDrawable(context, iconoTiempo));
+    int iconoTiempo = tiempo == 0 ? R.drawable.ic_cohete
+      : tiempo == 1 ? R.drawable.ic_liebre
+      : R.drawable.ic_tortuga;
+    holder.binding.tarjeta.ivTiempo.setImageDrawable(
+      ContextCompat.getDrawable(context, iconoTiempo));
 
     //portada
     if (clank.getPortada() != null && !clank.getPortada().isEmpty()) {
-      Glide.with(context).load(clank.getPortada()).centerCrop().into(holder.binding.tarjeta.ivPortada);
+      Glide.with(context).load(clank.getPortada()).centerCrop()
+        .into(holder.binding.tarjeta.ivPortada);
     } else {
       holder.binding.tarjeta.ivPortada.setImageDrawable(null);
     }
 
-    /////////////////////////cabecera usuario/////////////////////////
+    //contador likes
+    holder.binding.tarjeta.tvNumLikes.setText(String.valueOf(clank.getNumLikes()));
+
+    //botón like en esquina superior derecha
+    holder.binding.tarjeta.ivOpciones.setVisibility(android.view.View.VISIBLE);
+    actualizarBotonLike(holder, clankId);
+    holder.binding.tarjeta.ivOpciones.setOnClickListener(v -> {
+      if (uidUsuario == null || uidUsuario.isEmpty()) return;
+      clankRepository.toggleLike(clankId, uidUsuario)
+        .addOnSuccessListener(ahoraTieneLike -> {
+          cacheLikes.put(clankId, ahoraTieneLike);
+          actualizarBotonLike(holder, clankId);
+        });
+    });
+
+    // cargar estado like si no está en caché
+    if (uidUsuario != null && !uidUsuario.isEmpty()
+      && !cacheLikes.containsKey(clankId)) {
+      clankRepository.hasDadoLike(clankId, uidUsuario)
+        .addOnSuccessListener(dioLike -> {
+          cacheLikes.put(clankId, dioLike);
+          actualizarBotonLike(holder, clankId);
+        });
+    }
+
+    // cabecera usuario
     holder.binding.cabeceraUsuario.tvUsernameItem.setText("");
-    holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+    holder.binding.cabeceraUsuario.civAvatarUsuario
+      .setImageResource(R.drawable.ic_usuario_inactivo);
     Glide.with(context).clear(holder.binding.cabeceraUsuario.civAvatarUsuario);
 
     String usuarioId = clank.getUsuarioId();
@@ -124,16 +153,15 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
         String foto = doc.contains("fotoPerfil") ? doc.getString("fotoPerfil") : "";
         String usuarioClank = doc.contains("usuarioClank") ? doc.getString("usuarioClank") : "";
         String handle = usuarioClank != null ? usuarioClank.replace("@", "").trim() : "";
-        holder.binding.cabeceraUsuario.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
-
+        holder.binding.cabeceraUsuario.tvUsernameItem
+          .setText(!handle.isEmpty() ? "@" + handle : "");
         if (foto != null && !foto.isEmpty()) {
-          Glide.with(context)
-            .load(foto)
-            .circleCrop()
+          Glide.with(context).load(foto).circleCrop()
             .placeholder(R.drawable.ic_usuario_inactivo)
             .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
         } else {
-          holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+          holder.binding.cabeceraUsuario.civAvatarUsuario
+            .setImageResource(R.drawable.ic_usuario_inactivo);
         }
       });
       holder.binding.cabeceraUsuario.civAvatarUsuario.setOnClickListener(v -> {
@@ -146,13 +174,24 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
     //fecha
     if (clank.getFechaPublicacion() != null) {
-      holder.binding.cabeceraUsuario.tvFechaItem.setText(formatearFechaRelativa(clank.getFechaPublicacion()));
+      holder.binding.cabeceraUsuario.tvFechaItem
+        .setText(formatearFechaRelativa(clank.getFechaPublicacion()));
     }
 
-    /////////////////////////click/////////////////////////
+    //click tarjeta
     holder.itemView.setOnClickListener(v -> {
       if (listener != null) listener.onClankClick(clankId);
     });
+  }
+
+  private void actualizarBotonLike(@NonNull ViewHolder holder, String clankId) {
+    Boolean dioLike = cacheLikes.get(clankId);
+    boolean activo = Boolean.TRUE.equals(dioLike);
+    holder.binding.tarjeta.ivOpciones.setImageResource(
+      activo ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
+    holder.binding.tarjeta.ivOpciones.setBackgroundResource(
+      activo ? R.drawable.bg_circulo_opciones_activo
+        : R.drawable.bg_circulo_opciones_inactivo);
   }
 
   @Override
@@ -163,60 +202,30 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   @Override
   public void onError(@NonNull FirebaseFirestoreException error) {
     super.onError(error);
-
-    if (listenerPreparacion != null) {
-      listenerPreparacion.alFinalizarPreparacion();
-    }
+    if (listenerPreparacion != null) listenerPreparacion.alFinalizarPreparacion();
   }
 
   private void prepararTraduccionesTarjetas() {
     int versionActual = ++versionPreparacion;
-
-    if (listenerPreparacion != null) {
-      listenerPreparacion.alIniciarPreparacion();
-    }
+    if (listenerPreparacion != null) listenerPreparacion.alIniciarPreparacion();
 
     List<Task<?>> tareas = new ArrayList<>();
 
     for (int i = 0; i < getItemCount(); i++) {
       Clank clank = getItem(i);
       String clankId = getSnapshots().getSnapshot(i).getId();
-
       String clave = construirClaveTraduccion(clankId, clank);
+      if (cacheTraducciones.containsKey(clave)) continue;
 
-      if (cacheTraducciones.containsKey(clave)) {
-        continue;
-      }
-
-      String tituloOriginal =
-              clank.getTitulo() != null ? clank.getTitulo() : "";
-
-      String descripcionOriginal =
-              clank.getDescripcion() != null ? clank.getDescripcion() : "";
-
+      String tituloOriginal = clank.getTitulo() != null ? clank.getTitulo() : "";
+      String descripcionOriginal = clank.getDescripcion() != null ? clank.getDescripcion() : "";
       TraductorTarjetaClank.TextoTarjetaTraducido textoOriginal =
-              new TraductorTarjetaClank.TextoTarjetaTraducido(
-                      tituloOriginal,
-                      descripcionOriginal
-              );
+        new TraductorTarjetaClank.TextoTarjetaTraducido(tituloOriginal, descripcionOriginal);
 
       Task<?> tarea = traductorTarjetaClank
-              .traducirSiProcede(
-                      tituloOriginal,
-                      descripcionOriginal
-              )
-              .addOnSuccessListener(resultado -> {
-                cacheTraducciones.put(
-                        clave,
-                        resultado != null ? resultado : textoOriginal
-                );
-              })
-              .addOnFailureListener(error -> {
-                cacheTraducciones.put(
-                        clave,
-                        textoOriginal
-                );
-              });
+        .traducirSiProcede(tituloOriginal, descripcionOriginal)
+        .addOnSuccessListener(r -> cacheTraducciones.put(clave, r != null ? r : textoOriginal))
+        .addOnFailureListener(e -> cacheTraducciones.put(clave, textoOriginal));
 
       tareas.add(tarea);
     }
@@ -227,62 +236,31 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     }
 
     Tasks.whenAllComplete(tareas)
-            .addOnCompleteListener(tarea ->
-                    finalizarPreparacion(versionActual)
-            );
+      .addOnCompleteListener(t -> finalizarPreparacion(versionActual));
   }
 
   private void finalizarPreparacion(int versionActual) {
-    if (versionActual != versionPreparacion) {
-      return;
-    }
-
+    if (versionActual != versionPreparacion) return;
     notifyDataSetChanged();
-
-    if (listenerPreparacion != null) {
-      listenerPreparacion.alFinalizarPreparacion();
-    }
+    if (listenerPreparacion != null) listenerPreparacion.alFinalizarPreparacion();
   }
 
-  private TraductorTarjetaClank.TextoTarjetaTraducido obtenerTextoTarjeta(
-          String clankId,
-          Clank clank
-  ) {
-    String clave =
-            construirClaveTraduccion(clankId, clank);
-
-    TraductorTarjetaClank.TextoTarjetaTraducido resultado =
-            cacheTraducciones.get(clave);
-
-    if (resultado != null) {
-      return resultado;
-    }
-
+  private TraductorTarjetaClank.TextoTarjetaTraducido obtenerTextoTarjeta(String clankId, Clank clank) {
+    String clave = construirClaveTraduccion(clankId, clank);
+    TraductorTarjetaClank.TextoTarjetaTraducido resultado = cacheTraducciones.get(clave);
+    if (resultado != null) return resultado;
     return new TraductorTarjetaClank.TextoTarjetaTraducido(
             clank.getTitulo() != null ? clank.getTitulo() : "",
             clank.getDescripcion() != null ? clank.getDescripcion() : ""
     );
   }
 
-  private String construirClaveTraduccion(
-          String clankId,
-          Clank clank
-  ) {
-    String idiomaDestino =
-            GestorIdioma.getInstance(context)
-                    .getIdiomaActual();
-
-    return clankId
-            + "|"
-            + idiomaDestino
-            + "|"
-            + Objects.hash(
-            clank.getTitulo(),
-            clank.getDescripcion()
-    );
+  private String construirClaveTraduccion(String clankId, Clank clank) {
+    String idiomaDestino = GestorIdioma.getInstance(context).getIdiomaActual();
+    return clankId + "|" + idiomaDestino + "|"
+      + Objects.hash(clank.getTitulo(), clank.getDescripcion());
   }
 
-  /////////////////////////fecha relativa/////////////////////////
   private String formatearFechaRelativa(Date fecha) {
     long diferencia = System.currentTimeMillis() - fecha.getTime();
     long minutos = TimeUnit.MILLISECONDS.toMinutes(diferencia);
@@ -290,7 +268,6 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     long dias = TimeUnit.MILLISECONDS.toDays(diferencia);
     long meses= dias / 30;
     long anyos = dias / 365;
-
     if (minutos < 1)  return context.getString(R.string.feed_ahora);
     if (minutos < 60) return context.getString(R.string.feed_hace_minutos, minutos);
     if (horas < 24) return context.getString(R.string.feed_hace_horas, horas);
@@ -299,7 +276,6 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     return context.getString(R.string.feed_hace_anyos, anyos);
   }
 
-  /////////////////////////ViewHolder/////////////////////////
   public static class ViewHolder extends RecyclerView.ViewHolder {
     final ItemFeedBinding binding;
     public ViewHolder(@NonNull ItemFeedBinding binding) {
