@@ -114,7 +114,9 @@ public class FeedFragment extends Fragment {
             options,
             requireContext(),
             viewModel.getUsuarioRepository(),
-            new FeedAdapter.OnClankClickListener() {
+            viewModel.getClankRepository(),
+            viewModel.getCurrentUserId(),
+      new FeedAdapter.OnClankClickListener() {
               @Override
               public void onClankClick(String clankId) {
               Bundle args = new Bundle();
