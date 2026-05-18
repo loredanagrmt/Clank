@@ -251,6 +251,9 @@
     <action
         android:id="@+id/action_feed_a_perfil"
         app:destination="@id/perfilFragment" />
+    <action
+        android:id="@+id/action_feedFragment_to_filtrosFragment"
+        app:destination="@id/filtrosFragment"/>
   </fragment>
 
   <fragment
@@ -265,5 +268,32 @@
         android:id="@+id/action_busqueda_a_perfil"
         app:destination="@id/perfilFragment" />
   </fragment>
+
+  <fragment
+  android:id="@+id/filtrosFragment"
+  android:name="com.clank.app.ui.filtros.FiltrosFragment"
+  android:label=""
+  tools:layout="@layout/fragment_filtros">
+  <action
+      android:id="@+id/action_filtrosFragment_to_resultadosFragment"
+      app:destination="@id/resultadosFragment" />
+</fragment>
+
+<fragment
+android:id="@+id/resultadosFragment"
+android:name="com.clank.app.ui.resultados.ResultadosFragment"
+android:label=""
+tools:layout="@layout/fragment_resultados">
+<argument
+    android:name="categoriaNombre"
+    app:argType="string"
+    android:defaultValue="" />
+<action
+    android:id="@+id/action_resultadosFragment_to_detalleClankFragment"
+    app:destination="@id/detalleClankFragment" />
+<action
+    android:id="@+id/action_resultadosFragment_to_perfilFragment"
+    app:destination="@id/perfilFragment" />
+</fragment>
 
 </navigation>
