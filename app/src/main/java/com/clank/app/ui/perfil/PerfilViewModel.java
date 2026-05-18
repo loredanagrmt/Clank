@@ -70,6 +70,10 @@ public class PerfilViewModel extends ViewModel {
     return idUser != null && esPerfilPropio(idUser);
   }
 
+  public ClankRepository getClankRepository() {
+    return clankRepository;
+  }
+
   /////////////////////////queries/////////////////////////
   public FirestoreRecyclerOptions<Clank> buildClankOptionsAcabados(String idUser) {
     Query query = clankRepository.getPorUsuario(idUser)

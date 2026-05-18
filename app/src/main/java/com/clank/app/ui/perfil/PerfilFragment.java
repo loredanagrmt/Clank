@@ -230,19 +230,16 @@ public class PerfilFragment extends Fragment {
                 ? viewModel.buildClankOptionsAcabados(idUser)
                 : viewModel.buildClankOptionsBocetos(idUser);
 
-        adapter = new ClanksAdapter(
-                options,
-                requireContext(),
-                viewModel.esPerfilPropio(idUser),
-                clankId -> {
+      adapter = new ClanksAdapter(options, requireContext(), viewModel.getClankRepository(),
+        viewModel.getCurrentUserId(), viewModel.esPerfilPropio(idUser),
+        clankId ->  {
                     Bundle args = new Bundle();
                     args.putString("clankId", clankId);
 
                     Navigation.findNavController(requireView())
                             .navigate(R.id.action_perfil_a_detalle_clank, args);
-                },
-                this::mostrarOpcionesClank,
-                new ClanksAdapter.OnPreparacionTarjetasListener() {
+        },
+        this::mostrarOpcionesClank, new ClanksAdapter.OnPreparacionTarjetasListener() {
                     @Override
                     public void alIniciarPreparacion() {
                         mostrarCargandoPerfil();
