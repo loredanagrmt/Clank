@@ -234,7 +234,6 @@ public class PerfilFragment extends Fragment {
         adapter = new ClanksAdapter(
                 options,
                 requireContext(),
-                viewModel.getUsuarioRepository(),
                 viewModel.esPerfilPropio(idUser),
                 clankId -> {
                     Bundle args = new Bundle();

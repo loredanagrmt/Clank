@@ -211,7 +211,7 @@
         android:background="@color/clank_background_light"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <include
             layout="@layout/vista_cargando"
