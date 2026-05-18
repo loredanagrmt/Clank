@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     private View btnNavFeed, btnNavCrear, btnNavPerfil;
     private View indicadorFeed, indicadorCrear, indicadorPerfil;
 
-    // (RECORDAR: ocultar en Logo e Idioma, Portada, Bienvenida, InicioSesion,
+    // Se oculta en Logo e Idioma, Portada, Bienvenida, InicioSesion,
     // Registro, EditarPerfil, CompletarPerfil, CambiarContrasenia, BorrarCuenta, CerrarSesion, OpcionesClankPerfil,
     // OpcionesCLankDetalle, OpcionesColeccion, Borrar y Publicar)
     private static final Set<Integer> FRAGMENTS_SIN_BOTTOMBAR = new HashSet<>(Arrays.asList(
@@ -160,6 +161,22 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     }
 
     ///////////////////////// métodos NavbarHost/////////////////////////
+    @Override
+    public void mostrarNavbar(String titulo, @Nullable Integer iconoAccion, @Nullable View.OnClickListener onAccion) {
+      navbarBinding.tvNavbarTitulo.setText(titulo);
+      navbarBinding.btnNavbarVolver.setVisibility(View.GONE);
+      navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
+      binding.navbar.getRoot().setVisibility(View.VISIBLE);
+
+      if (iconoAccion != null && onAccion != null) {
+        navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
+        navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
+        navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
+      } else {
+        navbarBinding.btnNavbarAccion.setOnClickListener(null);
+        navbarBinding.btnNavbarAccion.setVisibility(View.GONE);
+      }
+    }
     @Override
     public void mostrarNavbar(String titulo) {
         navbarBinding.tvNavbarTitulo.setText(titulo);

@@ -148,13 +148,13 @@ public class DetalleClankViewModel extends ViewModel {
             }
           });
           datosEnConstruccion.categorias = catNombres;
-          reducirPendientes(); 
+          reducirPendientes();
         }).addOnFailureListener(e -> {
           Log.e(TAG, "Error cargando categorías", e);
           reducirPendientes();
         });
       } else {
-        reducirPendientes(); 
+        reducirPendientes();
       }
 
     }).addOnFailureListener(e -> {
@@ -190,6 +190,7 @@ public class DetalleClankViewModel extends ViewModel {
       reducirPendientes();
     }).addOnFailureListener(e -> {
       Log.e(TAG, "Error cargando herramientas", e);
+      reducirPendientes();
     });
     clankRepository.getInstrucciones(clankId).addOnSuccessListener(snap -> {
       Log.d(TAG, "Instrucciones cargadas");
@@ -202,6 +203,7 @@ public class DetalleClankViewModel extends ViewModel {
       reducirPendientes();
     }).addOnFailureListener(e -> {
       Log.e(TAG, "Error cargando instrucciones", e);
+      reducirPendientes();
     });
   }
 

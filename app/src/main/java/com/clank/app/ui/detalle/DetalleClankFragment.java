@@ -89,11 +89,10 @@ public class DetalleClankFragment extends Fragment {
 
   private void configurarNavbar() {
     NavbarHost host = (NavbarHost) requireActivity();
-
     host.mostrarNavbar(
-            getString(R.string.detalle_titulo),
-            R.drawable.ic_opciones_activo,
-            v -> mostrarOpcionesClank()
+      getString(R.string.detalle_titulo),
+      null,
+      null
     );
   }
 
@@ -177,6 +176,32 @@ public class DetalleClankFragment extends Fragment {
             .setOnClickListener(v -> navegarAPerfilAutor());
     binding.cabeceraUsuario.tvUsernameItem
             .setOnClickListener(v -> navegarAPerfilAutor());
+    configurarBotonOpciones(datos.usuarioId);
+  }
+
+  /////////////////////////configura menu navbar/////////////////////////
+  private void configurarBotonOpciones(String autorId) {
+    NavbarHost host = (NavbarHost) requireActivity();
+
+    com.google.firebase.auth.FirebaseUser usuarioActual =
+      com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+
+    boolean esPropio = usuarioActual != null
+      && usuarioActual.getUid().equals(autorId);
+
+    if (esPropio) {
+      host.mostrarNavbar(
+        getString(R.string.detalle_titulo),
+        R.drawable.ic_opciones_activo,
+        v -> mostrarOpcionesClank()
+      );
+    } else {
+      host.mostrarNavbar(
+        getString(R.string.detalle_titulo),
+        null,
+        null
+      );
+    }
   }
 
   /////////////////////////fecha relativa/////////////////////////

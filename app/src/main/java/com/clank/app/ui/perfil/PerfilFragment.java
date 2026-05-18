@@ -219,7 +219,6 @@ public class PerfilFragment extends Fragment {
         binding.indicadorTab.setLayoutParams(lp);
     }
 
-    // RECORDAR: comprobar si diferencia clank de boceto
     ///////////////////////// adapter /////////////////////////
     private void cargarAdapter(boolean soloAcabados) {
         mostrarCargandoPerfil();
