@@ -605,7 +605,7 @@ public class CrearFragment extends Fragment {
               .inflate(R.layout.bt_secundario, binding.flexboxCategorias, false);
 
       chip.setText(catNombre);
-      chip.setTag(catNombre);
+      chip.setTag(cat[0]);
 
       ViewGroup.MarginLayoutParams lp =
               (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
