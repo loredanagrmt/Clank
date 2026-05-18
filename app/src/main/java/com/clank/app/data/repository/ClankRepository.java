@@ -26,6 +26,7 @@ public class ClankRepository {
     private static final String MATERIALES = "materiales";
     private static final String HERRAMIENTAS = "herramientas";
     private static final String INSTRUCCIONES = "instrucciones";
+  private static final String LIKES = "likes";
 
     private final FirestoreDataSource dataSource;
     private final FirebaseStorage storage;
@@ -241,5 +242,35 @@ public class ClankRepository {
   public Task<QuerySnapshot> getClanksAcabadosRecientes(int limite) {
     return dataSource.collection(COLLECTION).whereEqualTo("estadoAcabado", true)
       .orderBy("fechaPublicacion", Query.Direction.DESCENDING).limit(limite).get();
+  }
+  public Task<Boolean> toggleLike(String clankId, String uid) {
+    DocumentReference clankRef = dataSource.collection(COLLECTION).document(clankId);
+    DocumentReference likeRef = clankRef.collection(LIKES).document(uid);
+
+    return dataSource.getFirestore().runTransaction(transaction -> {
+      DocumentSnapshot likeSnap = transaction.get(likeRef);
+      boolean yaDioLike = likeSnap.exists();
+
+      if (yaDioLike) {
+        transaction.delete(likeRef);
+        transaction.update(clankRef, "numLikes", com.google.firebase.firestore.FieldValue.increment(-1));
+      } else {
+        transaction.set(likeRef, java.util.Collections.singletonMap("uid", uid));
+        transaction.update(clankRef, "numLikes", com.google.firebase.firestore.FieldValue.increment(1));
+      }
+
+      return !yaDioLike; // true = ahora tiene like, false = quitó like
+    });
+  }
+
+  public Task<Boolean> hasDadoLike(String clankId, String uid) {
+    return dataSource.collection(COLLECTION)
+      .document(clankId)
+      .collection(LIKES)
+      .document(uid)
+      .get()
+      .continueWith(task -> task.isSuccessful()
+        && task.getResult() != null
+        && task.getResult().exists());
   }
 }
