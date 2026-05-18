@@ -16,7 +16,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.clank.app.R;
 import com.clank.app.data.model.Clank;
-import com.clank.app.data.repository.UsuarioRepository;
 import com.bumptech.glide.Glide;
 
 import com.clank.app.util.GestorIdioma;
@@ -50,7 +49,6 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
   }
 
   private final Context context;
-  private final UsuarioRepository usuarioRepository;
   private final OnClankClickListener listener;
   @Nullable
   private final OnOpcionesClankClickListener listenerOpciones;
@@ -72,54 +70,48 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
   /// //////////////////////para feed (sin contador, sin opciones)/////////////////////////
   public ClanksAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
                        Context context,
-                       UsuarioRepository usuarioRepository,
                        OnClankClickListener listener) {
-    this(options, context, usuarioRepository, null, false, listener, null, null);
+    this(options, context, null, false, listener, null, null);
   }
 
   /// //////////////////////para filtrar (con contador, sin opciones)/////////////////////////
   public ClanksAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
                        Context context,
-                       UsuarioRepository usuarioRepository,
                        @Nullable TextView textViewContador,
                        OnClankClickListener listener) {
-    this(options, context, usuarioRepository, textViewContador, false, listener, null, null);
+    this(options, context, textViewContador, false, listener, null, null);
   }
 
   /// //////////////////////para perfil (sin contador, con opciones)/////////////////////////
   public ClanksAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
                        Context context,
-                       UsuarioRepository usuarioRepository,
                        boolean mostrarOpciones,
                        OnClankClickListener listener) {
-    this(options, context, usuarioRepository, null, mostrarOpciones, listener, null, null);
+    this(options, context, null, mostrarOpciones, listener, null, null);
   }
 
   /// //////////////////////para perfil (sin contador, con opciones y callback propio)/////////////////////////
   public ClanksAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
                        Context context,
-                       UsuarioRepository usuarioRepository,
                        boolean mostrarOpciones,
                        OnClankClickListener listener,
                        @Nullable OnOpcionesClankClickListener listenerOpciones) {
-    this(options, context, usuarioRepository, null, mostrarOpciones, listener, listenerOpciones, null);
+    this(options, context, null, mostrarOpciones, listener, listenerOpciones, null);
   }
 
   /// //////////////////////para perfil con traducción preparada/////////////////////////
   public ClanksAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
                        Context context,
-                       UsuarioRepository usuarioRepository,
                        boolean mostrarOpciones,
                        OnClankClickListener listener,
                        @Nullable OnOpcionesClankClickListener listenerOpciones,
                        @Nullable OnPreparacionTarjetasListener listenerPreparacion) {
-    this(options, context, usuarioRepository, null, mostrarOpciones, listener, listenerOpciones, listenerPreparacion);
+    this(options, context, null, mostrarOpciones, listener, listenerOpciones, listenerPreparacion);
   }
 
   /// //////////////////////completo/////////////////////////
   private ClanksAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
                         Context context,
-                        UsuarioRepository usuarioRepository,
                         @Nullable TextView textViewContador,
                         boolean mostrarOpciones,
                         OnClankClickListener listener,
@@ -127,14 +119,12 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
                         @Nullable OnPreparacionTarjetasListener listenerPreparacion) {
     super(options);
     this.context = context;
-    this.usuarioRepository = usuarioRepository;
     this.textViewContador = textViewContador;
     this.mostrarOpciones = mostrarOpciones;
     this.listener = listener;
     this.listenerOpciones = listenerOpciones;
     this.listenerPreparacion = listenerPreparacion;
-    this.traductorTarjetaClank =
-            new TraductorTarjetaClank(context);
+    this.traductorTarjetaClank = new TraductorTarjetaClank(context);
   }
 
   @Override
@@ -181,16 +171,6 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
       Glide.with(context).load(clank.getPortada()).centerCrop().into(holder.ivPortada);
     } else {
       holder.ivPortada.setImageDrawable(null);
-    }
-
-    //usuario
-    String usuarioId = clank.getUsuarioId();
-    if (usuarioId != null && !usuarioId.isEmpty()) {
-      usuarioRepository.getUsuario(usuarioId).addOnSuccessListener(doc -> {
-        if (!doc.exists()) return;
-        String nombre = doc.contains("nombre") ? doc.getString("nombre") : null;
-        holder.tvUsuario.setText(nombre != null ? nombre : "");
-      });
     }
 
     //listener
@@ -349,7 +329,6 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
     TextView tvTitulo;
-    TextView tvUsuario;
     TextView tvDescripcion;
     ImageView ivPortada;
     ImageView ivOpciones;
@@ -358,7 +337,6 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
     public ViewHolder(@NonNull View view) {
       super(view);
       tvTitulo = view.findViewById(R.id.tvTituloClank);
-      tvUsuario = view.findViewById(R.id.tvUsuario);
       tvDescripcion = view.findViewById(R.id.tvDescripcionClank);
       ivPortada = view.findViewById(R.id.ivPortada);
       ivOpciones = view.findViewById(R.id.ivOpciones);
