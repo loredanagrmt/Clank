@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/clank_background_light"
+    tools:context=".ui.codigoRecuperacionContrasenya.CodigoRecuperacionContrasenyaFragment">
+
+    <include
+        android:id="@+id/navbarCodigoRecuperacionContrasenya"
+        layout="@layout/navbar_superior"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTituloNavbarCodigoRecuperacionContrasenya"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:text="@string/codigo_recuperacion_contrasenya_titulo_navbar"
+        android:textColor="@color/color_clank_activo"
+        android:textSize="@dimen/codigo_recuperacion_contrasenya_texto_titulo_navbar"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/navbarCodigoRecuperacionContrasenya"
+        app:layout_constraintBottom_toBottomOf="@id/navbarCodigoRecuperacionContrasenya"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollCodigoRecuperacionContrasenya"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/navbarCodigoRecuperacionContrasenya"
+        app:layout_constraintBottom_toTopOf="@id/contenedorBotonCodigoRecuperacionContrasenya"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/codigo_recuperacion_contrasenya_padding_horizontal"
+            android:paddingTop="@dimen/codigo_recuperacion_contrasenya_padding_superior_contenido"
+            android:paddingEnd="@dimen/codigo_recuperacion_contrasenya_padding_horizontal">
+
+            <TextView
+                android:id="@+id/tvTituloCodigoRecuperacionContrasenya"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:text="@string/codigo_recuperacion_contrasenya_titulo_contenido"
+                android:textColor="@color/color_negrita"
+                android:textSize="@dimen/codigo_recuperacion_contrasenya_texto_titulo_contenido"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDescripcionCodigoRecuperacionContrasenya"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/codigo_recuperacion_contrasenya_margen_descripcion"
+                android:fontFamily="@font/poppins_regular"
+                android:lineSpacingExtra="@dimen/codigo_recuperacion_contrasenya_interlineado_descripcion"
+                android:text="@string/codigo_recuperacion_contrasenya_descripcion"
+                android:textColor="@color/color_negrita"
+                android:textSize="@dimen/codigo_recuperacion_contrasenya_texto_descripcion" />
+
+            <LinearLayout
+                android:id="@+id/contenedorCasillasCodigoRecuperacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/codigo_recuperacion_contrasenya_margen_superior_casillas"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etCodigoUno"
+                    style="@style/EstiloCasillaCodigoRecuperacion"
+                    tools:text="0" />
+
+                <EditText
+                    android:id="@+id/etCodigoDos"
+                    style="@style/EstiloCasillaCodigoRecuperacion"
+                    tools:text="0" />
+
+                <EditText
+                    android:id="@+id/etCodigoTres"
+                    style="@style/EstiloCasillaCodigoRecuperacion"
+                    tools:text="0" />
+
+                <EditText
+                    android:id="@+id/etCodigoCuatro"
+                    style="@style/EstiloCasillaCodigoRecuperacion"
+                    tools:text="0" />
+
+                <EditText
+                    android:id="@+id/etCodigoCinco"
+                    style="@style/EstiloCasillaCodigoRecuperacion"
+                    tools:text="0" />
+
+                <EditText
+                    android:id="@+id/etCodigoSeis"
+                    style="@style/EstiloCasillaCodigoRecuperacion"
+                    tools:text="0" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/contenedorBotonCodigoRecuperacionContrasenya"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/codigo_recuperacion_contrasenya_altura_footer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/btContinuarCodigoRecuperacionContrasenya"
+            layout="@layout/bt_principal"
+            android:layout_width="@dimen/codigo_recuperacion_contrasenya_ancho_boton"
+            android:layout_height="@dimen/codigo_recuperacion_contrasenya_alto_boton"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

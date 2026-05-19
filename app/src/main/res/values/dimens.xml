@@ -212,5 +212,77 @@
   <!-- Filtros  -->
   <dimen name="chip_margin">8dp</dimen>
 
+  <!-- ── Olvide Contrasenya ──────────────────────────────────── -->
+  <dimen name="olvide_contrasenya_padding_horizontal">32dp</dimen>
+  <dimen name="olvide_contrasenya_padding_superior_contenido">28dp</dimen>
 
+  <dimen name="olvide_contrasenya_texto_titulo_navbar">14sp</dimen>
+  <dimen name="olvide_contrasenya_texto_saludo">25sp</dimen>
+  <dimen name="olvide_contrasenya_texto_descripcion">15sp</dimen>
+
+  <dimen name="olvide_contrasenya_margen_descripcion">10dp</dimen>
+  <dimen name="olvide_contrasenya_interlineado_descripcion">1dp</dimen>
+
+  <dimen name="olvide_contrasenya_margen_input_correo">28dp</dimen>
+
+  <dimen name="olvide_contrasenya_altura_footer">84dp</dimen>
+  <dimen name="olvide_contrasenya_ancho_boton">142dp</dimen>
+  <dimen name="olvide_contrasenya_alto_boton">38dp</dimen>
+
+  <!-- ── Codigo recuperar contrasenya  ──────────────────────────────────── -->
+  <dimen name="codigo_recuperacion_contrasenya_padding_horizontal">32dp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_padding_superior_contenido">28dp</dimen>
+
+  <dimen name="codigo_recuperacion_contrasenya_texto_titulo_navbar">14sp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_texto_titulo_contenido">25sp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_texto_descripcion">15sp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_interlineado_descripcion">1dp</dimen>
+
+  <dimen name="codigo_recuperacion_contrasenya_margen_descripcion">10dp</dimen>
+
+  <dimen name="codigo_recuperacion_contrasenya_margen_superior_casillas">34dp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_tamanyo_casilla">40dp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_margen_horizontal_casilla">5dp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_texto_casilla">13sp</dimen>
+
+  <dimen name="codigo_recuperacion_contrasenya_altura_footer">84dp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_ancho_boton">142dp</dimen>
+  <dimen name="codigo_recuperacion_contrasenya_alto_boton">38dp</dimen>
+
+  <!-- ── Nueva contrasenya ──────────────────────────────────── -->
+  <dimen name="nueva_contrasenya_padding_horizontal">32dp</dimen>
+  <dimen name="nueva_contrasenya_padding_superior_contenido">28dp</dimen>
+
+  <dimen name="nueva_contrasenya_texto_titulo_contenido">25sp</dimen>
+  <dimen name="nueva_contrasenya_texto_descripcion">15sp</dimen>
+  <dimen name="nueva_contrasenya_interlineado_descripcion">1dp</dimen>
+
+  <dimen name="nueva_contrasenya_margen_descripcion">10dp</dimen>
+  <dimen name="nueva_contrasenya_margen_primer_input">28dp</dimen>
+
+  <dimen name="nueva_contrasenya_altura_footer">84dp</dimen>
+  <dimen name="nueva_contrasenya_ancho_boton">142dp</dimen>
+  <dimen name="nueva_contrasenya_alto_boton">38dp</dimen>
+
+  <!-- ── Cambiar contraseña ──────────────────────────────────── -->
+  <dimen name="cambiar_contrasenya_padding_horizontal">32dp</dimen>
+  <dimen name="cambiar_contrasenya_padding_superior">24dp</dimen>
+  <dimen name="cambiar_contrasenya_padding_inferior">24dp</dimen>
+
+  <dimen name="cambiar_contrasenya_texto_titulo">16sp</dimen>
+  <dimen name="cambiar_contrasenya_texto_descripcion">12sp</dimen>
+  <dimen name="cambiar_contrasenya_interlineado_descripcion">2dp</dimen>
+
+  <dimen name="cambiar_contrasenya_margen_descripcion">10dp</dimen>
+  <dimen name="cambiar_contrasenya_margen_primer_input">24dp</dimen>
+
+  <dimen name="cambiar_contrasenya_margen_checkbox">6dp</dimen>
+  <dimen name="cambiar_contrasenya_texto_checkbox">12sp</dimen>
+
+  <dimen name="cambiar_contrasenya_margen_olvido">18dp</dimen>
+  <dimen name="cambiar_contrasenya_texto_olvido">14sp</dimen>
+
+  <dimen name="cambiar_contrasenya_footer_height">88dp</dimen>
+  <dimen name="cambiar_contrasenya_boton_width">132dp</dimen>
+  <dimen name="cambiar_contrasenya_boton_height">48dp</dimen>
 </resources>

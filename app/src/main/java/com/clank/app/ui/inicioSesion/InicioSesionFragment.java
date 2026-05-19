@@ -162,8 +162,9 @@ public class InicioSesionFragment extends Fragment {
                 vista -> navegarRegistro()
         );
 
-        binding.tvOlvidoContrasenya.setOnClickListener(vista -> {
-        });
+        binding.tvOlvidoContrasenya.setOnClickListener(
+                vista -> navegarOlvideContrasenya()
+        );
     }
 
     private void iniciarSesion() {
@@ -255,6 +256,16 @@ public class InicioSesionFragment extends Fragment {
         }
 
         navegador.navigate(R.id.action_inicio_sesion_a_feed);
+    }
+    private void navegarOlvideContrasenya() {
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null
+                || navegador.getCurrentDestination().getId() != R.id.inicioSesionFragment) {
+            return;
+        }
+
+        navegador.navigate(R.id.action_inicio_sesion_a_olvide_contrasenya);
     }
 
     private void mostrarCargando(boolean cargando) {
