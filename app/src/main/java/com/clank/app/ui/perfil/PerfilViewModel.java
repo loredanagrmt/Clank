@@ -38,6 +38,7 @@ public class PerfilViewModel extends ViewModel {
   //listeners en tiempo real
   private ListenerRegistration listenerClanks;
   private ListenerRegistration listenerBocetos;
+  private ListenerRegistration listenerPerfil;
 
   @Inject
   public PerfilViewModel(UsuarioRepository usuarioRepository, ClankRepository clankRepository, AuthRepository authRepository) {
@@ -105,8 +106,8 @@ public class PerfilViewModel extends ViewModel {
     cargarContadores(idUser);
   }
   private void cargarPerfil(String idUser) {
-    usuarioRepository.getUsuario(idUser).addOnSuccessListener(doc -> {
-      if (!doc.exists()) return;
+    listenerPerfil = usuarioRepository.escucharUsuario(idUser, (doc, e) -> {
+      if (doc == null || !doc.exists()) return;
       PerfilData datos = new PerfilData();
       datos.nombre = obtenerCampo(doc, "nombre");
       datos.correo = obtenerCampo(doc, "correo");
@@ -134,10 +135,18 @@ public class PerfilViewModel extends ViewModel {
     String val = doc.getString(campo);
     return val != null ? val : "";
   }
+  public void invalidarDatos() {
+    datosCargados = false;
+    if (listenerPerfil != null) {
+      listenerPerfil.remove();
+      listenerPerfil = null;
+    }
+  }
 
   @Override
   protected void onCleared() {
     super.onCleared();
+    if (listenerPerfil  != null) listenerPerfil.remove();
     if (listenerClanks  != null) listenerClanks.remove();
     if (listenerBocetos != null) listenerBocetos.remove();
   }

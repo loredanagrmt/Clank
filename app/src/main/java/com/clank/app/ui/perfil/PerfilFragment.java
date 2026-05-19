@@ -92,15 +92,13 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (viewModel.esPerfilPropio()) {
-            ((NavbarHost) requireActivity()).ocultarNavbar();
-        }else {
-            ((NavbarHost) requireActivity()).mostrarNavbar(
-                    "",
-                    0,
-                    null
-            );
-        }
+      if (viewModel.esPerfilPropio(idUser)) {
+        ((NavbarHost) requireActivity()).ocultarNavbar();
+      } else {
+        ((NavbarHost) requireActivity()).mostrarNavbar("", 0, null);
+      }
+      viewModel.invalidarDatos();
+      viewModel.cargarDatos(idUser);
     }
 
     @Override
@@ -122,8 +120,10 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-      if (adapter != null) adapter.cerrar();
+      if (adapter != null) {
+        adapter.cerrar();
         binding = null;
+      }
     }
 
     ///////////////////////// recyclerView /////////////////////////

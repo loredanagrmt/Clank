@@ -5,6 +5,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,5 +69,11 @@ public class UsuarioRepository {
   }
   public Task<QuerySnapshot> getTodosUsuarios() {
     return baseDatos.collection(COLECCION_USUARIOS).get();
+  }
+  public ListenerRegistration escucharUsuario(String uid, EventListener<DocumentSnapshot> listener) {
+    return baseDatos
+      .collection(COLECCION_USUARIOS)
+      .document(uid)
+      .addSnapshotListener(listener);
   }
 }
