@@ -32,6 +32,7 @@ public class ResultadosFragment extends Fragment {
   private ResultadosViewModel viewModel;
   private FeedAdapter adapter;
   private String categoria;
+  private String nombreCategoria;
 
   private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
 
@@ -40,6 +41,9 @@ public class ResultadosFragment extends Fragment {
     super.onCreate(savedInstanceState);
     categoria = getArguments() != null
             ? getArguments().getString("categoria", "")
+            : "";
+    nombreCategoria = getArguments() != null
+            ? getArguments().getString("nombreCategoria", "")
             : "";
   }
 
@@ -52,9 +56,9 @@ public class ResultadosFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
-        ((NavbarHost) requireActivity())
-                .mostrarNavbarConVolver(categoria != null ? categoria : "");
+      super.onResume();
+      ((NavbarHost) requireActivity())
+              .mostrarNavbarConVolver(nombreCategoria != null ? nombreCategoria : "");
     }
 
   @Override

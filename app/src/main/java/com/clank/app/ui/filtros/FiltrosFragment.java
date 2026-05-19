@@ -68,7 +68,8 @@ public class FiltrosFragment extends Fragment {
 
     private void navegarAResultados(Categoria cat) {
         Bundle args = new Bundle();
-        args.putString("categoria", cat.getCategoria());
+        args.putString("categoria", cat.getCatId());
+        args.putString("nombreCategoria", cat.getCategoria());
         NavHostFragment.findNavController(this)
                 .navigate(R.id.action_filtrosFragment_to_resultadosFragment, args);
     }
