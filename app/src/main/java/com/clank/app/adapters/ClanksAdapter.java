@@ -278,6 +278,9 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
     String idiomaDestino = GestorIdioma.getInstance(context).getIdiomaActual();
     return clankId + "|" + idiomaDestino + "|" + Objects.hash(clank.getTitulo(), clank.getDescripcion());
   }
+  public void cerrar() {
+    traductorTarjetaClank.cerrar();
+  }
 
   @NonNull
   @Override

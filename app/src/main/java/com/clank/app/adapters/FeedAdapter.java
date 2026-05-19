@@ -260,6 +260,9 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     return clankId + "|" + idiomaDestino + "|"
       + Objects.hash(clank.getTitulo(), clank.getDescripcion());
   }
+  public void cerrar() {
+    traductorTarjetaClank.cerrar();
+  }
 
   private String formatearFechaRelativa(Date fecha) {
     long diferencia = System.currentTimeMillis() - fecha.getTime();

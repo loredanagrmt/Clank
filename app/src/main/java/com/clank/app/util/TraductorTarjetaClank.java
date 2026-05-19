@@ -14,11 +14,17 @@ import com.google.mlkit.nl.translate.TranslatorOptions;
 
 public class TraductorTarjetaClank {
 
-    private final Context contextoAplicacion;
+  private final Context contextoAplicacion;
+  private final LanguageIdentifier identificador;
 
-    public TraductorTarjetaClank(Context context) {
-        this.contextoAplicacion = context.getApplicationContext();
-    }
+  public TraductorTarjetaClank(Context context) {
+    this.contextoAplicacion = context.getApplicationContext();
+    this.identificador = LanguageIdentification.getClient();
+  }
+
+  public void cerrar() {
+    identificador.close();
+  }
 
     public static class TextoTarjetaTraducido {
         public final String titulo;
@@ -30,98 +36,53 @@ public class TraductorTarjetaClank {
         }
     }
 
-    public Task<TextoTarjetaTraducido> traducirSiProcede(
-            String tituloOriginal,
-            String descripcionOriginal
-    ) {
-        String tituloSeguro =
-                tituloOriginal != null ? tituloOriginal : "";
+  public Task<TextoTarjetaTraducido> traducirSiProcede(
+    String tituloOriginal,
+    String descripcionOriginal
+  ) {
+    String tituloSeguro = tituloOriginal != null ? tituloOriginal : "";
+    String descripcionSegura = descripcionOriginal != null ? descripcionOriginal : "";
+    String textoParaDetectar = construirTextoDeteccion(tituloSeguro, descripcionSegura);
 
-        String descripcionSegura =
-                descripcionOriginal != null ? descripcionOriginal : "";
-
-        String textoParaDetectar =
-                construirTextoDeteccion(
-                        tituloSeguro,
-                        descripcionSegura
-                );
-
-        if (textoParaDetectar.trim().isEmpty()) {
-            return Tasks.forResult(
-                    new TextoTarjetaTraducido(
-                            tituloSeguro,
-                            descripcionSegura
-                    )
-            );
-        }
-
-        String etiquetaIdiomaDestino =
-                GestorIdioma.getInstance(contextoAplicacion)
-                        .getIdiomaActual();
-
-        String idiomaDestino =
-                TranslateLanguage.fromLanguageTag(etiquetaIdiomaDestino);
-
-        if (idiomaDestino == null) {
-            return Tasks.forResult(
-                    new TextoTarjetaTraducido(
-                            tituloSeguro,
-                            descripcionSegura
-                    )
-            );
-        }
-
-        LanguageIdentifier identificador =
-                LanguageIdentification.getClient();
-
-        return identificador.identifyLanguage(textoParaDetectar)
-                .continueWithTask(tareaDeteccion -> {
-                    if (!tareaDeteccion.isSuccessful()) {
-                        return Tasks.forResult(
-                                new TextoTarjetaTraducido(
-                                        tituloSeguro,
-                                        descripcionSegura
-                                )
-                        );
-                    }
-
-                    String etiquetaIdiomaOrigen =
-                            tareaDeteccion.getResult();
-
-                    if (etiquetaIdiomaOrigen == null
-                            || "und".equalsIgnoreCase(etiquetaIdiomaOrigen)) {
-                        return Tasks.forResult(
-                                new TextoTarjetaTraducido(
-                                        tituloSeguro,
-                                        descripcionSegura
-                                )
-                        );
-                    }
-
-                    String idiomaOrigen =
-                            TranslateLanguage.fromLanguageTag(
-                                    etiquetaIdiomaOrigen
-                            );
-
-                    if (idiomaOrigen == null
-                            || idiomaOrigen.equals(idiomaDestino)) {
-                        return Tasks.forResult(
-                                new TextoTarjetaTraducido(
-                                        tituloSeguro,
-                                        descripcionSegura
-                                )
-                        );
-                    }
-
-                    return traducirTarjeta(
-                            tituloSeguro,
-                            descripcionSegura,
-                            idiomaOrigen,
-                            idiomaDestino
-                    );
-                })
-                .addOnCompleteListener(tarea -> identificador.close());
+    if (textoParaDetectar.trim().isEmpty()) {
+      return Tasks.forResult(new TextoTarjetaTraducido(tituloSeguro, descripcionSegura));
     }
+
+    String etiquetaIdiomaDestino =
+      GestorIdioma.getInstance(contextoAplicacion).getIdiomaActual();
+    String idiomaDestino = TranslateLanguage.fromLanguageTag(etiquetaIdiomaDestino);
+
+    if (idiomaDestino == null) {
+      return Tasks.forResult(new TextoTarjetaTraducido(tituloSeguro, descripcionSegura));
+    }
+
+    return identificador.identifyLanguage(textoParaDetectar)
+      .continueWithTask(tareaDeteccion -> {
+        if (!tareaDeteccion.isSuccessful()) {
+          return Tasks.forResult(
+            new TextoTarjetaTraducido(tituloSeguro, descripcionSegura));
+        }
+
+        String etiquetaIdiomaOrigen = tareaDeteccion.getResult();
+
+        if (etiquetaIdiomaOrigen == null
+          || "und".equalsIgnoreCase(etiquetaIdiomaOrigen)) {
+          return Tasks.forResult(
+            new TextoTarjetaTraducido(tituloSeguro, descripcionSegura));
+        }
+
+        String idiomaOrigen =
+          TranslateLanguage.fromLanguageTag(etiquetaIdiomaOrigen);
+
+        if (idiomaOrigen == null || idiomaOrigen.equals(idiomaDestino)) {
+          return Tasks.forResult(
+            new TextoTarjetaTraducido(tituloSeguro, descripcionSegura));
+        }
+
+        return traducirTarjeta(tituloSeguro, descripcionSegura,
+          idiomaOrigen, idiomaDestino);
+      });
+  }
 
     private Task<TextoTarjetaTraducido> traducirTarjeta(
             String tituloOriginal,

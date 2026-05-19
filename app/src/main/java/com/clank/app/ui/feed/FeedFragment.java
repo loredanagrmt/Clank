@@ -70,6 +70,7 @@ public class FeedFragment extends Fragment {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    if (adapter != null) adapter.cerrar();
     binding = null;
   }
 
