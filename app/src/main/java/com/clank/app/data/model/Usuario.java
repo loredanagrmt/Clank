@@ -1,7 +1,8 @@
 package com.clank.app.data.model;
 
-import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
+@IgnoreExtraProperties
 public class Usuario {
 
   private String uid;
@@ -11,7 +12,6 @@ public class Usuario {
   private String fotoPerfil;
   private String fechaCreacion;
   private String fechaNacimiento;
-  private Timestamp ultimaConexion;
   private boolean enLinea;
   private String usuarioClank;
 
@@ -73,19 +73,9 @@ public class Usuario {
   public void setFechaNacimiento(String fechaNacimiento) {
     this.fechaNacimiento = fechaNacimiento;
   }
-
-  public Timestamp getUltimaConexion() {
-    return ultimaConexion;
-  }
-
-  public void setUltimaConexion(Timestamp ultimaConexion) {
-    this.ultimaConexion = ultimaConexion;
-  }
-
   public boolean isEnLinea() {
     return enLinea;
   }
-
   public void setEnLinea(boolean enLinea) {
     this.enLinea = enLinea;
   }
