@@ -117,6 +117,12 @@ public class DetalleClankFragment extends Fragment {
 
     viewModel.getError().observe(getViewLifecycleOwner(), msg -> {
       if (msg != null) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
+      }
+    });
+
+    viewModel.getError().observe(getViewLifecycleOwner(), msg -> {
+      if (msg != null) {
         Toast.makeText(
                 requireContext(),
                 msg,
@@ -145,7 +151,6 @@ public class DetalleClankFragment extends Fragment {
     //descripción
     binding.tvDescripcion.setText(datos.descripcion);
 
-    //tiempo — marca el seleccionado, deja los otros inactivos
     mostrarTiempo(datos.tiempo);
 
     //listas dinámicas
@@ -418,39 +423,22 @@ public class DetalleClankFragment extends Fragment {
 
   /////////////////////////like/////////////////////////
   private void configurarLike(String clankId) {
-    //estado inicial
     viewModel.hasDadoLike(clankId).addOnSuccessListener(haDadoLike -> {
       if (binding == null) return;
       binding.btnLikeDetalle.setImageResource(
-        haDadoLike
-          ? R.drawable.ic_like_activo
-          : R.drawable.ic_like_inactivo
-      );
+        haDadoLike ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
       binding.btnLikeDetalle.setBackgroundResource(
-        haDadoLike
-          ? R.drawable.bg_circulo_opciones_activo
-          : R.drawable.bg_circulo_opciones_inactivo
-      );
+        haDadoLike ? R.drawable.bg_circulo_opciones_activo : R.drawable.bg_circulo_opciones_inactivo);
     });
 
-    //contador inicial
-    viewModel.getDetalle().observe(getViewLifecycleOwner(), datos -> {
-    });
-
-    //click like
     binding.btnLikeDetalle.setOnClickListener(v -> {
       viewModel.toggleLike(clankId).addOnSuccessListener(ahoraLikeado -> {
         if (binding == null) return;
+
         binding.btnLikeDetalle.setImageResource(
-          ahoraLikeado
-            ? R.drawable.ic_like_activo
-            : R.drawable.ic_like_inactivo
-        );
+          ahoraLikeado ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
         binding.btnLikeDetalle.setBackgroundResource(
-          ahoraLikeado
-            ? R.drawable.bg_circulo_opciones_activo
-            : R.drawable.bg_circulo_opciones_inactivo
-        );
+          ahoraLikeado ? R.drawable.bg_circulo_opciones_activo : R.drawable.bg_circulo_opciones_inactivo);
 
         //animación
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(v, "scaleX", 1f, 1.3f, 1f);
@@ -461,9 +449,15 @@ public class DetalleClankFragment extends Fragment {
         set.start();
 
         //actualizar contador
-        viewModel.getDetalle().getValue();
         DetalleClankViewModel.DetalleData datos = viewModel.getDetalle().getValue();
-        //contador se actualiza cuando ClankRepository.toggleLike actualiza numlikes en bbdde y rellenarVista se vuelve a llamar
+        if (datos != null) {
+          datos.numLikes = ahoraLikeado ? datos.numLikes + 1 : datos.numLikes - 1;
+          if (datos.numLikes < 0) datos.numLikes = 0;
+          binding.tvNumLikesDetalle.setText(String.valueOf(datos.numLikes));
+        }
+      }).addOnFailureListener(e -> {
+        android.util.Log.e("LikeDetalle", "Error en toggleLike: " + e.getMessage(), e);
+        Toast.makeText(requireContext(), "Error al dar like: " + e.getMessage(), Toast.LENGTH_LONG).show();
       });
     });
   }

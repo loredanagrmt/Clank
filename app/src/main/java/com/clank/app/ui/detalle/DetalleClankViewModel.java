@@ -43,6 +43,7 @@ public class DetalleClankViewModel extends ViewModel {
     public String  fotoPerfil    = "";
     public String  usuarioClank  = "";
     public Date fechaPublicacion = null;
+    public int numLikes = 0;
 
     public List<Material>    materiales    = new ArrayList<>();
     public List<Herramienta> herramientas  = new ArrayList<>();

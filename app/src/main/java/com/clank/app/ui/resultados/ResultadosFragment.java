@@ -69,33 +69,40 @@ public class ResultadosFragment extends Fragment {
         FirestoreRecyclerOptions<Clank> options = new FirestoreRecyclerOptions.Builder<Clank>().setQuery(viewModel.getQueryPorCategoria(categoria), Clank.class)
                 .setLifecycleOwner(getViewLifecycleOwner()).build();
 
-        adapter = new FeedAdapter(options, requireContext(), viewModel.getUsuarioRepository(),
-                new FeedAdapter.OnClankClickListener() {
-                    @Override
-                    public void onClankClick(String clankId) {
-                        Bundle args = new Bundle();
-                        args.putString("clankId", clankId);
-                        Navigation.findNavController(requireView()).navigate(R.id.action_resultadosFragment_to_detalleClankFragment, args);
-                    }
-                    @Override
-                    public void onUsuarioClick(String usuarioId) {
-                        Bundle args = new Bundle();
-                        args.putString("usuarioId", usuarioId);
-                        Navigation.findNavController(requireView()).navigate(R.id.action_resultadosFragment_to_perfilFragment, args);
-                    }
-                },
-                new FeedAdapter.OnPreparacionTarjetasListener() {
-                    @Override
-                    public void alIniciarPreparacion() {
-                        binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
-                    }
-                    @Override
-                    public void alFinalizarPreparacion() {
-                        if (binding != null)
-                            binding.overlayCargandoResultados.setVisibility(View.GONE);
-                    }
-                }
-        );
+      adapter = new FeedAdapter(
+        options,
+        requireContext(),
+        viewModel.getUsuarioRepository(),
+        viewModel.getClankRepository(),
+        viewModel.getCurrentUserId(),
+        new FeedAdapter.OnClankClickListener() {
+          @Override
+          public void onClankClick(String clankId) {
+            Bundle args = new Bundle();
+            args.putString("clankId", clankId);
+            Navigation.findNavController(requireView())
+              .navigate(R.id.action_resultadosFragment_to_detalleClankFragment, args);
+          }
+          @Override
+          public void onUsuarioClick(String usuarioId) {
+            Bundle args = new Bundle();
+            args.putString("usuarioId", usuarioId);
+            Navigation.findNavController(requireView())
+              .navigate(R.id.action_resultadosFragment_to_perfilFragment, args);
+          }
+        },
+        new FeedAdapter.OnPreparacionTarjetasListener() {
+          @Override
+          public void alIniciarPreparacion() {
+            binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
+          }
+          @Override
+          public void alFinalizarPreparacion() {
+            if (binding != null)
+              binding.overlayCargandoResultados.setVisibility(View.GONE);
+          }
+        }
+      );
 
         binding.rvResultados.setAdapter(adapter);
     }
