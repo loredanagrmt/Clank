@@ -123,15 +123,24 @@ public class CrearViewModel extends ViewModel {
       estadoPublicacion.setValue(Recurso.error("No hay sesion activa"));
       return;
     }
-    if (portadaUri != null) {
-      subirPortadaYContinuar(portadaUri, uid, clankId, titulo, descripcion, tiempo,
-        materiales, herramientas, instrucciones,
-        imagenesInstrucciones, categoriasSeleccionadas);
-    } else {
-      subirImagenesInstruccionesYCrear("", uid, clankId, titulo, descripcion, tiempo,
-        materiales, herramientas, instrucciones,
-        imagenesInstrucciones, categoriasSeleccionadas);
+    if (portadaUri == null) {
+      estadoPublicacion.setValue(Recurso.error("Debes añadir una portada"));
+      return;
     }
+
+    subirPortadaYContinuar(
+            portadaUri,
+            uid,
+            clankId,
+            titulo,
+            descripcion,
+            tiempo,
+            materiales,
+            herramientas,
+            instrucciones,
+            imagenesInstrucciones,
+            categoriasSeleccionadas
+    );
   }
 
   /// //////////////////////subir portada/////////////////////////
