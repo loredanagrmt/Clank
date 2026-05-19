@@ -1,24 +1,26 @@
 package com.clank.app.ui.ajustes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
-import com.clank.app.util.GestorTema;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentAjustesBinding;
-
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
 import com.clank.app.util.GestorIdioma;
-import android.content.Intent;
+import com.clank.app.util.GestorTema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +45,66 @@ public class AjustesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
+
         vistaModelo = new ViewModelProvider(this).get(AjustesViewModel.class);
 
+        configurarNavbar();
+        configurarListeners();
+        configurarEstadoInicial();
+        observarVistaModelo();
+    }
+
+    private void configurarNavbar() {
+        binding.navbarAjustes.tvNavbarTitulo.setText(R.string.ajustes_titulo);
+
+        binding.navbarAjustes.btnNavbarAccion.setVisibility(View.GONE);
+
+        binding.navbarAjustes.btnNavbarVolver.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
+    }
+
+    private void configurarListeners() {
         binding.btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
         binding.btnLenguaje.setOnClickListener(v -> mostrarSelectorIdiomas());
-        binding.switchTemaOscuro.setChecked(GestorTema.obtenerModoOscuroGuardado(requireContext()));
+        binding.btnCambiarContrasenya.setOnClickListener(v -> navegarACambiarContrasenya());
+        binding.btnBorrarCuenta.setOnClickListener(v -> mostrarConfirmacionBorrarCuenta());
 
         binding.switchTemaOscuro.setOnCheckedChangeListener((boton, activado) -> GestorTema.cambiarModoOscuro(requireContext(), activado));
+    }
+
+    private void configurarEstadoInicial() {
+        binding.switchTemaOscuro.setChecked(GestorTema.obtenerModoOscuroGuardado(requireContext()));
+    }
+
+    private void observarVistaModelo() {
+        vistaModelo.getEliminandoCuenta().observe(getViewLifecycleOwner(), eliminando -> {
+            boolean estaEliminando = Boolean.TRUE.equals(eliminando);
+
+            binding.btnBorrarCuenta.setEnabled(!estaEliminando);
+            binding.btnCerrarSesion.setEnabled(!estaEliminando);
+            binding.btnCambiarContrasenya.setEnabled(!estaEliminando);
+            binding.btnLenguaje.setEnabled(!estaEliminando);
+            binding.switchTemaOscuro.setEnabled(!estaEliminando);
+        });
+
+        vistaModelo.getEstadoEliminacionCuenta().observe(getViewLifecycleOwner(), estado -> {
+            if (estado == null) {
+                return;
+            }
+
+            switch (estado) {
+                case EXITO:
+                    vistaModelo.limpiarEstadoEliminacionCuenta();
+                    vistaModelo.cerrarSesion();
+                    navegarABienvenida();
+                    break;
+
+                case ERROR_GENERAL:
+                    Toast.makeText(requireContext(), R.string.ajustes_error_eliminar_cuenta, Toast.LENGTH_LONG).show();
+
+                    vistaModelo.limpiarEstadoEliminacionCuenta();
+                    break;
+            }
+        });
     }
 
     private void cerrarSesion() {
@@ -70,13 +125,17 @@ public class AjustesFragment extends Fragment {
         hoja.show(getChildFragmentManager(), "selector_idioma_ajustes");
     }
 
+    private void mostrarConfirmacionBorrarCuenta() {
+        HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(getString(R.string.ajustes_eliminar_cuenta_titulo), getString(R.string.ajustes_eliminar_cuenta_mensaje), getString(R.string.ajustes_eliminar_cuenta_cancelar), getString(R.string.ajustes_eliminar_cuenta_confirmar), () -> {
+        }, () -> vistaModelo.eliminarCuentaCompleta());
+
+        hoja.show(getChildFragmentManager(), "confirmacion_borrar_cuenta");
+    }
+
     private void reiniciarAppTrasCambioIdioma() {
         Intent intent = requireActivity().getIntent();
-        intent.addFlags(
-                Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK
-        );
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         startActivity(intent);
         requireActivity().finish();
@@ -84,13 +143,31 @@ public class AjustesFragment extends Fragment {
 
     private List<ItemOpcion> obtenerIdiomasDisponibles() {
         List<ItemOpcion> idiomas = new ArrayList<>();
+
         idiomas.add(new ItemOpcion("es", "Español"));
         idiomas.add(new ItemOpcion("en", "English"));
         idiomas.add(new ItemOpcion("fr", "Français"));
         idiomas.add(new ItemOpcion("de", "Deutsch"));
         idiomas.add(new ItemOpcion("pt", "Português"));
         idiomas.add(new ItemOpcion("it", "Italiano"));
+
         return idiomas;
+    }
+
+    private void navegarACambiarContrasenya() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_ajustes_a_cambiar_contrasenya);
+    }
+
+    private void navegarABienvenida() {
+        NavController navegador = Navigation.findNavController(requireView());
+
+        if (navegador.getCurrentDestination() == null || navegador.getCurrentDestination().getId() != R.id.ajustesFragment) {
+            return;
+        }
+
+        NavOptions opcionesNavegacion = new NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build();
+
+        navegador.navigate(R.id.bienvenidaFragment, null, opcionesNavegacion);
     }
 
     @Override

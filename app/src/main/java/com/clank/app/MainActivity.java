@@ -52,7 +52,11 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
             R.id.registroFragment,
             R.id.completarPerfilFragment,
             R.id.crearFragment,
-            R.id.editarClankFragment
+            R.id.editarClankFragment,
+            R.id.olvideContrasenyaFragment,
+            R.id.codigoRecuperacionContrasenyaFragment,
+            R.id.nuevaContrasenyaFragment,
+            R.id.cambiarContrasenyaFragment
             // R.id.detalleFragment,
             // R.id.editarPerfilFragment
     ));
