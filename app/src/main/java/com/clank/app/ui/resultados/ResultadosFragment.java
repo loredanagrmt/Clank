@@ -68,18 +68,6 @@ public class ResultadosFragment extends Fragment {
   }
 
   @Override
-  public void onStart() {
-    super.onStart();
-    if (adapter != null) adapter.startListening();
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-    if (adapter != null) adapter.stopListening();
-  }
-
-  @Override
   public void onDestroyView() {
     super.onDestroyView();
     if (adapter != null) adapter.cerrar();
