@@ -148,10 +148,9 @@ public class PerfilViewModel extends ViewModel {
   }
   public void invalidarDatos() {
     datosCargados = false;
-    if (listenerPerfil != null) {
-      listenerPerfil.remove();
-      listenerPerfil = null;
-    }
+    if (listenerPerfil  != null) { listenerPerfil.remove();  listenerPerfil  = null; }
+    if (listenerClanks  != null) { listenerClanks.remove();  listenerClanks  = null; }
+    if (listenerBocetos != null) { listenerBocetos.remove(); listenerBocetos = null; }
   }
   public LiveData<Boolean> getEstadoLike(String clankId) {
     return obtenerOCrearEstado(clankId);
