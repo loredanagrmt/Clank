@@ -194,10 +194,12 @@ public class CrearFragment extends Fragment {
   private void procesarImagenSeleccionada(Uri uri) {
     if (targetActivo == null) {
       uriPortadaSeleccionada = uri;
+      ocultarErrorPortada();
+
       binding.ivPortadaPreview.setVisibility(View.VISIBLE);
       binding.llAnyadirPortada.setVisibility(View.GONE);
       Glide.with(this).load(uri).centerCrop().into(binding.ivPortadaPreview);
-    } else {
+    }else {
       View fila = targetActivo;
       View boton = fila.findViewById(R.id.llBotonImagenInstruccion);
       ImageView preview = fila.findViewById(R.id.ivPreviewInstruccion);
@@ -255,6 +257,7 @@ public class CrearFragment extends Fragment {
   ///////////////////////// tiempo /////////////////////////
   private void seleccionarTiempo(int indice) {
     tiempoSeleccionado = indice;
+    ocultarErrorTiempo();
 
     android.widget.ImageButton[] botones = {
             binding.btnTiempoCohete,
@@ -354,6 +357,11 @@ public class CrearFragment extends Fragment {
     String titulo = binding.etTitulo.getText().toString().trim();
     String descripcion = binding.etDescripcion.getText().toString().trim();
 
+    if (uriPortadaSeleccionada == null) {
+      mostrarErrorPortada();
+      return;
+    }
+
     if (titulo.isEmpty()) {
       binding.etTitulo.setError(getString(R.string.crear_error_titulo_vacio));
       binding.etTitulo.requestFocus();
@@ -367,9 +375,7 @@ public class CrearFragment extends Fragment {
     }
 
     if (tiempoSeleccionado == -1) {
-      Toast.makeText(requireContext(),
-              getString(R.string.crear_error_tiempo),
-              Toast.LENGTH_SHORT).show();
+      mostrarErrorTiempo();
       return;
     }
 
@@ -468,6 +474,7 @@ public class CrearFragment extends Fragment {
     uriPortadaSeleccionada = null;
     uriFotoTemporal = null;
     targetActivo = null;
+    ocultarErrorPortada();
 
     binding.ivPortadaPreview.setImageDrawable(null);
     binding.ivPortadaPreview.setVisibility(View.GONE);
@@ -475,6 +482,7 @@ public class CrearFragment extends Fragment {
 
     tiempoSeleccionado = -1;
     restablecerBotonesTiempo();
+    ocultarErrorTiempo();
 
     binding.llContenedorMateriales.removeAllViews();
     anyadirFilaMaterial(false);
@@ -628,6 +636,17 @@ public class CrearFragment extends Fragment {
       binding.flexboxCategorias.addView(chip);
     }
   }
+
+  private void mostrarErrorPortada() {
+    binding.tvErrorPortada.setText(getString(R.string.crear_error_portada_vacia));
+    binding.tvErrorPortada.setVisibility(View.VISIBLE);
+  }
+
+  private void ocultarErrorPortada() {
+    binding.tvErrorPortada.setVisibility(View.GONE);
+    binding.tvErrorPortada.setText("");
+  }
+
   private boolean hayAlMenosUnMaterialValido() {
     for (int i = 0; i < binding.llContenedorMateriales.getChildCount(); i++) {
       View fila = binding.llContenedorMateriales.getChildAt(i);
@@ -684,5 +703,15 @@ public class CrearFragment extends Fragment {
       etTextoInstruccion.setError(getString(R.string.crear_error_min_instruccion));
       etTextoInstruccion.requestFocus();
     }
+  }
+
+  private void mostrarErrorTiempo() {
+    binding.tvErrorTiempo.setText(getString(R.string.crear_error_tiempo));
+    binding.tvErrorTiempo.setVisibility(View.VISIBLE);
+  }
+
+  private void ocultarErrorTiempo() {
+    binding.tvErrorTiempo.setVisibility(View.GONE);
+    binding.tvErrorTiempo.setText("");
   }
 }
