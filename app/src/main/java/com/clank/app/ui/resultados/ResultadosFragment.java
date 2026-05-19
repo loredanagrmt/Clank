@@ -36,6 +36,14 @@ public class ResultadosFragment extends Fragment {
   private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
 
   @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    categoria = getArguments() != null
+            ? getArguments().getString("categoria", "")
+            : "";
+  }
+
+  @Override
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
     binding = FragmentResultadosBinding.inflate(inflater, container, false);
@@ -54,10 +62,6 @@ public class ResultadosFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
 
     viewModel = new ViewModelProvider(this).get(ResultadosViewModel.class);
-
-        categoria = getArguments() != null
-                ? getArguments().getString("categoria", "")
-                : "";
 
     configurarRecyclerView();
     cargarAdapter();
