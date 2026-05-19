@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/clank_background_light"
@@ -52,11 +53,14 @@
                     android:textColor="@color/color_negrita"
                     android:textSize="@dimen/ajustes_texto_opcion" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch_tema_oscuro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:track="@drawable/selector_switch" />
+              <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_tema_oscuro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumb="@drawable/selector_switch"
+                app:thumbTint="@null"
+                app:track="@null"
+                app:trackTint="@null" />
 
             </LinearLayout>
 
