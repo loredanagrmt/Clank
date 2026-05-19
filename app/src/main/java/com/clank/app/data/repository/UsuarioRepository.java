@@ -52,7 +52,6 @@ public class UsuarioRepository {
         datosUsuario.put("fotoPerfil", usuario.getFotoPerfil());
         datosUsuario.put("fechaCreacion", usuario.getFechaCreacion());
         datosUsuario.put("fechaNacimiento", usuario.getFechaNacimiento());
-        datosUsuario.put("ultimaConexion", usuario.getUltimaConexion());
         datosUsuario.put("enLinea", usuario.isEnLinea());
 
         return baseDatos
