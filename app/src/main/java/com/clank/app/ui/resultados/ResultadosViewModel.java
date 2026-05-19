@@ -46,7 +46,6 @@ public class ResultadosViewModel extends ViewModel {
   }
 
   public UsuarioRepository getUsuarioRepository() { return usuarioRepository; }
-  public ClankRepository   getClankRepository()   { return clankRepository; }
   public String            getCurrentUserId()     { return authRepository.getUid(); }
 
   public LiveData<Boolean> getEstadoLike(String clankId) {
