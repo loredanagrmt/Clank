@@ -1,48 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Configuración -->
+    <!--  Configuración  -->
     <string name="app_name">Clank</string>
     <string name="id_cliente_web_firebase">976901046275-hmrl51og8g5a1l6aeed9v91hp9bs69gv.apps.googleusercontent.com</string>
 
-    <!-- Comunes -->
+    <!--  Comunes  -->
     <string name="continuar">Continuer</string>
     <string name="cancelar">Annuler</string>
     <string name="confirmar">Confirmer</string>
     <string name="volver">Retour</string>
-    <string name="error_generico">Une erreur s’est produite. Réessayez.</string>
-    <string name="error_permiso_camara">L’autorisation de la caméra est nécessaire</string>
-    <string name="error_camara">Impossible d’ouvrir la caméra</string>
+    <string name="error_generico">Une erreur est survenue. Réessaie.</string>
+    <string name="error_permiso_camara">L’autorisation d’utiliser l’appareil photo est nécessaire</string>
+    <string name="error_camara">Impossible d’ouvrir l’appareil photo</string>
+    <string name="comun_espere_un_momento">Patiente un instant</string>
 
-    <!-- Logo -->
+    <!--  Crear - hoja descartar Clank  -->
+    <string name="crear_descartar_clank_titulo">Abandonner le Clank</string>
+    <string name="crear_descartar_clank_mensaje">Veux-tu vraiment abandonner ce Clank ? Toutes les données saisies seront perdues.</string>
+    <string name="crear_descartar_clank_confirmar">Abandonner</string>
+
+    <!--  Crear - hoja publicar Clank  -->
+    <string name="crear_publicar_clank_titulo">Publier le Clank</string>
+    <string name="crear_publicar_clank_mensaje">Félicitations ! Es-tu prêt à publier ton Clank ?</string>
+    <string name="crear_publicar_clank_confirmar">Publier !</string>
+
+    <!--  Logo  -->
     <string name="logo_titulo">Clank</string>
 
-    <!-- Elegir idioma -->
-    <string name="elige_tu_idioma">Choisissez votre langue</string>
+    <!--  Elegir idioma  -->
+    <string name="elige_tu_idioma">Choisis ta langue</string>
 
-    <!-- Inspirar -->
-    <string name="inspirar_titulo">Laissez-vous inspirer</string>
-    <string name="inspirar_subtitulo">Rejoignez la communauté créative la plus cool</string>
+    <!--  Inspirar  -->
+    <string name="inspirar_titulo">Laisse-toi inspirer</string>
+    <string name="inspirar_subtitulo">Rejoins la communauté créative la plus sympa</string>
 
-    <!-- Bienvenida -->
+    <!--  Bienvenida  -->
     <string name="bienvenida_titulo">Bienvenue</string>
-    <string name="bienvenida_subtitulo">Gardez votre côté créatif en sécurité.</string>
+    <string name="bienvenida_subtitulo">Garde ton côté créatif dans un endroit sûr.</string>
     <string name="soy_nuevo">Je suis nouveau</string>
-    <string name="ya_he_estado">Je suis déjà passé par ici</string>
+    <string name="ya_he_estado">Je suis déjà venu ici</string>
 
-    <!-- Inicio de sesión -->
+    <!--  Inicio de sesión  -->
     <string name="inicio_sesion_titulo">Connexion</string>
-    <string name="correo_electronico">E-mail</string>
+    <string name="correo_electronico">Adresse e-mail</string>
     <string name="ejemplo_correo">exemple@exemple.com</string>
+    <string name="contrasena">Mot de passe</string>
     <string name="contrasenya">Mot de passe</string>
     <string name="hint_contrasenya_oculta">••••••••</string>
     <string name="iniciar_sesion">Se connecter</string>
     <string name="registrarse">S’inscrire</string>
-    <string name="olvido_contrasenya">Mot de passe oublié ? Cliquez ici</string>
-    <string name="o_inicia_con">Ou connectez-vous avec :</string>
-    <string name="aun_sin_cuenta">Pas encore de compte ? Cliquez ici</string>
+    <string name="olvido_contrasena">Mot de passe oublié ? Clique ici</string>
+    <string name="olvido_contrasenya">Mot de passe oublié ? Clique ici</string>
+    <string name="o_inicia_con">Ou connecte-toi avec :</string>
+    <string name="aun_sin_cuenta">Pas encore de compte ? Clique ici</string>
 
-    <!-- Registro -->
+    <!--  Registro  -->
     <string name="registro_titulo">Inscription</string>
     <string name="nombre_completo">Nom</string>
     <string name="nombre_apellidos">Nom</string>
@@ -50,60 +62,60 @@
     <string name="ejemplo_telefono">123 456 789</string>
     <string name="fecha_nacimiento">Date de naissance</string>
     <string name="ejemplo_fecha_nacimiento">JJ / MM / AAAA</string>
-    <string name="confirmar_contrasenya">Confirmez votre mot de passe</string>
+    <string name="confirmar_contrasenya">Confirme ton mot de passe</string>
     <string name="registrarme">M’inscrire</string>
-    <string name="ya_tienes_cuenta">Vous avez déjà un compte ? Cliquez ici</string>
+    <string name="ya_tienes_cuenta">Tu as déjà un compte ? Clique ici</string>
 
-    <!-- Errores de registro -->
-    <string name="registro_error_campos_vacios">Pour continuer, remplissez tous les champs</string>
-    <string name="registro_error_nombre_vacio">Saisissez votre nom</string>
-    <string name="registro_error_correo_vacio">Saisissez votre e-mail</string>
-    <string name="registro_error_correo_invalido">L’e-mail n’est pas valide</string>
-    <string name="registro_error_telefono_vacio">Saisissez votre numéro de téléphone</string>
-    <string name="registro_error_fecha_nacimiento_vacia">Saisissez votre date de naissance</string>
-    <string name="registro_error_contrasenya_vacia">Saisissez un mot de passe</string>
-    <string name="registro_error_confirmar_contrasenya_vacia">Confirmez votre mot de passe</string>
+    <!--  Errores de registro  -->
+    <string name="registro_error_campos_vacios">Pour continuer, complète tous les champs</string>
+    <string name="registro_error_nombre_vacio">Saisis ton nom</string>
+    <string name="registro_error_correo_vacio">Saisis ton adresse e-mail</string>
+    <string name="registro_error_correo_invalido">L’adresse e-mail n’est pas valide</string>
+    <string name="registro_error_telefono_vacio">Saisis ton numéro de téléphone</string>
+    <string name="registro_error_fecha_nacimiento_vacia">Saisis ta date de naissance</string>
+    <string name="registro_error_contrasenya_vacia">Saisis un mot de passe</string>
+    <string name="registro_error_confirmar_contrasenya_vacia">Confirme ton mot de passe</string>
     <string name="registro_error_contrasenyas_distintas">Les mots de passe ne correspondent pas</string>
     <string name="registro_error_contrasenya_corta">Le mot de passe doit contenir au moins 6 caractères</string>
-    <string name="registro_error_uid_no_obtenido">Impossible d’obtenir l’utilisateur authentifié</string>
+    <string name="registro_error_uid_no_obtenido">Impossible de récupérer l’utilisateur authentifié</string>
     <string name="registro_error_guardar_usuario">Impossible d’enregistrer l’utilisateur dans la base de données</string>
-    <string name="registro_error_registro">Impossible d’inscrire l’utilisateur. Réessayez</string>
+    <string name="registro_error_registro">Impossible d’inscrire l’utilisateur. Réessaie</string>
 
-    <!-- Popup registro -->
+    <!--  Popup registro  -->
     <string name="popup_boton_continuar">Continuer</string>
-    <string name="popup_icono_desc">Icône informative du popup</string>
-    <string name="popup_registro_perfil_titulo">C’est fait !&#10;Maintenant&#10;Passons à votre&#10;profil Clank</string>
-    <string name="popup_registro_perfil_mensaje">Voici les données que vous verrez dans votre panneau personnel</string>
+    <string name="popup_icono_desc">Icône informative de la fenêtre contextuelle</string>
+    <string name="popup_registro_perfil_titulo">C’est prêt ! Maintenant Passons à Ton profil Clank</string>
+    <string name="popup_registro_perfil_mensaje">Voici les données que tu verras dans ton espace personnel</string>
 
-    <!-- Completar perfil -->
+    <!--  Completar perfil  -->
     <string name="completar_perfil_titulo">Compléter le profil</string>
-    <string name="completar_perfil_titulo_pantalla">Terminez la création de votre profil</string>
+    <string name="completar_perfil_titulo_pantalla">Termine la création de ton profil</string>
     <string name="imagen_foto_perfil">Photo de profil</string>
     <string name="editar_foto_perfil">Modifier la photo de profil</string>
     <string name="clank_user">Clank User</string>
     <string name="ejemplo_clank_user">@utilisateur</string>
     <string name="completar_perfil_guardando">Enregistrement...</string>
-    <string name="completar_perfil_seleccionar_foto">Sélectionnez une photo</string>
-    <string name="completar_perfil_desde_galeria">Choisir depuis la galerie</string>
+    <string name="completar_perfil_seleccionar_foto">Sélectionne une photo</string>
+    <string name="completar_perfil_desde_galeria">Choisir dans la galerie</string>
     <string name="completar_perfil_desde_camara">Prendre une photo</string>
 
-    <!-- Errores de completar perfil -->
-    <string name="completar_perfil_error_usuario_clank_vacio">Saisissez votre Clank User</string>
+    <!--  Errores de completar perfil  -->
+    <string name="completar_perfil_error_usuario_clank_vacio">Saisis ton Clank User</string>
     <string name="completar_perfil_error_usuario_clank_existente">Ce Clank User est déjà utilisé</string>
-    <string name="completar_perfil_error_correo_existente">Cet e-mail est déjà enregistré. Revenez à la connexion ou utilisez un autre e-mail.</string>
-    <string name="completar_perfil_error_datos_registro">Les données d’inscription sont introuvables. Inscrivez-vous à nouveau.</string>
-    <string name="completar_perfil_error_registro">Impossible de créer le compte. Réessayez.</string>
-    <string name="completar_perfil_error_subir_foto">Impossible d’envoyer la photo de profil. Réessayez.</string>
-    <string name="completar_perfil_error_guardar_usuario">Impossible d’enregistrer votre profil. Réessayez.</string>
-    <string name="completar_perfil_error_generico">Impossible de compléter le profil. Réessayez.</string>
-    <string name="completar_perfil_error_crear_archivo_foto">Impossible de préparer la caméra. Réessayez.</string>
+    <string name="completar_perfil_error_correo_existente">Cet e-mail est déjà enregistré. Retourne à la connexion ou utilise une autre adresse e-mail.</string>
+    <string name="completar_perfil_error_datos_registro">Les données d’inscription sont introuvables. Inscris-toi à nouveau.</string>
+    <string name="completar_perfil_error_registro">Impossible de créer le compte. Réessaie.</string>
+    <string name="completar_perfil_error_subir_foto">Impossible d’importer la photo de profil. Réessaie.</string>
+    <string name="completar_perfil_error_guardar_usuario">Impossible d’enregistrer ton profil. Réessaie.</string>
+    <string name="completar_perfil_error_generico">Impossible de compléter le profil. Réessaie.</string>
+    <string name="completar_perfil_error_crear_archivo_foto">Impossible de préparer l’appareil photo. Réessaie.</string>
 
-    <!-- Popup completar perfil -->
+    <!--  Popup completar perfil  -->
     <string name="popup_completar_perfil_titulo">Profil créé !</string>
-    <string name="popup_completar_perfil_mensaje">Votre compte Clank est prêt.</string>
+    <string name="popup_completar_perfil_mensaje">Ton compte Clank est prêt.</string>
     <string name="popup_completar_perfil_icono_desc">Icône de profil complété</string>
 
-    <!-- Crear -->
+    <!--  Crear  -->
     <string name="crear_titulo">Créer un Clank</string>
     <string name="crear_publicar">Publier</string>
     <string name="crear_guardar_boceto">Enregistrer le brouillon</string>
@@ -115,38 +127,42 @@
     <string name="crear_campo_herramientas">Outils</string>
     <string name="crear_campo_instrucciones">Instructions</string>
     <string name="crear_campo_categorias">Catégories</string>
-    <string name="crear_hint_titulo">Titre de votre Clank</string>
-    <string name="crear_hint_descripcion">Décrivez brièvement de quoi il s’agit…</string>
+    <string name="crear_hint_titulo">Titre de ton Clank</string>
+    <string name="crear_hint_descripcion">Décris brièvement en quoi cela consiste…</string>
     <string name="crear_hint_material">Nom du matériau</string>
     <string name="crear_hint_herramienta">Nom de l’outil</string>
-    <string name="crear_hint_instruccion">Expliquez cette étape en détail…</string>
+    <string name="crear_hint_instruccion">Explique cette étape en détail…</string>
     <string name="crear_anyadir_material">+ Matériau</string>
     <string name="crear_anyadir_herramienta">+ Outil</string>
     <string name="crear_anyadir_instruccion">+ Instruction</string>
     <string name="crear_error_titulo_vacio">Le titre ne peut pas être vide</string>
-    <string name="crear_error_descripcion_vacia">Ajoutez une description</string>
-    <string name="crear_error_tiempo">Sélectionnez le niveau de difficulté</string>
-    <string name="crear_error_min_material">Ajoutez au moins un matériau</string>
-    <string name="crear_error_min_instruccion">Ajoutez au moins une instruction</string>
-    <string name="crear_error_publicar">Impossible de publier. Réessayez</string>
+    <string name="crear_error_descripcion_vacia">Ajoute une description</string>
+    <string name="crear_error_tiempo">Sélectionne le niveau de difficulté</string>
+    <string name="crear_error_min_material">Ajoute au moins un matériau</string>
+    <string name="crear_error_min_instruccion">Ajoute au moins une instruction</string>
+    <string name="crear_error_publicar">Impossible de publier. Réessaie</string>
     <string name="crear_boceto_proximamente">Ajout en attente</string>
-    <string name="crear_confirmar_descartar_titulo">Supprimer le Clank ?</string>
-    <string name="crear_confirmar_descartar_mensaje">Vous perdrez toutes les modifications non enregistrées.</string>
-    <string name="crear_descartar">Supprimer</string>
+    <string name="crear_confirmar_descartar_titulo">Abandonner le Clank ?</string>
+    <string name="crear_confirmar_descartar_mensaje">Tu perdras toutes les modifications non enregistrées.</string>
+    <string name="crear_descartar">Abandonner</string>
     <string name="crear_seleccionar_imagen">Ajouter une image</string>
-    <string name="crear_desde_galeria">Choisir depuis la galerie</string>
+    <string name="crear_desde_galeria">Choisir dans la galerie</string>
     <string name="crear_desde_camara">Prendre une photo</string>
     <string name="crear_anyadir_foto_paso">Ajouter une photo</string>
     <string name="crear_ver_imagen">Voir l’image</string>
     <string name="crear_eliminar_imagen">Supprimer l’image</string>
 
-    <!-- Editar Clank -->
+    <!--  Editar Clank  -->
     <string name="editar_titulo">Modifier le Clank</string>
-    <string name="editar_descartar_cambios_titulo">Annuler les modifications ?</string>
-    <string name="editar_descartar_cambios_mensaje">Les modifications que vous avez faites seront perdues.</string>
-    <string name="editar_descartar_confirmar">Annuler</string>
+    <string name="editar_descartar_cambios_titulo">Abandonner les modifications ?</string>
+    <string name="editar_descartar_cambios_mensaje">Les modifications effectuées seront perdues.</string>
+    <string name="editar_descartar_confirmar">Abandonner</string>
 
-    <!-- Tarjeta Clank -->
+    <!--  Detalle Clank  -->
+    <string name="detalle_titulo">Tes Clanks</string>
+    <string name="detalle_campo_detalles">Détails</string>
+
+    <!--  Tarjeta Clank  -->
     <string name="tarjeta_portada_desc">Couverture du Clank</string>
     <string name="tarjeta_opciones_desc">Options du Clank</string>
     <string name="tarjeta_tiempo_desc">Niveau de difficulté</string>
@@ -154,12 +170,104 @@
     <string name="tarjeta_hint_usuario">Nom d’utilisateur</string>
     <string name="tarjeta_hint_descripcion">Description du Clank…</string>
 
-    <!-- Perfil -->
+    <!--  Perfil  -->
     <string name="perfil_hint_nombre">Nom</string>
     <string name="perfil_hint_uid">@utilisateur</string>
     <string name="perfil_tab_clanks">Clanks</string>
     <string name="perfil_tab_bocetos">Brouillons</string>
     <string name="perfil_editar">Modifier le profil</string>
     <string name="perfil_ajustes">Paramètres</string>
+
+    <!--  Editar perfil  -->
+    <string name="editar_perfil_titulo">Modifier Ton Profil</string>
+    <string name="editar_perfil_guardar">Enregistrer Les Modifications</string>
+    <string name="editar_perfil_cambiar_contrasenya">Changer Le Mot De Passe</string>
+
+    <!--  Popup editar perfil  -->
+    <string name="popup_editar_perfil_titulo">Profil mis à jour !</string>
+    <string name="popup_editar_perfil_mensaje">Les modifications ont été enregistrées correctement.</string>
+    <string name="popup_editar_perfil_icono_desc">Icône de profil mis à jour</string>
+
+    <!--  Opciones Clank  -->
+    <string name="perfil_opcion_editar_clank">Modifier</string>
+    <string name="perfil_opcion_eliminar_clank">Supprimer</string>
+
+    <!--  Eliminar Clank  -->
+    <string name="perfil_eliminar_clank_titulo">Supprimer le Clank</string>
+    <string name="perfil_eliminar_clank_mensaje">Veux-tu vraiment supprimer “%1$s” ? Cette action est irréversible.</string>
+    <string name="perfil_eliminar_clank_confirmar">Supprimer</string>
+    <string name="perfil_clank_eliminado">Clank supprimé</string>
+    <string name="perfil_error_eliminar_clank">Impossible de supprimer le Clank</string>
+
+    <!--  Feed  -->
+    <string name="feed_vacio">Il n’y a pas encore de publications</string>
+    <string name="feed_ahora">À l’instant</string>
+    <string name="feed_hace_minutos">Il y a %d min</string>
+    <string name="feed_hace_horas">Il y a %d h</string>
+    <string name="feed_hace_dias">Il y a %d jours</string>
+    <string name="feed_hace_meses">Il y a %d mois</string>
+    <string name="feed_hace_anyos">Il y a %d ans</string>
+
+    <!--  Búsqueda  -->
+    <string name="busqueda_hint">Rechercher des clanks ou @utilisateur…</string>
+    <string name="busqueda_sin_resultados">Aucun résultat pour "%1$s"</string>
+
+    <!--  Ajustes  -->
+    <string name="ajustes_notificaciones">Notifications</string>
+    <string name="ajustes_contactar">Contacte-nous</string>
+    <string name="ajustes_alto_contraste">Contraste élevé</string>
+    <string name="ajustes_tema_oscuro">Thème sombre</string>
+    <string name="ajustes_lenguaje">Langue</string>
+    <string name="ajustes_cambiar_contrasenya">Changer le mot de passe</string>
+    <string name="ajustes_cerrar_sesion">Se déconnecter</string>
+    <string name="ajustes_borrar_cuenta">Supprimer le compte</string>
+
+    <!--  Filtrar por categoría  -->
+    <string name="filtrar_titulo">Filtrer</string>
+    <string name="resultados_vacio">Il n’y a aucun clank dans cette catégorie</string>
+
+    <!--  Olvide Contrasenya  -->
+    <string name="olvide_contrasenya_titulo_navbar">J’ai oublié mon mot de passe</string>
+    <string name="olvide_contrasenya_saludo">Bonjour !</string>
+    <string name="olvide_contrasenya_descripcion">Saisis ton adresse e-mail. Nous t’enverrons un code de vérification à l’étape suivante.</string>
+    <string name="olvide_contrasenya_label_correo">Adresse e-mail</string>
+    <string name="olvide_contrasenya_hint_correo">exemple@exemple.com</string>
+    <string name="olvide_contrasenya_boton_continuar">Continuer</string>
+    <string name="olvide_contrasenya_error_correo_vacio">Saisis ton adresse e-mail.</string>
+    <string name="olvide_contrasenya_error_correo_invalido">Saisis une adresse e-mail valide.</string>
+    <string name="olvide_contrasenya_error_envio_codigo">Impossible d’envoyer le code. Réessaie.</string>
+
+    <!--  Codigo recuperar contrasenya   -->
+    <string name="codigo_recuperacion_contrasenya_titulo_navbar">J’ai oublié mon mot de passe</string>
+    <string name="codigo_recuperacion_contrasenya_titulo_contenido">Tu as un e-mail !</string>
+    <string name="codigo_recuperacion_contrasenya_descripcion">Nous avons envoyé un code de vérification à ton adresse e-mail. Consulte ta boîte de réception et saisis-le juste en dessous.</string>
+    <string name="codigo_recuperacion_contrasenya_boton_continuar">Continuer</string>
+    <string name="codigo_recuperacion_contrasenya_error_codigo_incompleto">Saisis les 6 chiffres du code.</string>
+    <string name="codigo_recuperacion_contrasenya_error_codigo_invalido">Le code saisi n’est pas correct.</string>
+    <string name="codigo_recuperacion_contrasenya_error_codigo_caducado">Le code a expiré. Demande-en un nouveau.</string>
+    <string name="codigo_recuperacion_contrasenya_error_demasiados_intentos">Tu as dépassé le nombre maximal de tentatives.</string>
+    <string name="codigo_recuperacion_contrasenya_error_general">Impossible de vérifier le code. Réessaie.</string>
+
+    <!--  Nueva contrasenya   -->
+    <string name="nueva_contrasenya_titulo_navbar">Créer un nouveau mot de passe</string>
+    <string name="nueva_contrasenya_titulo_contenido">Crée un nouveau mot de passe</string>
+    <string name="nueva_contrasenya_descripcion">Saisis ton nouveau mot de passe pour pouvoir accéder de nouveau à ton compte.</string>
+    <string name="nueva_contrasenya_label_nueva">Nouveau mot de passe</string>
+    <string name="nueva_contrasenya_label_repetir">Répète ton nouveau mot de passe</string>
+    <string name="nueva_contrasenya_boton_continuar">Continuer</string>
+    <string name="popup_nueva_contrasenya_titulo">Mot de passe mis à jour !</string>
+    <string name="popup_nueva_contrasenya_mensaje">Ton mot de passe a été modifié correctement. Tu peux maintenant te connecter avec le nouveau mot de passe.</string>
+    <string name="popup_nueva_contrasenya_boton">Aller à la connexion</string>
+    <string name="popup_nueva_contrasenya_icono_desc">Icône de confirmation du changement de mot de passe</string>
+    <string name="nueva_contrasenya_error_vacia">Saisis un nouveau mot de passe.</string>
+    <string name="nueva_contrasenya_error_minimo_caracteres">Le mot de passe doit contenir au moins 6 caractères.</string>
+    <string name="nueva_contrasenya_error_repetir_vacia">Répète le nouveau mot de passe.</string>
+    <string name="nueva_contrasenya_error_no_coinciden">Les mots de passe ne correspondent pas.</string>
+    <string name="nueva_contrasenya_error_token_invalido">La récupération n’est pas valide. Demande un nouveau code.</string>
+    <string name="nueva_contrasenya_error_token_caducado">La récupération a expiré. Demande un nouveau code.</string>
+    <string name="nueva_contrasenya_error_datos_recuperacion">Impossible de récupérer les données du processus. Recommence.</string>
+    <string name="nueva_contrasenya_error_general">Impossible de mettre à jour le mot de passe. Réessaie.</string>
+    <string name="descripcion_mostrar_contrasenya">Afficher le mot de passe</string>
+    <string name="descripcion_ocultar_contrasenya">Masquer le mot de passe</string>
 
 </resources>

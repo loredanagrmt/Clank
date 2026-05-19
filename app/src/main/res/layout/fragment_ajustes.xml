@@ -5,10 +5,11 @@
     android:background="@color/clank_background_light"
     android:orientation="vertical">
 
-    <View
-        android:id="@+id/view_toolbar_placeholder"
+    <include
+        android:id="@+id/navbarAjustes"
+        layout="@layout/navbar_superior"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="wrap_content" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -24,82 +25,6 @@
             android:paddingTop="@dimen/ajustes_padding_superior"
             android:paddingEnd="@dimen/ajustes_padding_horizontal"
             android:paddingBottom="@dimen/ajustes_padding_inferior">
-
-            <LinearLayout
-                android:id="@+id/btn_contactar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/ajustes_padding_vertical_fila"
-                android:paddingBottom="@dimen/ajustes_padding_vertical_fila">
-
-                <ImageView
-                    android:id="@+id/icon_contactar"
-                    android:layout_width="@dimen/ajustes_icono_principal"
-                    android:layout_height="@dimen/ajustes_icono_principal"
-                    android:src="@drawable/ic_contacta_nosotros" />
-
-                <TextView
-                    android:id="@+id/label_contactar"
-                    android:layout_width="@dimen/ajustes_dimension_cero"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/ajustes_margen_inicio_texto"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/ajustes_contactar"
-                    android:textColor="@color/color_negrita"
-                    android:textSize="@dimen/ajustes_texto_opcion" />
-
-                <ImageView
-                    android:id="@+id/icon_play_contactar"
-                    android:layout_width="@dimen/ajustes_icono_flecha"
-                    android:layout_height="@dimen/ajustes_icono_flecha"
-                    android:clickable="false"
-                    android:contentDescription="@null"
-                    android:focusable="false"
-                    android:src="@drawable/ic_play" />
-
-            </LinearLayout>
-
-            <!--
-            <LinearLayout
-                android:id="@+id/row_alto_contraste"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/ajustes_padding_vertical_fila"
-                android:paddingBottom="@dimen/ajustes_padding_vertical_fila">
-
-                <ImageView
-                    android:id="@+id/icon_alto_contraste"
-                    android:layout_width="@dimen/ajustes_icono_principal"
-                    android:layout_height="@dimen/ajustes_icono_principal"
-                    android:src="@drawable/ic_alto_contraste" />
-
-                <TextView
-                    android:id="@+id/label_alto_contraste"
-                    android:layout_width="@dimen/ajustes_dimension_cero"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/ajustes_margen_inicio_texto"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/ajustes_alto_contraste"
-                    android:textColor="@color/color_negrita"
-                    android:textSize="@dimen/ajustes_texto_opcion" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch_alto_contraste"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:track="@drawable/selector_switch" />
-
-            </LinearLayout>
-            -->
 
             <LinearLayout
                 android:id="@+id/row_tema_oscuro"
@@ -166,7 +91,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btn_cambiar_contrasena"
+                android:id="@+id/btn_cambiar_contrasenya"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -178,13 +103,13 @@
                 android:paddingBottom="@dimen/ajustes_padding_vertical_fila">
 
                 <ImageView
-                    android:id="@+id/icon_cambiar_contrasena"
+                    android:id="@+id/icon_cambiar_contrasenya"
                     android:layout_width="@dimen/ajustes_icono_principal"
                     android:layout_height="@dimen/ajustes_icono_principal"
                     android:src="@drawable/ic_cambiar_contrasenya" />
 
                 <TextView
-                    android:id="@+id/label_cambiar_contrasena"
+                    android:id="@+id/label_cambiar_contrasenya"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/ajustes_margen_inicio_texto"
