@@ -87,20 +87,22 @@ public class PerfilFragment extends Fragment {
         configurarBotones();
         observarViewModel();
 
-        viewModel.cargarDatos(idUser);
-    }
+    viewModel.cargarDatos(idUser);
+    cargarAdapter(mostrandoClanks);
+  }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-      if (viewModel.esPerfilPropio(idUser)) {
-        ((NavbarHost) requireActivity()).ocultarNavbar();
-      } else {
-        ((NavbarHost) requireActivity()).mostrarNavbar("", 0, null);
-      }
-      viewModel.invalidarDatos();
-      viewModel.cargarDatos(idUser);
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (viewModel.esPerfilPropio(idUser)) {
+      ((NavbarHost) requireActivity()).ocultarNavbar();
+    } else {
+      ((NavbarHost) requireActivity()).mostrarNavbar("", 0, null);
     }
+    viewModel.invalidarDatos();
+    viewModel.cargarDatos(idUser);
+    cargarAdapter(mostrandoClanks);
+  }
 
     @Override
     public void onStart() {
@@ -313,19 +315,14 @@ public class PerfilFragment extends Fragment {
                             : ""
             );
 
-            if (perfil.fotoPerfil != null && !perfil.fotoPerfil.isEmpty()) {
-                Glide.with(this)
-                        .load(perfil.fotoPerfil)
-                        .circleCrop()
-                        .placeholder(R.drawable.ic_usuario_inactivo)
-                        .into(binding.civFotoPerfil);
-            }
-
-            // Carga el adapter solo la primera vez
-            if (adapter == null) {
-                cargarAdapter(mostrandoClanks);
-            }
-        });
+      if (perfil.fotoPerfil != null && !perfil.fotoPerfil.isEmpty()) {
+        Glide.with(this)
+          .load(perfil.fotoPerfil)
+          .circleCrop()
+          .placeholder(R.drawable.ic_usuario_inactivo)
+          .into(binding.civFotoPerfil);
+      }
+    });
 
         viewModel.getNumClanks().observe(getViewLifecycleOwner(), num ->
                 binding.tvNumClanks.setText(
