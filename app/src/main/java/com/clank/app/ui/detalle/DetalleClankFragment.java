@@ -27,11 +27,10 @@ import androidx.navigation.Navigation;
 
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
+import com.clank.app.util.FechaUtils;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import android.animation.AnimatorSet;
@@ -167,7 +166,7 @@ public class DetalleClankFragment extends Fragment {
 
     if (datos.fechaPublicacion != null) {
       binding.cabeceraUsuario.tvFechaItem.setText(
-              formatearFechaRelativa(datos.fechaPublicacion));
+        FechaUtils.formatearFechaRelativa(requireContext(), datos.fechaPublicacion));
       binding.cabeceraUsuario.tvFechaItem.setVisibility(View.VISIBLE);
     } else {
       binding.cabeceraUsuario.tvFechaItem.setVisibility(View.GONE);
@@ -215,24 +214,6 @@ public class DetalleClankFragment extends Fragment {
         null
       );
     }
-  }
-
-  /////////////////////////fecha relativa/////////////////////////
-
-  private String formatearFechaRelativa(Date fecha) {
-    long diferencia = System.currentTimeMillis() - fecha.getTime();
-    long minutos = TimeUnit.MILLISECONDS.toMinutes(diferencia);
-    long horas   = TimeUnit.MILLISECONDS.toHours(diferencia);
-    long dias    = TimeUnit.MILLISECONDS.toDays(diferencia);
-    long meses   = dias / 30;
-    long anyos   = dias / 365;
-
-    if (minutos < 1)  return getString(R.string.feed_ahora);
-    if (minutos < 60) return getString(R.string.feed_hace_minutos, minutos);
-    if (horas < 24)   return getString(R.string.feed_hace_horas, horas);
-    if (dias < 30)    return getString(R.string.feed_hace_dias, dias);
-    if (meses < 12)   return getString(R.string.feed_hace_meses, meses);
-    return getString(R.string.feed_hace_anyos, anyos);
   }
 
   /////////////////////////tiempo (solo visual, no clickable)/////////////////////////
