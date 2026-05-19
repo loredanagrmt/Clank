@@ -1,9 +1,11 @@
 package com.clank.app.ui.feed;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,9 +21,8 @@ import com.clank.app.ui.comun.NavbarHost;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.clank.app.data.model.Clank;
 
+import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
-import android.graphics.Rect;
-import android.view.View;
 
 @AndroidEntryPoint
 public class FeedFragment extends Fragment {
@@ -30,7 +31,9 @@ public class FeedFragment extends Fragment {
   private FeedViewModel viewModel;
   private FeedAdapter adapter;
 
-  /////////////////////////ciclo de vida/////////////////////////
+  //guarda los clankIds cuyos observadores ya arrancamos para no duplicar
+  private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
+
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
@@ -75,24 +78,21 @@ public class FeedFragment extends Fragment {
   }
 
   /////////////////////////navbar/////////////////////////
+
   private void configurarNavbar() {
     binding.navbar.tvNavbarTitulo.setText(getString(R.string.app_name));
     binding.navbar.btnNavbarVolver.setVisibility(View.GONE);
 
-    // botón buscar solo en feed
     binding.navbar.btnNavbarAccion.setVisibility(View.VISIBLE);
     binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_buscar);
-    binding.navbar.btnNavbarAccion.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_feed_a_busqueda));
+    binding.navbar.btnNavbarAccion.setOnClickListener(v ->
+      Navigation.findNavController(requireView()).navigate(R.id.action_feed_a_busqueda));
 
-    //botón filtrar solo en feed
     binding.navbar.btnNavbarFiltrar.setVisibility(View.VISIBLE);
     binding.navbar.btnNavbarFiltrar.setOnClickListener(v ->
-            Navigation.findNavController(requireView())
-                    .navigate(R.id.action_feedFragment_to_filtrosFragment)
-    );
+      Navigation.findNavController(requireView()).navigate(R.id.action_feedFragment_to_filtrosFragment));
   }
 
-  /////////////////////////recyclerView/////////////////////////
   private void configurarRecyclerView() {
     binding.rvFeed.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.rvFeed.setHasFixedSize(false);
@@ -100,9 +100,10 @@ public class FeedFragment extends Fragment {
     int spacing = (int) getResources().getDimension(R.dimen.feed_item_spacing);
     binding.rvFeed.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override
-      public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        int pos = parent.getChildAdapterPosition(view);
-        if (pos > 0) outRect.top = spacing;
+      public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                 @NonNull RecyclerView parent,
+                                 @NonNull RecyclerView.State state) {
+        if (parent.getChildAdapterPosition(view) > 0) outRect.top = spacing;
       }
     });
   }
@@ -112,56 +113,94 @@ public class FeedFragment extends Fragment {
     FirestoreRecyclerOptions<Clank> options = viewModel.buildFeedOptions();
 
     adapter = new FeedAdapter(
-            options,
-            requireContext(),
-            viewModel.getUsuarioRepository(),
-            viewModel.getClankRepository(),
-            viewModel.getCurrentUserId(),
+      options,
+      requireContext(),
+      viewModel.getUsuarioRepository(),
+      viewModel.getCurrentUserId(),
+
       new FeedAdapter.OnClankClickListener() {
-              @Override
-              public void onClankClick(String clankId) {
-              Bundle args = new Bundle();
-              args.putString("clankId", clankId);
-              Navigation.findNavController(requireView())
-                      .navigate(R.id.action_feed_a_detalle_clank, args);
-              }
+        @Override
+        public void onClankClick(String clankId) {
+          Bundle args = new Bundle();
+          args.putString("clankId", clankId);
+          Navigation.findNavController(requireView())
+            .navigate(R.id.action_feed_a_detalle_clank, args);
+        }
+        @Override
+        public void onUsuarioClick(String usuarioId) {
+          Bundle args = new Bundle();
+          args.putString("usuarioId", usuarioId);
+          Navigation.findNavController(requireView())
+            .navigate(R.id.action_feed_a_perfil, args);
+        }
+      },
 
-              @Override
-              public void onUsuarioClick(String usuarioId) {
-                Bundle args = new Bundle();
-                args.putString("usuarioId", usuarioId);
-                Navigation.findNavController(requireView())
-                        .navigate(R.id.action_feed_a_perfil, args);
-              }
-            },
-            new FeedAdapter.OnPreparacionTarjetasListener() {
-              @Override
-              public void alIniciarPreparacion() {
-                mostrarCargandoFeed();
-              }
+      clankId -> viewModel.toggleLike(clankId),
 
-              @Override
-              public void alFinalizarPreparacion() {
-                ocultarCargandoFeed();
-              }
-            }
+      (clankIds, numLikesIniciales) ->
+        arrancarObservadoresLikes(clankIds, numLikesIniciales),
+
+      new FeedAdapter.OnPreparacionTarjetasListener() {
+        @Override public void alIniciarPreparacion()  { mostrarCargandoFeed(); }
+        @Override public void alFinalizarPreparacion() { ocultarCargandoFeed(); }
+      }
     );
 
     binding.rvFeed.setAdapter(adapter);
   }
-  private void mostrarCargandoFeed() {
-    if (binding == null) {
-      return;
-    }
+  private void arrancarObservadoresLikes(List<String> clankIds,
+                                         List<Integer> numLikesIniciales) {
+    for (int i = 0; i < clankIds.size(); i++) {
+      String clankId       = clankIds.get(i);
+      int    likesInicial  = numLikesIniciales.get(i);
+      viewModel.iniciarListenerLike(clankId, likesInicial);
 
+      if (observadosLikes.contains(clankId)) continue;
+      observadosLikes.add(clankId);
+      observarEstadoLike(clankId);
+      observarContadorLike(clankId);
+    }
+  }
+
+  private void observarEstadoLike(String clankId) {
+    viewModel.getEstadoLike(clankId).observe(getViewLifecycleOwner(), isLiked -> {
+      if (isLiked == null) return;
+      Integer contador = viewModel.getContadorLikes(clankId).getValue();
+      adapter.actualizarLike(clankId,
+        isLiked,
+        contador != null ? contador : 0);
+      int pos = encontrarPosicion(clankId);
+      if (pos >= 0) adapter.notifyItemChanged(pos, FeedAdapter.PAYLOAD_LIKE);
+    });
+  }
+
+  private void observarContadorLike(String clankId) {
+    viewModel.getContadorLikes(clankId).observe(getViewLifecycleOwner(), contador -> {
+      if (contador == null) return;
+      Boolean isLiked = viewModel.getEstadoLike(clankId).getValue();
+      adapter.actualizarLike(clankId,
+        Boolean.TRUE.equals(isLiked),
+        contador);
+      int pos = encontrarPosicion(clankId);
+      if (pos >= 0) adapter.notifyItemChanged(pos, FeedAdapter.PAYLOAD_LIKE);
+    });
+  }
+
+  private int encontrarPosicion(String clankId) {
+    if (adapter == null) return -1;
+    for (int i = 0; i < adapter.getItemCount(); i++) {
+      if (clankId.equals(adapter.getSnapshots().getSnapshot(i).getId())) return i;
+    }
+    return -1;
+  }
+  /////////////////////////overlay cargando /////////////////////////
+  private void mostrarCargandoFeed() {
+    if (binding == null) return;
     binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
   }
 
   private void ocultarCargandoFeed() {
-    if (binding == null) {
-      return;
-    }
-
+    if (binding == null) return;
     binding.overlayCargandoFeed.setVisibility(View.GONE);
   }
 }
