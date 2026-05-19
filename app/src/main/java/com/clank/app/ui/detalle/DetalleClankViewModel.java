@@ -261,4 +261,11 @@ public class DetalleClankViewModel extends ViewModel {
   public Task<Void> eliminarClank(String clankId) {
     return clankRepository.eliminarCompletoPorId(clankId);
   }
+  /////////////////////////cierra traductor/////////////////////////
+  @Override
+  protected void onCleared() {
+    super.onCleared();
+    traductorDetalleClank.cerrar();
+    traductorCategorias.cerrar();
+  }
 }

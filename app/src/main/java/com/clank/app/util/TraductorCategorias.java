@@ -24,10 +24,13 @@ public class TraductorCategorias {
 
     private static final String TAG = "TraductorCategorias";
     private final Context contextoAplicacion;
+  private final LanguageIdentifier identificador;
 
-    @Inject
+
+  @Inject
     public TraductorCategorias(@ApplicationContext Context contextoAplicacion) {
         this.contextoAplicacion = contextoAplicacion;
+    this.identificador = LanguageIdentification.getClient();
     }
 
     public Task<List<String[]>> traducirSiProcede(List<String[]> categoriasOriginales) {
@@ -58,9 +61,6 @@ public class TraductorCategorias {
             Log.d(TAG, "Idioma destino no compatible con ML Kit.");
             return Tasks.forResult(categoriasSeguras);
         }
-
-        LanguageIdentifier identificador =
-                LanguageIdentification.getClient();
 
         return identificador.identifyLanguage(textoParaDetectar)
                 .continueWithTask(tareaDeteccion -> {
@@ -99,10 +99,6 @@ public class TraductorCategorias {
                             idiomaOrigen,
                             idiomaDestino
                     );
-                })
-                .addOnCompleteListener(tarea -> {
-                    identificador.close();
-                    Log.d(TAG, "LanguageIdentifier de categorías cerrado.");
                 });
     }
 
@@ -262,4 +258,7 @@ public class TraductorCategorias {
 
         return texto.toString();
     }
+  public void cerrar() {
+    identificador.close();
+  }
 }
