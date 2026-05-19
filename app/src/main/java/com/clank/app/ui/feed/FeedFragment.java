@@ -98,7 +98,11 @@ public class FeedFragment extends Fragment {
 
   /////////////////////////adapter/////////////////////////
   private void cargarAdapter() {
-    FirestoreRecyclerOptions<Clank> options = viewModel.buildFeedOptions();
+    FirestoreRecyclerOptions<Clank> options =
+            new FirestoreRecyclerOptions.Builder<Clank>()
+                    .setQuery(viewModel.getFeedQuery(), Clank.class)
+                    .setLifecycleOwner(getViewLifecycleOwner())
+                    .build();
 
     adapter = new FeedAdapter(
       options,
