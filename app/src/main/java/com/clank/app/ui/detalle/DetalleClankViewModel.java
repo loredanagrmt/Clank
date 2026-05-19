@@ -113,6 +113,7 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.tiempo      = clank.getTiempo();
       datosEnConstruccion.esAcabado   = clank.isEstadoAcabado();
       datosEnConstruccion.fechaPublicacion = clank.getFechaPublicacion();
+      datosEnConstruccion.numLikes = clank.getNumLikes();
 
       String uid = clank.getUsuarioId();
       datosEnConstruccion.usuarioId = uid != null ? uid : "";

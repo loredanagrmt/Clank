@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 
 @AndroidEntryPoint
 public class DetalleClankFragment extends Fragment {
@@ -44,6 +46,7 @@ public class DetalleClankFragment extends Fragment {
   private DetalleClankViewModel viewModel;
   private String clankId;
   private String tituloClankActual = "";
+  public int numLikes = 0;
 
   /////////////////////////instancia/////////////////////////
 
@@ -130,6 +133,10 @@ public class DetalleClankFragment extends Fragment {
     //título en overlay de portada
     binding.tvTitulo.setText(datos.titulo);
 
+    if (datos.numLikes >= 0) {
+      binding.tvNumLikesDetalle.setText(String.valueOf(datos.numLikes));
+    }
+
     //portada
     if (!datos.portadaUrl.isEmpty()) {
       Glide.with(this).load(datos.portadaUrl).centerCrop().into(binding.ivPortada);
@@ -177,6 +184,7 @@ public class DetalleClankFragment extends Fragment {
     binding.cabeceraUsuario.tvUsernameItem
             .setOnClickListener(v -> navegarAPerfilAutor());
     configurarBotonOpciones(datos.usuarioId);
+    configurarLike(datos.clankId);
   }
 
   /////////////////////////configura menu navbar/////////////////////////
@@ -406,5 +414,57 @@ public class DetalleClankFragment extends Fragment {
     args.putString("usuarioId", uid);
     Navigation.findNavController(requireView())
             .navigate(R.id.action_detalle_a_perfil, args);
+  }
+
+  /////////////////////////like/////////////////////////
+  private void configurarLike(String clankId) {
+    //estado inicial
+    viewModel.hasDadoLike(clankId).addOnSuccessListener(haDadoLike -> {
+      if (binding == null) return;
+      binding.btnLikeDetalle.setImageResource(
+        haDadoLike
+          ? R.drawable.ic_like_activo
+          : R.drawable.ic_like_inactivo
+      );
+      binding.btnLikeDetalle.setBackgroundResource(
+        haDadoLike
+          ? R.drawable.bg_circulo_opciones_activo
+          : R.drawable.bg_circulo_opciones_inactivo
+      );
+    });
+
+    //contador inicial
+    viewModel.getDetalle().observe(getViewLifecycleOwner(), datos -> {
+    });
+
+    //click like
+    binding.btnLikeDetalle.setOnClickListener(v -> {
+      viewModel.toggleLike(clankId).addOnSuccessListener(ahoraLikeado -> {
+        if (binding == null) return;
+        binding.btnLikeDetalle.setImageResource(
+          ahoraLikeado
+            ? R.drawable.ic_like_activo
+            : R.drawable.ic_like_inactivo
+        );
+        binding.btnLikeDetalle.setBackgroundResource(
+          ahoraLikeado
+            ? R.drawable.bg_circulo_opciones_activo
+            : R.drawable.bg_circulo_opciones_inactivo
+        );
+
+        //animación
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(v, "scaleX", 1f, 1.3f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(v, "scaleY", 1f, 1.3f, 1f);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(scaleX, scaleY);
+        set.setDuration(250);
+        set.start();
+
+        //actualizar contador
+        viewModel.getDetalle().getValue();
+        DetalleClankViewModel.DetalleData datos = viewModel.getDetalle().getValue();
+        //contador se actualiza cuando ClankRepository.toggleLike actualiza numlikes en bbdde y rellenarVista se vuelve a llamar
+      });
+    });
   }
 }
