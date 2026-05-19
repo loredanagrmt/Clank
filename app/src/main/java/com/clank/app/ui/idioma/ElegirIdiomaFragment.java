@@ -15,6 +15,9 @@ import com.clank.app.R;
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
 import com.clank.app.util.GestorIdioma;
+import android.content.Context;
+import android.content.res.Configuration;
+import java.util.Locale;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +39,10 @@ public class ElegirIdiomaFragment extends Fragment {
 
     private void mostrarSelectorIdiomas(View view) {
         HojaOpciones hoja = HojaOpciones.nuevaLista(
-                getString(R.string.elige_tu_idioma),
+                obtenerTextoSiempreEnEspanol(R.string.elige_tu_idioma),
                 obtenerIdiomasDisponibles(),
                 codigoIdioma -> {
                     GestorIdioma.getInstance(requireContext()).aplicarIdioma(codigoIdioma);
-                    GestorIdioma.getInstance(requireContext()).aplicarIdiomaSinGuardar(codigoIdioma);
 
                     NavController navController = Navigation.findNavController(view);
                     navController.navigate(R.id.action_idioma_a_inicio);
@@ -58,5 +60,18 @@ public class ElegirIdiomaFragment extends Fragment {
         idiomas.add(new ItemOpcion("pt", "Português"));
         idiomas.add(new ItemOpcion("it", "Italiano"));
         return idiomas;
+    }
+
+    private String obtenerTextoSiempreEnEspanol(int idTexto) {
+        Configuration configuracion = new Configuration(
+                requireContext().getResources().getConfiguration()
+        );
+
+        configuracion.setLocale(Locale.forLanguageTag("es"));
+
+        Context contextoEspanol =
+                requireContext().createConfigurationContext(configuracion);
+
+        return contextoEspanol.getString(idTexto);
     }
 }
