@@ -25,6 +25,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import com.clank.app.data.repository.LikeRepository;
 
 @HiltViewModel
 public class DetalleClankViewModel extends ViewModel {
@@ -61,6 +62,7 @@ public class DetalleClankViewModel extends ViewModel {
 
   private final MutableLiveData<Boolean> cargando = new MutableLiveData<>(false);
   private final AuthRepository authRepository;
+  private final LikeRepository likeRepository;
   private DetalleData datosEnConstruccion;
   private int         pendientes = 0;
   private boolean     procesoFinalLanzado = false;
@@ -72,18 +74,25 @@ public class DetalleClankViewModel extends ViewModel {
                                CategoriaRepository categoriaRepository,
                                TraductorDetalleClank traductorDetalleClank,
                                TraductorCategorias traductorCategorias,
-  AuthRepository authRepository) {
+                               AuthRepository authRepository,
+                               LikeRepository likeRepository) {
     this.clankRepository       = clankRepository;
     this.usuarioRepository     = usuarioRepository;
     this.categoriaRepository   = categoriaRepository;
     this.traductorDetalleClank = traductorDetalleClank;
     this.traductorCategorias   = traductorCategorias;
     this.authRepository        = authRepository;
+    this.likeRepository        = likeRepository;
   }
 
   public LiveData<DetalleData> getDetalle() { return detalle; }
   public LiveData<String>      getError()   { return error; }
   public LiveData<Boolean>     getCargando() { return cargando; }
+  public com.google.firebase.firestore.ListenerRegistration escucharNumLikes(
+    String clankId,
+    LikeRepository.OnNumLikesListener listener) {
+    return likeRepository.escucharNumLikes(clankId, listener);
+  }
 
   public void cargarClank(String clankId) {
     Log.d(TAG, "Inicio carga del clank: " + clankId);
@@ -271,14 +280,14 @@ public class DetalleClankViewModel extends ViewModel {
   }
   public Task<Boolean> toggleLike(String clankId) {
     String uid = authRepository.getUid();
-    if (uid == null || uid.isEmpty()) return Tasks.forException(
-      new Exception("Usuario no autenticado"));
-    return clankRepository.toggleLike(clankId, uid);
+    if (uid == null || uid.isEmpty())
+      return Tasks.forException(new Exception("Usuario no autenticado"));
+    return likeRepository.toggleLike(clankId, uid);
   }
   public Task<Boolean> hasDadoLike(String clankId) {
     String uid = authRepository.getUid();
     if (uid == null || uid.isEmpty()) return Tasks.forResult(false);
-    return clankRepository.hasDadoLike(clankId, uid);
+    return likeRepository.hasDadoLike(clankId, uid);
   }
 
   /////////////////////////cierra traductor/////////////////////////

@@ -27,14 +27,13 @@ import androidx.navigation.Navigation;
 
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
+import com.clank.app.util.AnimUtils;
 import com.clank.app.util.FechaUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 
 @AndroidEntryPoint
 public class DetalleClankFragment extends Fragment {
@@ -46,6 +45,7 @@ public class DetalleClankFragment extends Fragment {
   private String clankId;
   private String tituloClankActual = "";
   public int numLikes = 0;
+  private com.google.firebase.firestore.ListenerRegistration listenerLikes;
 
   /////////////////////////instancia/////////////////////////
 
@@ -69,6 +69,10 @@ public class DetalleClankFragment extends Fragment {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    if (listenerLikes != null) {
+      listenerLikes.remove();
+      listenerLikes = null;
+    }
     binding = null;
   }
 
@@ -406,40 +410,37 @@ public class DetalleClankFragment extends Fragment {
   private void configurarLike(String clankId) {
     viewModel.hasDadoLike(clankId).addOnSuccessListener(haDadoLike -> {
       if (binding == null) return;
-      binding.btnLikeDetalle.setImageResource(
-        haDadoLike ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
-      binding.btnLikeDetalle.setBackgroundResource(
-        haDadoLike ? R.drawable.bg_circulo_opciones_activo : R.drawable.bg_circulo_opciones_inactivo);
+      pintarBotonLike(haDadoLike);
+    });
+
+    if (listenerLikes != null) {
+      listenerLikes.remove();
+      listenerLikes = null;
+    }
+    listenerLikes = viewModel.escucharNumLikes(clankId, cantidad -> {
+      if (binding == null) return;
+      binding.tvNumLikesDetalle.setText(String.valueOf(cantidad));
     });
 
     binding.btnLikeDetalle.setOnClickListener(v -> {
       viewModel.toggleLike(clankId).addOnSuccessListener(ahoraLikeado -> {
         if (binding == null) return;
-
-        binding.btnLikeDetalle.setImageResource(
-          ahoraLikeado ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
-        binding.btnLikeDetalle.setBackgroundResource(
-          ahoraLikeado ? R.drawable.bg_circulo_opciones_activo : R.drawable.bg_circulo_opciones_inactivo);
-
-        //animación
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(v, "scaleX", 1f, 1.3f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(v, "scaleY", 1f, 1.3f, 1f);
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(scaleX, scaleY);
-        set.setDuration(250);
-        set.start();
-
-        //actualizar contador
-        DetalleClankViewModel.DetalleData datos = viewModel.getDetalle().getValue();
-        if (datos != null) {
-          datos.numLikes = ahoraLikeado ? datos.numLikes + 1 : datos.numLikes - 1;
-          if (datos.numLikes < 0) datos.numLikes = 0;
-          binding.tvNumLikesDetalle.setText(String.valueOf(datos.numLikes));
-        }
+        pintarBotonLike(ahoraLikeado);
+        AnimUtils.animarLike(binding.btnLikeDetalle);
       }).addOnFailureListener(e -> {
-        android.util.Log.e("LikeDetalle", "Error en toggleLike: " + e.getMessage(), e);
-        Toast.makeText(requireContext(), "Error al dar like: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        if (!isAdded()) return;
+        Toast.makeText(requireContext(),
+          getString(R.string.error_generico),
+          Toast.LENGTH_SHORT).show();
       });
     });
+  }
+
+  private void pintarBotonLike(boolean activo) {
+    binding.btnLikeDetalle.setImageResource(
+      activo ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
+    binding.btnLikeDetalle.setBackgroundResource(
+      activo ? R.drawable.bg_circulo_opciones_activo
+        : R.drawable.bg_circulo_opciones_inactivo);
   }
 }
