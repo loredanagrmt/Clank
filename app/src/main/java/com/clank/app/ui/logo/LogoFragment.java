@@ -54,7 +54,6 @@ public class LogoFragment extends Fragment {
 
         vistaModelo = new ViewModelProvider(this).get(LogoViewModel.class);
 
-        GestorIdioma.getInstance(requireContext()).aplicarIdiomaSinGuardar("es");
         handler.postDelayed(navegarRunnable, 1000);
     }
 
