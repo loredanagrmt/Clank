@@ -28,6 +28,7 @@ import com.clank.app.ui.comun.NavbarHost;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.Arrays;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -36,7 +37,7 @@ public class PerfilFragment extends Fragment {
 
     private static final String ID_USER = "usuarioId";
     private static final String TAB_INICIAL = "tabInicial";
-
+    private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
     private FragmentPerfilBinding binding;
     private PerfilViewModel viewModel;
     private ClanksAdapter adapter;
@@ -231,29 +232,33 @@ public class PerfilFragment extends Fragment {
                 ? viewModel.buildClankOptionsAcabados(idUser)
                 : viewModel.buildClankOptionsBocetos(idUser);
 
-      adapter = new ClanksAdapter(options, requireContext(), viewModel.getClankRepository(),
-        viewModel.getCurrentUserId(), viewModel.esPerfilPropio(idUser),
-        clankId ->  {
-                    Bundle args = new Bundle();
-                    args.putString("clankId", clankId);
-
-                    Navigation.findNavController(requireView())
-                            .navigate(R.id.action_perfil_a_detalle_clank, args);
+      adapter = new ClanksAdapter(
+        options,
+        requireContext(),
+        viewModel.getClankRepository(),
+        viewModel.getLikeRepository(),
+        viewModel.getCurrentUserId(),
+        viewModel.esPerfilPropio(idUser),
+        clankId -> {
+          Bundle args = new Bundle();
+          args.putString("clankId", clankId);
+          Navigation.findNavController(requireView())
+            .navigate(R.id.action_perfil_a_detalle_clank, args);
         },
-        this::mostrarOpcionesClank, new ClanksAdapter.OnPreparacionTarjetasListener() {
-                    @Override
-                    public void alIniciarPreparacion() {
-                        mostrarCargandoPerfil();
-                    }
-
-                    @Override
-                    public void alFinalizarPreparacion() {
-                        ocultarCargandoPerfil();
-                    }
-                }
-        );
-
-        binding.rvClanks.setAdapter(adapter);
+        this::mostrarOpcionesClank,
+        new ClanksAdapter.OnPreparacionTarjetasListener() {
+          @Override
+          public void alIniciarPreparacion()  { mostrarCargandoPerfil(); }
+          @Override
+          public void alFinalizarPreparacion() { ocultarCargandoPerfil(); }
+        }
+      );
+      if (!viewModel.esPerfilPropio(idUser)) {
+        adapter.setLikeListener(clankId -> viewModel.toggleLike(clankId));
+        adapter.setItemsListosListener((clankIds, numLikesIniciales) ->
+          arrancarObservadoresLikes(clankIds, numLikesIniciales));
+      }
+      binding.rvClanks.setAdapter(adapter);
         adapter.startListening();
     }
 
@@ -417,4 +422,45 @@ public class PerfilFragment extends Fragment {
 
         binding.overlayCargandoPerfil.setVisibility(View.GONE);
     }
+
+  private void arrancarObservadoresLikes(List<String> clankIds,
+                                         List<Integer> numLikesIniciales) {
+    for (int i = 0; i < clankIds.size(); i++) {
+      String clankId      = clankIds.get(i);
+      int    likesInicial = numLikesIniciales.get(i);
+
+      viewModel.iniciarListenerLike(clankId, likesInicial);
+
+      if (observadosLikes.contains(clankId)) continue;
+      observadosLikes.add(clankId);
+
+      observarEstadoLike(clankId);
+      observarContadorLike(clankId);
+    }
+  }
+  private void observarEstadoLike(String clankId) {
+    viewModel.getEstadoLike(clankId).observe(getViewLifecycleOwner(), isLiked -> {
+      if (isLiked == null || adapter == null) return;
+      Integer contador = viewModel.getContadorLikes(clankId).getValue();
+      adapter.actualizarLike(clankId, isLiked, contador != null ? contador : 0);
+      int pos = encontrarPosicion(clankId);
+      if (pos >= 0) adapter.notifyItemChanged(pos, ClanksAdapter.PAYLOAD_LIKE);
+    });
+  }
+  private void observarContadorLike(String clankId) {
+    viewModel.getContadorLikes(clankId).observe(getViewLifecycleOwner(), contador -> {
+      if (contador == null || adapter == null) return;
+      Boolean isLiked = viewModel.getEstadoLike(clankId).getValue();
+      adapter.actualizarLike(clankId, Boolean.TRUE.equals(isLiked), contador);
+      int pos = encontrarPosicion(clankId);
+      if (pos >= 0) adapter.notifyItemChanged(pos, ClanksAdapter.PAYLOAD_LIKE);
+    });
+  }
+  private int encontrarPosicion(String clankId) {
+    if (adapter == null) return -1;
+    for (int i = 0; i < adapter.getItemCount(); i++) {
+      if (clankId.equals(adapter.getSnapshots().getSnapshot(i).getId())) return i;
+    }
+    return -1;
+  }
 }
