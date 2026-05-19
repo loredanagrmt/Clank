@@ -8,6 +8,7 @@ import com.clank.app.data.model.Clank;
 import com.clank.app.data.model.Herramienta;
 import com.clank.app.data.model.Instruccion;
 import com.clank.app.data.model.Material;
+import com.clank.app.data.repository.AuthRepository;
 import com.clank.app.data.repository.CategoriaRepository;
 import com.clank.app.data.repository.ClankRepository;
 import com.clank.app.data.repository.UsuarioRepository;
@@ -57,8 +58,8 @@ public class DetalleClankViewModel extends ViewModel {
   private final MutableLiveData<DetalleData> detalle = new MutableLiveData<>();
   private final MutableLiveData<String>      error   = new MutableLiveData<>();
 
-  private final MutableLiveData<Boolean> cargando =
-          new MutableLiveData<>(false);
+  private final MutableLiveData<Boolean> cargando = new MutableLiveData<>(false);
+  private final AuthRepository authRepository;
   private DetalleData datosEnConstruccion;
   private int         pendientes = 0;
   private boolean     procesoFinalLanzado = false;
@@ -69,12 +70,14 @@ public class DetalleClankViewModel extends ViewModel {
                                UsuarioRepository usuarioRepository,
                                CategoriaRepository categoriaRepository,
                                TraductorDetalleClank traductorDetalleClank,
-                               TraductorCategorias traductorCategorias) {
+                               TraductorCategorias traductorCategorias,
+  AuthRepository authRepository) {
     this.clankRepository       = clankRepository;
     this.usuarioRepository     = usuarioRepository;
     this.categoriaRepository   = categoriaRepository;
     this.traductorDetalleClank = traductorDetalleClank;
-    this.traductorCategorias = traductorCategorias;
+    this.traductorCategorias   = traductorCategorias;
+    this.authRepository        = authRepository;
   }
 
   public LiveData<DetalleData> getDetalle() { return detalle; }
@@ -261,6 +264,21 @@ public class DetalleClankViewModel extends ViewModel {
   public Task<Void> eliminarClank(String clankId) {
     return clankRepository.eliminarCompletoPorId(clankId);
   }
+  public String getCurrentUserId() {
+    return authRepository.getUid();
+  }
+  public Task<Boolean> toggleLike(String clankId) {
+    String uid = authRepository.getUid();
+    if (uid == null || uid.isEmpty()) return Tasks.forException(
+      new Exception("Usuario no autenticado"));
+    return clankRepository.toggleLike(clankId, uid);
+  }
+  public Task<Boolean> hasDadoLike(String clankId) {
+    String uid = authRepository.getUid();
+    if (uid == null || uid.isEmpty()) return Tasks.forResult(false);
+    return clankRepository.hasDadoLike(clankId, uid);
+  }
+
   /////////////////////////cierra traductor/////////////////////////
   @Override
   protected void onCleared() {
