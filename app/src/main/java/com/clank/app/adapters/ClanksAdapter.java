@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.clank.app.databinding.TarjetaClankBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.clank.app.R;
@@ -126,8 +127,8 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
 
     //título y descripción
     TraductorTarjetaClank.TextoTarjetaTraducido textos = obtenerTextoTarjeta(clankId, clank);
-    holder.tvTitulo.setText(textos.titulo);
-    holder.tvDescripcion.setText(textos.descripcion);
+    holder.binding.tvTituloClank.setText(textos.titulo);
+    holder.binding.tvDescripcionClank.setText(textos.descripcion);
 
     // icono tiempo
     int tiempo = clank.getTiempo();
@@ -135,24 +136,24 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
     if (tiempo == 0) iconoTiempo = R.drawable.ic_cohete;
     else if (tiempo == 1) iconoTiempo = R.drawable.ic_liebre;
     else iconoTiempo = R.drawable.ic_tortuga;
-    holder.ivTiempo.setImageDrawable(ContextCompat.getDrawable(context, iconoTiempo));
+    holder.binding.ivTiempo.setImageDrawable(ContextCompat.getDrawable(context, iconoTiempo));
 
     //portada
     if (clank.getPortada() != null && !clank.getPortada().isEmpty()) {
-      Glide.with(context).load(clank.getPortada()).centerCrop().into(holder.ivPortada);
+      Glide.with(context).load(clank.getPortada()).centerCrop().into(holder.binding.ivPortada);
     } else {
-      holder.ivPortada.setImageDrawable(null);
+      holder.binding.ivPortada.setImageDrawable(null);
     }
 
     //contador likes
-    holder.tvNumLikes.setText(String.valueOf(clank.getNumLikes()));
+    holder.binding.tvNumLikes.setText(String.valueOf(clank.getNumLikes()));
 
     //esquina superior derecha: opciones o like
     if (mostrarOpciones) {
-      holder.ivOpciones.setVisibility(View.VISIBLE);
-      holder.ivOpciones.setImageResource(R.drawable.ic_opciones_activo);
-      holder.ivOpciones.setBackgroundResource(R.drawable.bg_circulo_opciones_inactivo);
-      holder.ivOpciones.setOnClickListener(v -> {
+      holder.binding.ivOpciones.setVisibility(View.VISIBLE);
+      holder.binding.ivOpciones.setImageResource(R.drawable.ic_opciones_activo);
+      holder.binding.ivOpciones.setBackgroundResource(R.drawable.bg_circulo_opciones_inactivo);
+      holder.binding.ivOpciones.setOnClickListener(v -> {
         if (listenerOpciones != null) {
           listenerOpciones.onOpcionesClankClick(
             clankId,
@@ -161,9 +162,9 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
         }
       });
     } else {
-      holder.ivOpciones.setVisibility(View.VISIBLE);
+      holder.binding.ivOpciones.setVisibility(View.VISIBLE);
       actualizarBotonLike(holder, clankId);
-      holder.ivOpciones.setOnClickListener(v -> {
+      holder.binding.ivOpciones.setOnClickListener(v -> {
         if (uidUsuario == null || uidUsuario.isEmpty()) return;
         clankRepository.toggleLike(clankId, uidUsuario)
           .addOnSuccessListener(ahorraTieneLike -> {
@@ -196,10 +197,10 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
   private void actualizarBotonLike(@NonNull ViewHolder holder, String clankId) {
     Boolean dioLike = cacheLikes.get(clankId);
     boolean activo = Boolean.TRUE.equals(dioLike);
-    holder.ivOpciones.setImageResource(
+    holder.binding.ivOpciones.setImageResource(
       activo ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo
     );
-    holder.ivOpciones.setBackgroundResource(
+    holder.binding.ivOpciones.setBackgroundResource(
       activo ? R.drawable.bg_circulo_opciones_activo : R.drawable.bg_circulo_opciones_inactivo
     );
   }
@@ -285,27 +286,17 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.tarjeta_clank, parent, false);
-    return new ViewHolder(view);
+    TarjetaClankBinding binding = TarjetaClankBinding.inflate(
+      LayoutInflater.from(parent.getContext()), parent, false);
+    return new ViewHolder(binding);
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
-    TextView tvTitulo;
-    TextView tvDescripcion;
-    TextView tvNumLikes;
-    ImageView ivPortada;
-    ImageView ivOpciones;
-    ImageView ivTiempo;
-    ImageView ivLike;
+    final TarjetaClankBinding binding;
 
-    public ViewHolder(@NonNull View view) {
-      super(view);
-      tvTitulo = view.findViewById(R.id.tvTituloClank);
-      tvDescripcion = view.findViewById(R.id.tvDescripcionClank);
-      ivPortada = view.findViewById(R.id.ivPortada);
-      ivOpciones = view.findViewById(R.id.ivOpciones);
-      ivTiempo = view.findViewById(R.id.ivTiempo);
+    public ViewHolder(@NonNull TarjetaClankBinding binding) {
+      super(binding.getRoot());
+      this.binding = binding;
     }
   }
 }
