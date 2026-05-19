@@ -55,4 +55,8 @@ public class FirestoreDataSource {
   public Query queryOrderedDesc(String collection, String orderField) {
     return db.collection(collection).orderBy(orderField, Query.Direction.DESCENDING);
   }
+
+  public FirebaseFirestore getFirestore() {
+    return db;
+  }
 }

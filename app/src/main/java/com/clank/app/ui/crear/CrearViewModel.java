@@ -255,5 +255,6 @@ public class CrearViewModel extends ViewModel {
       FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
       authStateListener = null;
     }
+    traductorCategorias.cerrar();
   }
 }

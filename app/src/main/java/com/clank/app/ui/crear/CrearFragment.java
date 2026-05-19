@@ -568,15 +568,18 @@ public class CrearFragment extends Fragment {
       switch (estado.estado) {
         case CARGANDO:
           binding.btnPublicar.setEnabled(false);
+          binding.overlayCargando.setVisibility(View.VISIBLE);
           break;
 
         case EXITO:
+          binding.overlayCargando.setVisibility(View.GONE);
           binding.btnPublicar.setEnabled(true);
           Navigation.findNavController(requireView())
                   .navigate(R.id.action_crear_a_perfil);
           break;
 
         case ERROR:
+          binding.overlayCargando.setVisibility(View.GONE);
           binding.btnPublicar.setEnabled(true);
 
           String msg = estado.mensaje != null
@@ -605,7 +608,7 @@ public class CrearFragment extends Fragment {
               .inflate(R.layout.bt_secundario, binding.flexboxCategorias, false);
 
       chip.setText(catNombre);
-      chip.setTag(catNombre);
+      chip.setTag(cat[0]);
 
       ViewGroup.MarginLayoutParams lp =
               (ViewGroup.MarginLayoutParams) chip.getLayoutParams();

@@ -93,6 +93,28 @@
         android:src="@drawable/ic_liebre"
         android:contentDescription="@string/tarjeta_tiempo_desc" />
 
+      <Space
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1" />
+
+      <TextView
+        android:id="@+id/tvNumLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="0"
+        android:textSize="@dimen/text_body_small"
+        android:textColor="@color/color_texto_inactivo"
+        android:fontFamily="@font/poppins_family" />
+
+      <ImageView
+        android:id="@+id/ivLike"
+        android:layout_width="@dimen/tarjeta_icono_size"
+        android:layout_height="@dimen/tarjeta_icono_size"
+        android:src="@drawable/ic_like_inactivo"
+        android:contentDescription="@string/tarjeta_likes_desc" />
+
     </LinearLayout>
 
   </LinearLayout>

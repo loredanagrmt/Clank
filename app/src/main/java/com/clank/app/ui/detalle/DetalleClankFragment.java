@@ -27,11 +27,11 @@ import androidx.navigation.Navigation;
 
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
+import com.clank.app.util.AnimUtils;
+import com.clank.app.util.FechaUtils;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -44,6 +44,8 @@ public class DetalleClankFragment extends Fragment {
   private DetalleClankViewModel viewModel;
   private String clankId;
   private String tituloClankActual = "";
+  public int numLikes = 0;
+  private com.google.firebase.firestore.ListenerRegistration listenerLikes;
 
   /////////////////////////instancia/////////////////////////
 
@@ -67,6 +69,10 @@ public class DetalleClankFragment extends Fragment {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    if (listenerLikes != null) {
+      listenerLikes.remove();
+      listenerLikes = null;
+    }
     binding = null;
   }
 
@@ -89,11 +95,10 @@ public class DetalleClankFragment extends Fragment {
 
   private void configurarNavbar() {
     NavbarHost host = (NavbarHost) requireActivity();
-
     host.mostrarNavbar(
-            getString(R.string.detalle_titulo),
-            R.drawable.ic_opciones_activo,
-            v -> mostrarOpcionesClank()
+      getString(R.string.detalle_titulo),
+      null,
+      null
     );
   }
 
@@ -115,6 +120,12 @@ public class DetalleClankFragment extends Fragment {
 
     viewModel.getError().observe(getViewLifecycleOwner(), msg -> {
       if (msg != null) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
+      }
+    });
+
+    viewModel.getError().observe(getViewLifecycleOwner(), msg -> {
+      if (msg != null) {
         Toast.makeText(
                 requireContext(),
                 msg,
@@ -131,6 +142,10 @@ public class DetalleClankFragment extends Fragment {
     //título en overlay de portada
     binding.tvTitulo.setText(datos.titulo);
 
+    if (datos.numLikes >= 0) {
+      binding.tvNumLikesDetalle.setText(String.valueOf(datos.numLikes));
+    }
+
     //portada
     if (!datos.portadaUrl.isEmpty()) {
       Glide.with(this).load(datos.portadaUrl).centerCrop().into(binding.ivPortada);
@@ -139,7 +154,6 @@ public class DetalleClankFragment extends Fragment {
     //descripción
     binding.tvDescripcion.setText(datos.descripcion);
 
-    //tiempo — marca el seleccionado, deja los otros inactivos
     mostrarTiempo(datos.tiempo);
 
     //listas dinámicas
@@ -156,7 +170,7 @@ public class DetalleClankFragment extends Fragment {
 
     if (datos.fechaPublicacion != null) {
       binding.cabeceraUsuario.tvFechaItem.setText(
-              formatearFechaRelativa(datos.fechaPublicacion));
+        FechaUtils.formatearFechaRelativa(requireContext(), datos.fechaPublicacion));
       binding.cabeceraUsuario.tvFechaItem.setVisibility(View.VISIBLE);
     } else {
       binding.cabeceraUsuario.tvFechaItem.setVisibility(View.GONE);
@@ -177,24 +191,33 @@ public class DetalleClankFragment extends Fragment {
             .setOnClickListener(v -> navegarAPerfilAutor());
     binding.cabeceraUsuario.tvUsernameItem
             .setOnClickListener(v -> navegarAPerfilAutor());
+    configurarBotonOpciones(datos.usuarioId);
+    configurarLike(datos.clankId);
   }
 
-  /////////////////////////fecha relativa/////////////////////////
+  /////////////////////////configura menu navbar/////////////////////////
+  private void configurarBotonOpciones(String autorId) {
+    NavbarHost host = (NavbarHost) requireActivity();
 
-  private String formatearFechaRelativa(Date fecha) {
-    long diferencia = System.currentTimeMillis() - fecha.getTime();
-    long minutos = TimeUnit.MILLISECONDS.toMinutes(diferencia);
-    long horas   = TimeUnit.MILLISECONDS.toHours(diferencia);
-    long dias    = TimeUnit.MILLISECONDS.toDays(diferencia);
-    long meses   = dias / 30;
-    long anyos   = dias / 365;
+    com.google.firebase.auth.FirebaseUser usuarioActual =
+      com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
 
-    if (minutos < 1)  return getString(R.string.feed_ahora);
-    if (minutos < 60) return getString(R.string.feed_hace_minutos, minutos);
-    if (horas < 24)   return getString(R.string.feed_hace_horas, horas);
-    if (dias < 30)    return getString(R.string.feed_hace_dias, dias);
-    if (meses < 12)   return getString(R.string.feed_hace_meses, meses);
-    return getString(R.string.feed_hace_anyos, anyos);
+    boolean esPropio = usuarioActual != null
+      && usuarioActual.getUid().equals(autorId);
+
+    if (esPropio) {
+      host.mostrarNavbar(
+        getString(R.string.detalle_titulo),
+        R.drawable.ic_opciones_activo,
+        v -> mostrarOpcionesClank()
+      );
+    } else {
+      host.mostrarNavbar(
+        getString(R.string.detalle_titulo),
+        null,
+        null
+      );
+    }
   }
 
   /////////////////////////tiempo (solo visual, no clickable)/////////////////////////
@@ -381,5 +404,43 @@ public class DetalleClankFragment extends Fragment {
     args.putString("usuarioId", uid);
     Navigation.findNavController(requireView())
             .navigate(R.id.action_detalle_a_perfil, args);
+  }
+
+  /////////////////////////like/////////////////////////
+  private void configurarLike(String clankId) {
+    viewModel.hasDadoLike(clankId).addOnSuccessListener(haDadoLike -> {
+      if (binding == null) return;
+      pintarBotonLike(haDadoLike);
+    });
+
+    if (listenerLikes != null) {
+      listenerLikes.remove();
+      listenerLikes = null;
+    }
+    listenerLikes = viewModel.escucharNumLikes(clankId, cantidad -> {
+      if (binding == null) return;
+      binding.tvNumLikesDetalle.setText(String.valueOf(cantidad));
+    });
+
+    binding.btnLikeDetalle.setOnClickListener(v -> {
+      viewModel.toggleLike(clankId).addOnSuccessListener(ahoraLikeado -> {
+        if (binding == null) return;
+        pintarBotonLike(ahoraLikeado);
+        AnimUtils.animarLike(binding.btnLikeDetalle);
+      }).addOnFailureListener(e -> {
+        if (!isAdded()) return;
+        Toast.makeText(requireContext(),
+          getString(R.string.error_generico),
+          Toast.LENGTH_SHORT).show();
+      });
+    });
+  }
+
+  private void pintarBotonLike(boolean activo) {
+    binding.btnLikeDetalle.setImageResource(
+      activo ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
+    binding.btnLikeDetalle.setBackgroundResource(
+      activo ? R.drawable.bg_circulo_opciones_activo
+        : R.drawable.bg_circulo_opciones_inactivo);
   }
 }

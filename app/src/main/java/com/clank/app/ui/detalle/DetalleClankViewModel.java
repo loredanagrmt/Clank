@@ -8,6 +8,7 @@ import com.clank.app.data.model.Clank;
 import com.clank.app.data.model.Herramienta;
 import com.clank.app.data.model.Instruccion;
 import com.clank.app.data.model.Material;
+import com.clank.app.data.repository.AuthRepository;
 import com.clank.app.data.repository.CategoriaRepository;
 import com.clank.app.data.repository.ClankRepository;
 import com.clank.app.data.repository.UsuarioRepository;
@@ -24,6 +25,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import com.clank.app.data.repository.LikeRepository;
 
 @HiltViewModel
 public class DetalleClankViewModel extends ViewModel {
@@ -42,6 +44,7 @@ public class DetalleClankViewModel extends ViewModel {
     public String  fotoPerfil    = "";
     public String  usuarioClank  = "";
     public Date fechaPublicacion = null;
+    public int numLikes = 0;
 
     public List<Material>    materiales    = new ArrayList<>();
     public List<Herramienta> herramientas  = new ArrayList<>();
@@ -57,8 +60,9 @@ public class DetalleClankViewModel extends ViewModel {
   private final MutableLiveData<DetalleData> detalle = new MutableLiveData<>();
   private final MutableLiveData<String>      error   = new MutableLiveData<>();
 
-  private final MutableLiveData<Boolean> cargando =
-          new MutableLiveData<>(false);
+  private final MutableLiveData<Boolean> cargando = new MutableLiveData<>(false);
+  private final AuthRepository authRepository;
+  private final LikeRepository likeRepository;
   private DetalleData datosEnConstruccion;
   private int         pendientes = 0;
   private boolean     procesoFinalLanzado = false;
@@ -69,17 +73,26 @@ public class DetalleClankViewModel extends ViewModel {
                                UsuarioRepository usuarioRepository,
                                CategoriaRepository categoriaRepository,
                                TraductorDetalleClank traductorDetalleClank,
-                               TraductorCategorias traductorCategorias) {
+                               TraductorCategorias traductorCategorias,
+                               AuthRepository authRepository,
+                               LikeRepository likeRepository) {
     this.clankRepository       = clankRepository;
     this.usuarioRepository     = usuarioRepository;
     this.categoriaRepository   = categoriaRepository;
     this.traductorDetalleClank = traductorDetalleClank;
-    this.traductorCategorias = traductorCategorias;
+    this.traductorCategorias   = traductorCategorias;
+    this.authRepository        = authRepository;
+    this.likeRepository        = likeRepository;
   }
 
   public LiveData<DetalleData> getDetalle() { return detalle; }
   public LiveData<String>      getError()   { return error; }
   public LiveData<Boolean>     getCargando() { return cargando; }
+  public com.google.firebase.firestore.ListenerRegistration escucharNumLikes(
+    String clankId,
+    LikeRepository.OnNumLikesListener listener) {
+    return likeRepository.escucharNumLikes(clankId, listener);
+  }
 
   public void cargarClank(String clankId) {
     Log.d(TAG, "Inicio carga del clank: " + clankId);
@@ -110,6 +123,7 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.tiempo      = clank.getTiempo();
       datosEnConstruccion.esAcabado   = clank.isEstadoAcabado();
       datosEnConstruccion.fechaPublicacion = clank.getFechaPublicacion();
+      datosEnConstruccion.numLikes = clank.getNumLikes();
 
       String uid = clank.getUsuarioId();
       datosEnConstruccion.usuarioId = uid != null ? uid : "";
@@ -148,13 +162,13 @@ public class DetalleClankViewModel extends ViewModel {
             }
           });
           datosEnConstruccion.categorias = catNombres;
-          reducirPendientes(); 
+          reducirPendientes();
         }).addOnFailureListener(e -> {
           Log.e(TAG, "Error cargando categorías", e);
           reducirPendientes();
         });
       } else {
-        reducirPendientes(); 
+        reducirPendientes();
       }
 
     }).addOnFailureListener(e -> {
@@ -190,6 +204,7 @@ public class DetalleClankViewModel extends ViewModel {
       reducirPendientes();
     }).addOnFailureListener(e -> {
       Log.e(TAG, "Error cargando herramientas", e);
+      reducirPendientes();
     });
     clankRepository.getInstrucciones(clankId).addOnSuccessListener(snap -> {
       Log.d(TAG, "Instrucciones cargadas");
@@ -202,6 +217,7 @@ public class DetalleClankViewModel extends ViewModel {
       reducirPendientes();
     }).addOnFailureListener(e -> {
       Log.e(TAG, "Error cargando instrucciones", e);
+      reducirPendientes();
     });
   }
 
@@ -258,5 +274,27 @@ public class DetalleClankViewModel extends ViewModel {
   /////////////////////////eliminar clank/////////////////////////
   public Task<Void> eliminarClank(String clankId) {
     return clankRepository.eliminarCompletoPorId(clankId);
+  }
+  public String getCurrentUserId() {
+    return authRepository.getUid();
+  }
+  public Task<Boolean> toggleLike(String clankId) {
+    String uid = authRepository.getUid();
+    if (uid == null || uid.isEmpty())
+      return Tasks.forException(new Exception("Usuario no autenticado"));
+    return likeRepository.toggleLike(clankId, uid);
+  }
+  public Task<Boolean> hasDadoLike(String clankId) {
+    String uid = authRepository.getUid();
+    if (uid == null || uid.isEmpty()) return Tasks.forResult(false);
+    return likeRepository.hasDadoLike(clankId, uid);
+  }
+
+  /////////////////////////cierra traductor/////////////////////////
+  @Override
+  protected void onCleared() {
+    super.onCleared();
+    traductorDetalleClank.cerrar();
+    traductorCategorias.cerrar();
   }
 }

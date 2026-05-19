@@ -26,7 +26,6 @@ public class ClankRepository {
     private static final String MATERIALES = "materiales";
     private static final String HERRAMIENTAS = "herramientas";
     private static final String INSTRUCCIONES = "instrucciones";
-
     private final FirestoreDataSource dataSource;
     private final FirebaseStorage storage;
 
@@ -37,12 +36,6 @@ public class ClankRepository {
         this.storage = storage;
     }
 
-    public DocumentReference crear(Clank clank) {
-        CollectionReference col = dataSource.collection(COLLECTION);
-        DocumentReference ref = col.document();
-        ref.set(clank);
-        return ref;
-    }
 
     public DocumentReference nuevaReferencia() {
         return dataSource.collection(COLLECTION).document();

@@ -29,10 +29,12 @@ public class TraductorDetalleClank {
     private static final String TAG = "TraductorClank";
 
     private final Context contextoAplicacion;
+    private final LanguageIdentifier identificador;
 
     @Inject
     public TraductorDetalleClank(@ApplicationContext Context contextoAplicacion) {
         this.contextoAplicacion = contextoAplicacion;
+      this.identificador = LanguageIdentification.getClient();
     }
 
     public Task<Boolean> traducirSiProcede(DetalleClankViewModel.DetalleData datos) {
@@ -103,10 +105,6 @@ public class TraductorDetalleClank {
             Log.d(TAG, "Se traducirá el detalle de " + idiomaOrigen + " a " + idiomaDestino);
 
             return traducirDetalle(datos, idiomaOrigen, idiomaDestino);
-        }).addOnCompleteListener(tarea -> {
-            identificador.close();
-            Log.d(TAG, "LanguageIdentifier cerrado.");
-            Log.d(TAG, "traducirSiProcede() completado. Éxito tarea: " + tarea.isSuccessful());
         });
     }
 
@@ -272,4 +270,8 @@ public class TraductorDetalleClank {
 
         acumulador.append(texto.trim());
     }
+  public void cerrar() {
+    identificador.close();
+  }
+
 }
