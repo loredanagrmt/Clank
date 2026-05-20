@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentInspirarBinding;
+import com.clank.app.ui.comun.NavbarHost;
 
 public class InspirarFragment extends Fragment {
 
@@ -33,7 +34,8 @@ public class InspirarFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(InspirarViewModel.class);
@@ -42,22 +44,28 @@ public class InspirarFragment extends Fragment {
         configurarListeners();
     }
 
-    private void configurarVista() {
+    @Override
+    public void onResume() {
+        super.onResume();
         configurarNavbar();
+    }
 
-        binding.btnContinuar.getRoot().setText(getString(R.string.continuar));
+    private void configurarVista() {
+        binding.btnContinuar.getRoot().setText(
+                getString(R.string.continuar)
+        );
     }
 
     private void configurarNavbar() {
-        binding.navbar.tvNavbarTitulo.setText("");
-        binding.navbar.btnNavbarAccion.setVisibility(View.GONE);
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver("");
+        host.configurarAccionVolver(v ->
+                navegarElegirIdioma()
+        );
     }
 
     private void configurarListeners() {
-        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
-                navegarElegirIdioma()
-        );
-
         binding.btnContinuar.getRoot().setOnClickListener(vista ->
                 navegarBienvenida()
         );

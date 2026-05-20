@@ -18,6 +18,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCodigoRecuperacionContrasenyaBinding;
+import com.clank.app.ui.comun.NavbarHost;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -30,24 +31,49 @@ public class CodigoRecuperacionContrasenyaFragment extends Fragment {
     private String correoRecuperacion;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentCodigoRecuperacionContrasenyaBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentCodigoRecuperacionContrasenyaBinding.inflate(
+                inflater,
+                container,
+                false
+        );
 
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(CodigoRecuperacionContrasenyaViewModel.class);
+        viewModel = new ViewModelProvider(this)
+                .get(CodigoRecuperacionContrasenyaViewModel.class);
 
-        configurarNavbar();
         obtenerArgumentos();
         configurarVista();
         configurarCasillasCodigo();
         configurarBotonContinuar();
         observarViewModel();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        configurarNavbar();
+    }
+
+    private void configurarNavbar() {
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver(
+                getString(R.string.codigo_recuperacion_contrasenya_titulo_navbar)
+        );
+
+        host.configurarAccionVolver(v ->
+                Navigation.findNavController(requireView()).navigateUp()
+        );
     }
 
     private void obtenerArgumentos() {
@@ -61,11 +87,14 @@ public class CodigoRecuperacionContrasenyaFragment extends Fragment {
     }
 
     private void configurarVista() {
-        binding.btContinuarCodigoRecuperacionContrasenya.btnPrincipal.setText(R.string.codigo_recuperacion_contrasenya_boton_continuar);
+        binding.btContinuarCodigoRecuperacionContrasenya.btnPrincipal.setText(
+                R.string.codigo_recuperacion_contrasenya_boton_continuar
+        );
     }
 
     private void configurarBotonContinuar() {
-        binding.btContinuarCodigoRecuperacionContrasenya.btnPrincipal.setOnClickListener(vista -> verificarCodigoSiEsValido());
+        binding.btContinuarCodigoRecuperacionContrasenya.btnPrincipal
+                .setOnClickListener(vista -> verificarCodigoSiEsValido());
     }
 
     private void configurarCasillasCodigo() {
@@ -76,11 +105,17 @@ public class CodigoRecuperacionContrasenyaFragment extends Fragment {
 
             casillas[i].addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence texto, int inicio, int cantidad, int despues) {
+                public void beforeTextChanged(CharSequence texto,
+                                              int inicio,
+                                              int cantidad,
+                                              int despues) {
                 }
 
                 @Override
-                public void onTextChanged(CharSequence texto, int inicio, int antes, int cantidad) {
+                public void onTextChanged(CharSequence texto,
+                                          int inicio,
+                                          int antes,
+                                          int cantidad) {
                     limpiarErroresCodigo();
 
                     if (texto.length() == 1 && indiceActual < casillas.length - 1) {
@@ -94,10 +129,15 @@ public class CodigoRecuperacionContrasenyaFragment extends Fragment {
             });
 
             casillas[i].setOnKeyListener((vista, tecla, evento) -> {
-                if (evento.getAction() == KeyEvent.ACTION_DOWN && tecla == KeyEvent.KEYCODE_DEL && casillas[indiceActual].getText().toString().isEmpty() && indiceActual > 0) {
+                if (evento.getAction() == KeyEvent.ACTION_DOWN
+                        && tecla == KeyEvent.KEYCODE_DEL
+                        && casillas[indiceActual].getText().toString().isEmpty()
+                        && indiceActual > 0) {
 
                     casillas[indiceActual - 1].requestFocus();
-                    casillas[indiceActual - 1].setSelection(casillas[indiceActual - 1].getText().length());
+                    casillas[indiceActual - 1].setSelection(
+                            casillas[indiceActual - 1].getText().length()
+                    );
 
                     return true;
                 }
@@ -136,14 +176,22 @@ public class CodigoRecuperacionContrasenyaFragment extends Fragment {
     }
 
     private EditText[] obtenerCasillasCodigo() {
-        return new EditText[]{binding.etCodigoUno, binding.etCodigoDos, binding.etCodigoTres, binding.etCodigoCuatro, binding.etCodigoCinco, binding.etCodigoSeis};
+        return new EditText[]{
+                binding.etCodigoUno,
+                binding.etCodigoDos,
+                binding.etCodigoTres,
+                binding.etCodigoCuatro,
+                binding.etCodigoCinco,
+                binding.etCodigoSeis
+        };
     }
 
     private void observarViewModel() {
         viewModel.getCargando().observe(getViewLifecycleOwner(), cargando -> {
             boolean estaCargando = Boolean.TRUE.equals(cargando);
 
-            binding.btContinuarCodigoRecuperacionContrasenya.btnPrincipal.setEnabled(!estaCargando);
+            binding.btContinuarCodigoRecuperacionContrasenya.btnPrincipal
+                    .setEnabled(!estaCargando);
 
             for (EditText casilla : obtenerCasillasCodigo()) {
                 casilla.setEnabled(!estaCargando);
@@ -208,14 +256,9 @@ public class CodigoRecuperacionContrasenyaFragment extends Fragment {
         argumentos.putString("correoRecuperacion", correoRecuperacion);
         argumentos.putString("tokenRecuperacion", tokenRecuperacion);
 
-        NavHostFragment.findNavController(this).navigate(R.id.action_codigoRecuperacionContrasenyaFragment_to_nuevaContrasenyaFragment, argumentos);
-    }
-
-    private void configurarNavbar() {
-        binding.navbarCodigoRecuperacionContrasenya.btnNavbarAccion.setVisibility(View.GONE);
-
-        binding.navbarCodigoRecuperacionContrasenya.btnNavbarVolver.setOnClickListener(v ->
-                Navigation.findNavController(requireView()).navigateUp()
+        NavHostFragment.findNavController(this).navigate(
+                R.id.action_codigoRecuperacionContrasenyaFragment_to_nuevaContrasenyaFragment,
+                argumentos
         );
     }
 

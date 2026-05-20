@@ -8,22 +8,13 @@
     android:background="@color/clank_background_light"
     tools:context=".ui.nuevaContrasenya.NuevaContrasenyaFragment">
 
-    <include
-        android:id="@+id/navbarNuevaContrasenya"
-        layout="@layout/navbar_superior"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollNuevaContrasenya"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
         android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/navbarNuevaContrasenya"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/contenedorBotonNuevaContrasenya"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

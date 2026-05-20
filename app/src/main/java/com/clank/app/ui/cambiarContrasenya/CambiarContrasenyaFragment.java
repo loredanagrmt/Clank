@@ -3,6 +3,8 @@ package com.clank.app.ui.cambiarContrasenya;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,11 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.widget.EditText;
-import android.widget.ImageView;
-
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCambiarContrasenyaBinding;
+import com.clank.app.ui.comun.NavbarHost;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -30,24 +30,32 @@ public class CambiarContrasenyaFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View vista, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View vista,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(vista, savedInstanceState);
 
         binding = FragmentCambiarContrasenyaBinding.bind(vista);
         viewModel = new ViewModelProvider(this).get(CambiarContrasenyaViewModel.class);
 
-        configurarNavbar();
         configurarInputs();
         configurarBoton();
         observarViewModel();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        configurarNavbar();
+    }
+
     private void configurarNavbar() {
-        binding.navbar.tvNavbarTitulo.setText(
-                R.string.cambiar_contrasenya_titulo_navbar
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver(
+                getString(R.string.cambiar_contrasenya_titulo_navbar)
         );
 
-        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
+        host.configurarAccionVolver(v ->
                 NavHostFragment.findNavController(this).navigateUp()
         );
     }

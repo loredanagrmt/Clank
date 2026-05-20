@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentRegistroBinding;
+import com.clank.app.ui.comun.NavbarHost;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -48,7 +49,8 @@ public class RegistroFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
+    public void onViewCreated(@NonNull View vista,
+                              @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
 
         vistaModeloCompartida = new ViewModelProvider(requireActivity())
@@ -59,64 +61,131 @@ public class RegistroFragment extends Fragment {
         precargarDatosRegistro();
     }
 
-    private void configurarVista() {
+    @Override
+    public void onResume() {
+        super.onResume();
         configurarNavbar();
+    }
+
+    private void configurarVista() {
         configurarFormulario();
         configurarPopup();
     }
 
     private void configurarNavbar() {
-        binding.navbar.tvNavbarTitulo.setText(getString(R.string.registro_titulo));
-        binding.navbar.btnNavbarAccion.setVisibility(View.GONE);
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver(
+                getString(R.string.registro_titulo)
+        );
+
+        host.configurarAccionVolver(v ->
+                volverPantallaAnterior()
+        );
     }
 
     private void configurarFormulario() {
-        binding.inputNombreCompleto.tvInputTitulo.setText(getString(R.string.nombre_completo));
-        binding.inputNombreCompleto.customEditText.setHint(getString(R.string.nombre_apellidos));
-        binding.inputNombreCompleto.customEditText.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+        binding.inputNombreCompleto.tvInputTitulo.setText(
+                getString(R.string.nombre_completo)
         );
+
+        binding.inputNombreCompleto.customEditText.setHint(
+                getString(R.string.nombre_apellidos)
+        );
+
+        binding.inputNombreCompleto.customEditText.setInputType(
+                InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+        );
+
         binding.inputNombreCompleto.inputTrailingIcon.setVisibility(View.GONE);
 
-        binding.inputCorreo.tvInputTitulo.setText(getString(R.string.correo_electronico));
-        binding.inputCorreo.customEditText.setHint(getString(R.string.ejemplo_correo));
-        binding.inputCorreo.customEditText.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        binding.inputCorreo.tvInputTitulo.setText(
+                getString(R.string.correo_electronico)
         );
+
+        binding.inputCorreo.customEditText.setHint(
+                getString(R.string.ejemplo_correo)
+        );
+
+        binding.inputCorreo.customEditText.setInputType(
+                InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        );
+
         binding.inputCorreo.inputTrailingIcon.setVisibility(View.GONE);
 
-        binding.inputTelefono.tvInputTitulo.setText(getString(R.string.numero_telefono));
-        binding.inputTelefono.customEditText.setHint(getString(R.string.ejemplo_telefono));
-        binding.inputTelefono.customEditText.setInputType(InputType.TYPE_CLASS_PHONE);
+        binding.inputTelefono.tvInputTitulo.setText(
+                getString(R.string.numero_telefono)
+        );
+
+        binding.inputTelefono.customEditText.setHint(
+                getString(R.string.ejemplo_telefono)
+        );
+
+        binding.inputTelefono.customEditText.setInputType(
+                InputType.TYPE_CLASS_PHONE
+        );
+
         binding.inputTelefono.inputTrailingIcon.setVisibility(View.GONE);
 
-        binding.inputFechaNacimiento.tvInputTitulo.setText(getString(R.string.fecha_nacimiento));
-        binding.inputFechaNacimiento.customEditText.setHint(getString(R.string.ejemplo_fecha_nacimiento));
-        binding.inputFechaNacimiento.customEditText.setInputType(
-                InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_DATE
+        binding.inputFechaNacimiento.tvInputTitulo.setText(
+                getString(R.string.fecha_nacimiento)
         );
+
+        binding.inputFechaNacimiento.customEditText.setHint(
+                getString(R.string.ejemplo_fecha_nacimiento)
+        );
+
+        binding.inputFechaNacimiento.customEditText.setInputType(
+                InputType.TYPE_CLASS_DATETIME |
+                        InputType.TYPE_DATETIME_VARIATION_DATE
+        );
+
         binding.inputFechaNacimiento.inputTrailingIcon.setVisibility(View.GONE);
 
-        binding.inputContrasenya.tvInputTitulo.setText(getString(R.string.contrasenya));
-        binding.inputContrasenya.customEditText.setHint(getString(R.string.hint_contrasenya_oculta));
+        binding.inputContrasenya.tvInputTitulo.setText(
+                getString(R.string.contrasenya)
+        );
+
+        binding.inputContrasenya.customEditText.setHint(
+                getString(R.string.hint_contrasenya_oculta)
+        );
+
         binding.inputContrasenya.customEditText.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD
         );
+
         binding.inputContrasenya.inputTrailingIcon.setVisibility(View.VISIBLE);
-        binding.inputContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
-
-        binding.inputConfirmarContrasenya.tvInputTitulo.setText(getString(R.string.confirmar_contrasenya));
-        binding.inputConfirmarContrasenya.customEditText.setHint(getString(R.string.hint_contrasenya_oculta));
-        binding.inputConfirmarContrasenya.customEditText.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+        binding.inputContrasenya.inputTrailingIcon.setImageResource(
+                R.drawable.ic_contrasenya_oculta
         );
-        binding.inputConfirmarContrasenya.inputTrailingIcon.setVisibility(View.VISIBLE);
-        binding.inputConfirmarContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
 
-        binding.btnRegistrarme.btnSecundario.setText(getString(R.string.registrarme));
+        binding.inputConfirmarContrasenya.tvInputTitulo.setText(
+                getString(R.string.confirmar_contrasenya)
+        );
+
+        binding.inputConfirmarContrasenya.customEditText.setHint(
+                getString(R.string.hint_contrasenya_oculta)
+        );
+
+        binding.inputConfirmarContrasenya.customEditText.setInputType(
+                InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD
+        );
+
+        binding.inputConfirmarContrasenya.inputTrailingIcon.setVisibility(View.VISIBLE);
+        binding.inputConfirmarContrasenya.inputTrailingIcon.setImageResource(
+                R.drawable.ic_contrasenya_oculta
+        );
+
+        binding.btnRegistrarme.btnSecundario.setText(
+                getString(R.string.registrarme)
+        );
+
         configurarModoRegistroGoogle();
     }
-
 
     private void configurarModoRegistroGoogle() {
         boolean registroConGoogle = vistaModeloCompartida.isRegistroConGoogle();
@@ -136,17 +205,22 @@ public class RegistroFragment extends Fragment {
     private void configurarPopup() {
         binding.capaPopup.setVisibility(View.GONE);
 
-        binding.popup.tvTituloPopup.setText(getString(R.string.popup_registro_perfil_titulo));
-        binding.popup.tvMensajePopup.setText(getString(R.string.popup_registro_perfil_mensaje));
-        binding.popup.imgIconoPopup.setImageResource(R.drawable.ic_usuario_inactivo);
+        binding.popup.tvTituloPopup.setText(
+                getString(R.string.popup_registro_perfil_titulo)
+        );
+
+        binding.popup.tvMensajePopup.setText(
+                getString(R.string.popup_registro_perfil_mensaje)
+        );
+
+        binding.popup.imgIconoPopup.setImageResource(
+                R.drawable.ic_usuario_inactivo
+        );
+
         binding.popup.contenedorBotonPopup.setVisibility(View.GONE);
     }
 
     private void configurarListeners() {
-        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
-                volverPantallaAnterior()
-        );
-
         binding.tvIrInicioSesion.setOnClickListener(vista ->
                 navegarInicioSesion()
         );
@@ -171,17 +245,33 @@ public class RegistroFragment extends Fragment {
 
         vistaModeloCompartida.recargarDatosGuardados();
 
-        binding.inputNombreCompleto.customEditText.setText(vistaModeloCompartida.getNombre());
-        binding.inputCorreo.customEditText.setText(vistaModeloCompartida.getCorreo());
-        binding.inputTelefono.customEditText.setText(vistaModeloCompartida.getTelefono());
-        binding.inputFechaNacimiento.customEditText.setText(vistaModeloCompartida.getFechaNacimiento());
+        binding.inputNombreCompleto.customEditText.setText(
+                vistaModeloCompartida.getNombre()
+        );
+
+        binding.inputCorreo.customEditText.setText(
+                vistaModeloCompartida.getCorreo()
+        );
+
+        binding.inputTelefono.customEditText.setText(
+                vistaModeloCompartida.getTelefono()
+        );
+
+        binding.inputFechaNacimiento.customEditText.setText(
+                vistaModeloCompartida.getFechaNacimiento()
+        );
 
         if (vistaModeloCompartida.isRegistroConGoogle()) {
             binding.inputContrasenya.customEditText.setText("");
             binding.inputConfirmarContrasenya.customEditText.setText("");
         } else {
-            binding.inputContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
-            binding.inputConfirmarContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
+            binding.inputContrasenya.customEditText.setText(
+                    vistaModeloCompartida.getContrasenya()
+            );
+
+            binding.inputConfirmarContrasenya.customEditText.setText(
+                    vistaModeloCompartida.getContrasenya()
+            );
         }
     }
 
@@ -234,6 +324,7 @@ public class RegistroFragment extends Fragment {
 
         mostrarPopupRegistro();
     }
+
     private boolean validarFormulario(String nombre,
                                       String correo,
                                       String telefono,
@@ -358,13 +449,18 @@ public class RegistroFragment extends Fragment {
             navegarPantallaSiguiente();
         };
 
-        temporizador.postDelayed(accionDespuesPopup, DURACION_POPUP_MILISEGUNDOS);
+        temporizador.postDelayed(
+                accionDespuesPopup,
+                DURACION_POPUP_MILISEGUNDOS
+        );
     }
 
     private void bloquearFormulario(boolean bloqueado) {
         boolean habilitado = !bloqueado;
 
-        binding.navbar.btnNavbarVolver.setEnabled(habilitado);
+        ((NavbarHost) requireActivity())
+                .habilitarVolverNavbar(habilitado);
+
         binding.btnRegistrarme.btnSecundario.setEnabled(habilitado);
         binding.tvIrInicioSesion.setEnabled(habilitado);
 
@@ -374,12 +470,25 @@ public class RegistroFragment extends Fragment {
 
         boolean registroConGoogle = vistaModeloCompartida.isRegistroConGoogle();
 
-        binding.inputCorreo.customEditText.setEnabled(habilitado && !registroConGoogle);
-        binding.inputContrasenya.customEditText.setEnabled(habilitado && !registroConGoogle);
-        binding.inputConfirmarContrasenya.customEditText.setEnabled(habilitado && !registroConGoogle);
+        binding.inputCorreo.customEditText.setEnabled(
+                habilitado && !registroConGoogle
+        );
 
-        binding.inputContrasenya.inputTrailingIcon.setEnabled(habilitado && !registroConGoogle);
-        binding.inputConfirmarContrasenya.inputTrailingIcon.setEnabled(habilitado && !registroConGoogle);
+        binding.inputContrasenya.customEditText.setEnabled(
+                habilitado && !registroConGoogle
+        );
+
+        binding.inputConfirmarContrasenya.customEditText.setEnabled(
+                habilitado && !registroConGoogle
+        );
+
+        binding.inputContrasenya.inputTrailingIcon.setEnabled(
+                habilitado && !registroConGoogle
+        );
+
+        binding.inputConfirmarContrasenya.inputTrailingIcon.setEnabled(
+                habilitado && !registroConGoogle
+        );
 
         float transparencia = bloqueado ? 0.6f : 1f;
         binding.btnRegistrarme.btnSecundario.setAlpha(transparencia);
@@ -427,15 +536,25 @@ public class RegistroFragment extends Fragment {
     private void alternarVisibilidadContrasenya() {
         if (contrasenyaVisible) {
             binding.inputContrasenya.customEditText.setInputType(
-                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD
             );
-            binding.inputContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
+
+            binding.inputContrasenya.inputTrailingIcon.setImageResource(
+                    R.drawable.ic_contrasenya_oculta
+            );
+
             contrasenyaVisible = false;
         } else {
             binding.inputContrasenya.customEditText.setInputType(
-                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             );
-            binding.inputContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_visible);
+
+            binding.inputContrasenya.inputTrailingIcon.setImageResource(
+                    R.drawable.ic_contrasenya_visible
+            );
+
             contrasenyaVisible = true;
         }
 
@@ -447,15 +566,25 @@ public class RegistroFragment extends Fragment {
     private void alternarVisibilidadConfirmarContrasenya() {
         if (confirmarContrasenyaVisible) {
             binding.inputConfirmarContrasenya.customEditText.setInputType(
-                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD
             );
-            binding.inputConfirmarContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
+
+            binding.inputConfirmarContrasenya.inputTrailingIcon.setImageResource(
+                    R.drawable.ic_contrasenya_oculta
+            );
+
             confirmarContrasenyaVisible = false;
         } else {
             binding.inputConfirmarContrasenya.customEditText.setInputType(
-                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             );
-            binding.inputConfirmarContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_visible);
+
+            binding.inputConfirmarContrasenya.inputTrailingIcon.setImageResource(
+                    R.drawable.ic_contrasenya_visible
+            );
+
             confirmarContrasenyaVisible = true;
         }
 

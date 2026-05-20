@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentNuevaContrasenyaBinding;
+import com.clank.app.ui.comun.NavbarHost;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -57,10 +58,15 @@ public class NuevaContrasenyaFragment extends Fragment {
                 .get(NuevaContrasenyaViewModel.class);
 
         obtenerArgumentos();
-        configurarNavbar();
         configurarInputs();
         configurarBotonContinuar();
         observarViewModel();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        configurarNavbar();
     }
 
     private void obtenerArgumentos() {
@@ -76,13 +82,13 @@ public class NuevaContrasenyaFragment extends Fragment {
     }
 
     private void configurarNavbar() {
-        binding.navbarNuevaContrasenya.tvNavbarTitulo.setText(
-                R.string.nueva_contrasenya_titulo_navbar
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver(
+                getString(R.string.nueva_contrasenya_titulo_navbar)
         );
 
-        binding.navbarNuevaContrasenya.btnNavbarAccion.setVisibility(View.GONE);
-
-        binding.navbarNuevaContrasenya.btnNavbarVolver.setOnClickListener(v ->
+        host.configurarAccionVolver(v ->
                 Navigation.findNavController(requireView()).navigateUp()
         );
     }

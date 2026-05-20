@@ -15,6 +15,7 @@ import androidx.navigation.Navigation;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentBienvenidaBinding;
 import com.clank.app.ui.auth.RegistroCompartidoViewModel;
+import com.clank.app.ui.comun.NavbarHost;
 
 public class BienvenidaFragment extends Fragment {
 
@@ -33,7 +34,8 @@ public class BienvenidaFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
+    public void onViewCreated(@NonNull View vista,
+                              @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
 
         vistaModeloRegistro = new ViewModelProvider(requireActivity())
@@ -43,23 +45,32 @@ public class BienvenidaFragment extends Fragment {
         configurarListeners();
     }
 
-    private void configurarVista() {
+    @Override
+    public void onResume() {
+        super.onResume();
         configurarNavbar();
+    }
 
-        binding.btnSoyNuevo.btnSecundario.setText(getString(R.string.soy_nuevo));
-        binding.btnYaHeEstado.btnSecundario.setText(getString(R.string.ya_he_estado));
+    private void configurarVista() {
+        binding.btnSoyNuevo.btnSecundario.setText(
+                getString(R.string.soy_nuevo)
+        );
+
+        binding.btnYaHeEstado.btnSecundario.setText(
+                getString(R.string.ya_he_estado)
+        );
     }
 
     private void configurarNavbar() {
-        binding.navbar.tvNavbarTitulo.setText("");
-        binding.navbar.btnNavbarAccion.setVisibility(View.GONE);
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver("");
+        host.configurarAccionVolver(v ->
+                navegarInspirar()
+        );
     }
 
     private void configurarListeners() {
-        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
-                navegarInspirar()
-        );
-
         binding.btnSoyNuevo.btnSecundario.setOnClickListener(vista ->
                 navegarRegistro()
         );

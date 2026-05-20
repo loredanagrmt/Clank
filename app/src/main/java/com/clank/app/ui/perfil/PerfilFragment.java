@@ -37,7 +37,9 @@ public class PerfilFragment extends Fragment {
 
     private static final String ID_USER = "usuarioId";
     private static final String TAB_INICIAL = "tabInicial";
+
     private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
+
     private FragmentPerfilBinding binding;
     private PerfilViewModel viewModel;
     private ClanksAdapter adapter;
@@ -53,6 +55,7 @@ public class PerfilFragment extends Fragment {
     }
 
     ///////////////////////// ciclo de vida /////////////////////////
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
@@ -62,7 +65,8 @@ public class PerfilFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(PerfilViewModel.class);
@@ -87,26 +91,29 @@ public class PerfilFragment extends Fragment {
         configurarBotones();
         observarViewModel();
 
-    viewModel.cargarDatos(idUser);
-    cargarAdapter(mostrandoClanks);
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    if (viewModel.esPerfilPropio(idUser)) {
-      ((NavbarHost) requireActivity()).ocultarNavbar();
-    } else {
-      ((NavbarHost) requireActivity()).mostrarNavbar("", 0, null);
+        viewModel.cargarDatos(idUser);
+        cargarAdapter(mostrandoClanks);
     }
-    viewModel.invalidarDatos();
-    viewModel.cargarDatos(idUser);
-    cargarAdapter(mostrandoClanks);
-  }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (viewModel.esPerfilPropio(idUser)) {
+            ((NavbarHost) requireActivity()).ocultarNavbar();
+        } else {
+            ((NavbarHost) requireActivity()).mostrarNavbarConVolver("");
+        }
+
+        viewModel.invalidarDatos();
+        viewModel.cargarDatos(idUser);
+        cargarAdapter(mostrandoClanks);
+    }
 
     @Override
     public void onStart() {
         super.onStart();
+
         if (adapter != null) {
             adapter.startListening();
         }
@@ -115,6 +122,7 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+
         if (adapter != null) {
             adapter.stopListening();
         }
@@ -123,20 +131,26 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-      if (adapter != null) {
-        adapter.cerrar();
+
+        if (adapter != null) {
+            adapter.cerrar();
+        }
+
         binding = null;
-      }
     }
 
     ///////////////////////// recyclerView /////////////////////////
+
     private void configurarRecyclerView() {
         binding.rvClanks.setLayoutManager(
                 new GridLayoutManager(requireContext(), 2)
         );
+
         binding.rvClanks.setHasFixedSize(false);
 
-        int spacing = (int) getResources().getDimension(R.dimen.perfil_grid_spacing);
+        int spacing = (int) getResources().getDimension(
+                R.dimen.perfil_grid_spacing
+        );
 
         binding.rvClanks.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -155,6 +169,7 @@ public class PerfilFragment extends Fragment {
     }
 
     ///////////////////////// tabs clanks y borradores /////////////////////////
+
     private void configurarTabs() {
         if (!viewModel.esPerfilPropio(idUser)) {
             binding.tabBocetos.setVisibility(View.GONE);
@@ -209,9 +224,13 @@ public class PerfilFragment extends Fragment {
         );
 
         anim.setDuration(200);
+
         anim.addUpdateListener(a ->
-                binding.indicadorTab.setTranslationX((float) a.getAnimatedValue())
+                binding.indicadorTab.setTranslationX(
+                        (float) a.getAnimatedValue()
+                )
         );
+
         anim.start();
 
         ajustarAnchoIndicador(tabDestino);
@@ -224,8 +243,10 @@ public class PerfilFragment extends Fragment {
     }
 
     ///////////////////////// adapter /////////////////////////
+
     private void cargarAdapter(boolean soloAcabados) {
         mostrarCargandoPerfil();
+
         if (adapter != null) {
             adapter.stopListening();
         }
@@ -234,44 +255,59 @@ public class PerfilFragment extends Fragment {
                 ? viewModel.buildClankOptionsAcabados(idUser)
                 : viewModel.buildClankOptionsBocetos(idUser);
 
-      adapter = new ClanksAdapter(
-        options,
-        requireContext(),
-        viewModel.getClankRepository(),
-        viewModel.getLikeRepository(),
-        viewModel.getCurrentUserId(),
-        viewModel.esPerfilPropio(idUser),
-        clankId -> {
-          Bundle args = new Bundle();
-          args.putString("clankId", clankId);
-          Navigation.findNavController(requireView())
-            .navigate(R.id.action_perfil_a_detalle_clank, args);
-        },
-        this::mostrarOpcionesClank,
-        new ClanksAdapter.OnPreparacionTarjetasListener() {
-          @Override
-          public void alIniciarPreparacion()  { mostrarCargandoPerfil(); }
-          @Override
-          public void alFinalizarPreparacion() { ocultarCargandoPerfil(); }
+        adapter = new ClanksAdapter(
+                options,
+                requireContext(),
+                viewModel.getClankRepository(),
+                viewModel.getLikeRepository(),
+                viewModel.getCurrentUserId(),
+                viewModel.esPerfilPropio(idUser),
+                clankId -> {
+                    Bundle args = new Bundle();
+                    args.putString("clankId", clankId);
+
+                    Navigation.findNavController(requireView())
+                            .navigate(R.id.action_perfil_a_detalle_clank, args);
+                },
+                this::mostrarOpcionesClank,
+                new ClanksAdapter.OnPreparacionTarjetasListener() {
+                    @Override
+                    public void alIniciarPreparacion() {
+                        mostrarCargandoPerfil();
+                    }
+
+                    @Override
+                    public void alFinalizarPreparacion() {
+                        ocultarCargandoPerfil();
+                    }
+                }
+        );
+
+        if (!viewModel.esPerfilPropio(idUser)) {
+            adapter.setLikeListener(clankId ->
+                    viewModel.toggleLike(clankId)
+            );
+
+            adapter.setItemsListosListener((clankIds, numLikesIniciales) ->
+                    arrancarObservadoresLikes(clankIds, numLikesIniciales)
+            );
         }
-      );
-      if (!viewModel.esPerfilPropio(idUser)) {
-        adapter.setLikeListener(clankId -> viewModel.toggleLike(clankId));
-        adapter.setItemsListosListener((clankIds, numLikesIniciales) ->
-          arrancarObservadoresLikes(clankIds, numLikesIniciales));
-      }
-      binding.rvClanks.setAdapter(adapter);
+
+        binding.rvClanks.setAdapter(adapter);
         adapter.startListening();
     }
 
     ///////////////////////// botones /////////////////////////
+
     private void configurarBotones() {
         if (viewModel.esPerfilPropio(idUser)) {
             binding.btnAjustes.setOnClickListener(v ->
                     Navigation.findNavController(v)
                             .navigate(R.id.action_perfil_a_ajustes)
             );
+
             binding.tvEditarPerfil.setVisibility(View.VISIBLE);
+
             binding.tvEditarPerfil.setOnClickListener(v ->
                     Navigation.findNavController(v)
                             .navigate(R.id.action_perfil_a_editar_perfil)
@@ -283,6 +319,7 @@ public class PerfilFragment extends Fragment {
     }
 
     ///////////////////////// observadores /////////////////////////
+
     private void observarViewModel() {
         viewModel.getPerfil().observe(getViewLifecycleOwner(), perfil -> {
             if (perfil == null) {
@@ -297,15 +334,19 @@ public class PerfilFragment extends Fragment {
 
             String handle = "";
 
-            if (perfil.usuarioClank != null && !perfil.usuarioClank.trim().isEmpty()) {
+            if (perfil.usuarioClank != null &&
+                    !perfil.usuarioClank.trim().isEmpty()) {
                 handle = perfil.usuarioClank.replace("@", "").trim();
-            } else if (perfil.correo != null && !perfil.correo.trim().isEmpty()) {
+            } else if (perfil.correo != null &&
+                    !perfil.correo.trim().isEmpty()) {
                 handle = perfil.correo.split("@")[0].trim();
             }
 
             if (!viewModel.esPerfilPropio(idUser)) {
-                ((NavbarHost) requireActivity()).mostrarNavbar(
-                        !handle.isEmpty() ? "@" + handle : ""
+                ((NavbarHost) requireActivity()).mostrarNavbarConVolver(
+                        !handle.isEmpty()
+                                ? "@" + handle
+                                : ""
                 );
             }
 
@@ -315,14 +356,14 @@ public class PerfilFragment extends Fragment {
                             : ""
             );
 
-      if (perfil.fotoPerfil != null && !perfil.fotoPerfil.isEmpty()) {
-        Glide.with(this)
-          .load(perfil.fotoPerfil)
-          .circleCrop()
-          .placeholder(R.drawable.ic_usuario_inactivo)
-          .into(binding.civFotoPerfil);
-      }
-    });
+            if (perfil.fotoPerfil != null && !perfil.fotoPerfil.isEmpty()) {
+                Glide.with(this)
+                        .load(perfil.fotoPerfil)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_usuario_inactivo)
+                        .into(binding.civFotoPerfil);
+            }
+        });
 
         viewModel.getNumClanks().observe(getViewLifecycleOwner(), num ->
                 binding.tvNumClanks.setText(
@@ -338,6 +379,7 @@ public class PerfilFragment extends Fragment {
     }
 
     ///////////////////////// hoja de opciones de clank /////////////////////////
+
     private void mostrarOpcionesClank(String clankId, String tituloClank) {
         HojaOpciones hoja = HojaOpciones.nuevaLista(
                 tituloClank,
@@ -356,13 +398,19 @@ public class PerfilFragment extends Fragment {
                         navegarAEditarClank(clankId);
                     } else if ("eliminar".equals(opcionSeleccionada)) {
                         requireView().post(() ->
-                                mostrarConfirmarEliminarClank(clankId, tituloClank)
+                                mostrarConfirmarEliminarClank(
+                                        clankId,
+                                        tituloClank
+                                )
                         );
                     }
                 }
         );
 
-        hoja.show(getParentFragmentManager(), "hoja_opciones_clank");
+        hoja.show(
+                getParentFragmentManager(),
+                "hoja_opciones_clank"
+        );
     }
 
     private void navegarAEditarClank(String clankId) {
@@ -373,7 +421,8 @@ public class PerfilFragment extends Fragment {
                 .navigate(R.id.action_perfil_a_editar_clank, args);
     }
 
-    private void mostrarConfirmarEliminarClank(String clankId, String tituloClank) {
+    private void mostrarConfirmarEliminarClank(String clankId,
+                                               String tituloClank) {
         HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
                 getString(R.string.perfil_eliminar_clank_titulo),
                 getString(R.string.perfil_eliminar_clank_mensaje, tituloClank),
@@ -383,7 +432,10 @@ public class PerfilFragment extends Fragment {
                 () -> eliminarClankDesdePerfil(clankId)
         );
 
-        hoja.show(getParentFragmentManager(), "hoja_confirmar_eliminar_clank");
+        hoja.show(
+                getParentFragmentManager(),
+                "hoja_confirmar_eliminar_clank"
+        );
     }
 
     private void eliminarClankDesdePerfil(String clankId) {
@@ -405,6 +457,7 @@ public class PerfilFragment extends Fragment {
                     ).show();
                 });
     }
+
     private void mostrarCargandoPerfil() {
         if (binding == null) {
             return;
@@ -412,6 +465,7 @@ public class PerfilFragment extends Fragment {
 
         binding.overlayCargandoPerfil.setVisibility(View.VISIBLE);
     }
+
     private void ocultarCargandoPerfil() {
         if (binding == null) {
             return;
@@ -420,44 +474,90 @@ public class PerfilFragment extends Fragment {
         binding.overlayCargandoPerfil.setVisibility(View.GONE);
     }
 
-  private void arrancarObservadoresLikes(List<String> clankIds,
-                                         List<Integer> numLikesIniciales) {
-    for (int i = 0; i < clankIds.size(); i++) {
-      String clankId      = clankIds.get(i);
-      int    likesInicial = numLikesIniciales.get(i);
+    private void arrancarObservadoresLikes(List<String> clankIds,
+                                           List<Integer> numLikesIniciales) {
+        for (int i = 0; i < clankIds.size(); i++) {
+            String clankId = clankIds.get(i);
+            int likesInicial = numLikesIniciales.get(i);
 
-      viewModel.iniciarListenerLike(clankId, likesInicial);
+            viewModel.iniciarListenerLike(clankId, likesInicial);
 
-      if (observadosLikes.contains(clankId)) continue;
-      observadosLikes.add(clankId);
+            if (observadosLikes.contains(clankId)) {
+                continue;
+            }
 
-      observarEstadoLike(clankId);
-      observarContadorLike(clankId);
+            observadosLikes.add(clankId);
+
+            observarEstadoLike(clankId);
+            observarContadorLike(clankId);
+        }
     }
-  }
-  private void observarEstadoLike(String clankId) {
-    viewModel.getEstadoLike(clankId).observe(getViewLifecycleOwner(), isLiked -> {
-      if (isLiked == null || adapter == null) return;
-      Integer contador = viewModel.getContadorLikes(clankId).getValue();
-      adapter.actualizarLike(clankId, isLiked, contador != null ? contador : 0);
-      int pos = encontrarPosicion(clankId);
-      if (pos >= 0) adapter.notifyItemChanged(pos, ClanksAdapter.PAYLOAD_LIKE);
-    });
-  }
-  private void observarContadorLike(String clankId) {
-    viewModel.getContadorLikes(clankId).observe(getViewLifecycleOwner(), contador -> {
-      if (contador == null || adapter == null) return;
-      Boolean isLiked = viewModel.getEstadoLike(clankId).getValue();
-      adapter.actualizarLike(clankId, Boolean.TRUE.equals(isLiked), contador);
-      int pos = encontrarPosicion(clankId);
-      if (pos >= 0) adapter.notifyItemChanged(pos, ClanksAdapter.PAYLOAD_LIKE);
-    });
-  }
-  private int encontrarPosicion(String clankId) {
-    if (adapter == null) return -1;
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      if (clankId.equals(adapter.getSnapshots().getSnapshot(i).getId())) return i;
+
+    private void observarEstadoLike(String clankId) {
+        viewModel.getEstadoLike(clankId)
+                .observe(getViewLifecycleOwner(), isLiked -> {
+                    if (isLiked == null || adapter == null) {
+                        return;
+                    }
+
+                    Integer contador =
+                            viewModel.getContadorLikes(clankId).getValue();
+
+                    adapter.actualizarLike(
+                            clankId,
+                            isLiked,
+                            contador != null ? contador : 0
+                    );
+
+                    int pos = encontrarPosicion(clankId);
+
+                    if (pos >= 0) {
+                        adapter.notifyItemChanged(
+                                pos,
+                                ClanksAdapter.PAYLOAD_LIKE
+                        );
+                    }
+                });
     }
-    return -1;
-  }
+
+    private void observarContadorLike(String clankId) {
+        viewModel.getContadorLikes(clankId)
+                .observe(getViewLifecycleOwner(), contador -> {
+                    if (contador == null || adapter == null) {
+                        return;
+                    }
+
+                    Boolean isLiked =
+                            viewModel.getEstadoLike(clankId).getValue();
+
+                    adapter.actualizarLike(
+                            clankId,
+                            Boolean.TRUE.equals(isLiked),
+                            contador
+                    );
+
+                    int pos = encontrarPosicion(clankId);
+
+                    if (pos >= 0) {
+                        adapter.notifyItemChanged(
+                                pos,
+                                ClanksAdapter.PAYLOAD_LIKE
+                        );
+                    }
+                });
+    }
+
+    private int encontrarPosicion(String clankId) {
+        if (adapter == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            if (clankId.equals(adapter.getSnapshots().getSnapshot(i).getId())) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }

@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentInicioSesionBinding;
 import com.clank.app.ui.auth.RegistroCompartidoViewModel;
+import com.clank.app.ui.comun.NavbarHost;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -79,16 +80,24 @@ public class InicioSesionFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
+    public void onViewCreated(@NonNull View vista,
+                              @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
 
         vistaModelo = new ViewModelProvider(this).get(InicioSesionViewModel.class);
+
         vistaModeloRegistro = new ViewModelProvider(requireActivity())
                 .get(RegistroCompartidoViewModel.class);
 
         configurarVista();
         configurarListeners();
         observarVistaModelo();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        configurarNavbar();
     }
 
     private void configurarInicioGoogle() {
@@ -98,41 +107,68 @@ public class InicioSesionFragment extends Fragment {
                 .requestEmail()
                 .build();
 
-        clienteInicioGoogle = GoogleSignIn.getClient(requireContext(), opcionesInicioGoogle);
+        clienteInicioGoogle = GoogleSignIn.getClient(
+                requireContext(),
+                opcionesInicioGoogle
+        );
     }
 
     private void configurarVista() {
-        configurarNavbar();
-
-        binding.inputCorreo.tvInputTitulo.setText(getString(R.string.correo_electronico));
-        binding.inputCorreo.customEditText.setHint(getString(R.string.ejemplo_correo));
-        binding.inputCorreo.customEditText.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        binding.inputCorreo.tvInputTitulo.setText(
+                getString(R.string.correo_electronico)
         );
+
+        binding.inputCorreo.customEditText.setHint(
+                getString(R.string.ejemplo_correo)
+        );
+
+        binding.inputCorreo.customEditText.setInputType(
+                InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        );
+
         binding.inputCorreo.inputTrailingIcon.setVisibility(View.GONE);
 
-        binding.inputContrasenya.tvInputTitulo.setText(getString(R.string.contrasenya));
-        binding.inputContrasenya.customEditText.setHint(getString(R.string.hint_contrasenya_oculta));
-        binding.inputContrasenya.customEditText.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+        binding.inputContrasenya.tvInputTitulo.setText(
+                getString(R.string.contrasenya)
         );
-        binding.inputContrasenya.inputTrailingIcon.setVisibility(View.VISIBLE);
-        binding.inputContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
 
-        binding.btnIniciarSesion.btnSecundario.setText(getString(R.string.iniciar_sesion));
-        binding.btnRegistrarse.btnSecundario.setText(getString(R.string.registrarse));
+        binding.inputContrasenya.customEditText.setHint(
+                getString(R.string.hint_contrasenya_oculta)
+        );
+
+        binding.inputContrasenya.customEditText.setInputType(
+                InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD
+        );
+
+        binding.inputContrasenya.inputTrailingIcon.setVisibility(View.VISIBLE);
+        binding.inputContrasenya.inputTrailingIcon.setImageResource(
+                R.drawable.ic_contrasenya_oculta
+        );
+
+        binding.btnIniciarSesion.btnSecundario.setText(
+                getString(R.string.iniciar_sesion)
+        );
+
+        binding.btnRegistrarse.btnSecundario.setText(
+                getString(R.string.registrarse)
+        );
     }
 
     private void configurarNavbar() {
-        binding.navbar.tvNavbarTitulo.setText(getString(R.string.inicio_sesion_titulo));
-        binding.navbar.btnNavbarAccion.setVisibility(View.GONE);
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver(
+                getString(R.string.inicio_sesion_titulo)
+        );
+
+        host.configurarAccionVolver(v ->
+                navegarBienvenida()
+        );
     }
 
     private void configurarListeners() {
-        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
-                navegarBienvenida()
-        );
-
         binding.inputContrasenya.inputTrailingIcon.setOnClickListener(
                 vista -> alternarVisibilidadContrasenya()
         );
@@ -214,7 +250,9 @@ public class InicioSesionFragment extends Fragment {
         });
     }
 
-    private void gestionarInicioCorrecto(InicioSesionViewModel.DestinoNavegacion destinoNavegacion) {
+    private void gestionarInicioCorrecto(
+            InicioSesionViewModel.DestinoNavegacion destinoNavegacion
+    ) {
         if (destinoNavegacion == InicioSesionViewModel.DestinoNavegacion.REGISTRO) {
             navegarRegistroGoogle();
             return;
@@ -270,6 +308,7 @@ public class InicioSesionFragment extends Fragment {
 
         navegador.navigate(R.id.action_inicio_sesion_a_feed);
     }
+
     private void navegarOlvideContrasenya() {
         NavController navegador = Navigation.findNavController(requireView());
 
@@ -302,15 +341,25 @@ public class InicioSesionFragment extends Fragment {
     private void alternarVisibilidadContrasenya() {
         if (contrasenyaVisible) {
             binding.inputContrasenya.customEditText.setInputType(
-                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD
             );
-            binding.inputContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
+
+            binding.inputContrasenya.inputTrailingIcon.setImageResource(
+                    R.drawable.ic_contrasenya_oculta
+            );
+
             contrasenyaVisible = false;
         } else {
             binding.inputContrasenya.customEditText.setInputType(
-                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             );
-            binding.inputContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_visible);
+
+            binding.inputContrasenya.inputTrailingIcon.setImageResource(
+                    R.drawable.ic_contrasenya_visible
+            );
+
             contrasenyaVisible = true;
         }
 
@@ -321,11 +370,20 @@ public class InicioSesionFragment extends Fragment {
 
     private void mostrarMensaje(String mensaje) {
         if (mensaje == null || mensaje.trim().isEmpty()) {
-            Toast.makeText(requireContext(), "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                    requireContext(),
+                    "Ha ocurrido un error",
+                    Toast.LENGTH_LONG
+            ).show();
+
             return;
         }
 
-        Toast.makeText(requireContext(), mensaje, Toast.LENGTH_LONG).show();
+        Toast.makeText(
+                requireContext(),
+                mensaje,
+                Toast.LENGTH_LONG
+        ).show();
     }
 
     @Override

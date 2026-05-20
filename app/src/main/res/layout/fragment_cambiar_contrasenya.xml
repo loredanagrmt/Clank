@@ -7,22 +7,13 @@
     android:layout_height="match_parent"
     android:background="@color/clank_background_light">
 
-    <include
-        android:id="@+id/navbar"
-        layout="@layout/navbar_superior"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/crear_cabecera_height"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollCambiarContrasenya"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/navbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/contenedorBotonCambiarContrasenya"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
