@@ -7,72 +7,85 @@
     android:layout_height="match_parent"
     android:background="@color/clank_background_light">
 
-    <TextView
-        android:id="@+id/tvTituloCompletarPerfil"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollCompletarPerfil"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
-        android:layout_marginTop="@dimen/completar_perfil_margen_superior_titulo"
-        android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
-        android:fontFamily="@font/poppins_semibold"
-        android:textColor="@color/color_negrita"
-        android:textSize="@dimen/completar_perfil_tamanyo_titulo"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Termina de crear tu perfil" />
-
-    <FrameLayout
-        android:id="@+id/contenedorFotoPerfil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/completar_perfil_espacio_titulo_foto"
-        app:layout_constraintTop_toBottomOf="@id/tvTituloCompletarPerfil"
+        app:layout_constraintBottom_toTopOf="@id/contenedorBotonContinuar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/imgFotoPerfil"
-            android:layout_width="@dimen/completar_perfil_tamanyo_foto"
-            android:layout_height="@dimen/completar_perfil_tamanyo_foto"
-            android:background="@drawable/bg_circulo_opciones_inactivo"
-            android:contentDescription="@string/imagen_foto_perfil"
-            android:padding="@dimen/completar_perfil_padding_foto"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_usuario_inactivo" />
-
-        <ImageButton
-            android:id="@+id/btnEditarFotoPerfil"
-            android:layout_width="@dimen/completar_perfil_tamanyo_boton_editar"
-            android:layout_height="@dimen/completar_perfil_tamanyo_boton_editar"
-            android:layout_gravity="bottom|end"
-            android:background="@drawable/bg_cuadrado_activo"
-            android:contentDescription="@string/editar_foto_perfil"
-            android:padding="@dimen/completar_perfil_padding_boton_editar"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_lapiz_activo" />
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/contenedorFormularioCompletarPerfil"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
-        android:layout_marginTop="@dimen/completar_perfil_espacio_foto_formulario"
-        android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/contenedorFotoPerfil"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <include
-            android:id="@+id/inputUsuarioClank"
-            layout="@layout/input"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_l">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tvTituloCompletarPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
+                android:layout_marginTop="@dimen/completar_perfil_margen_superior_titulo"
+                android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
+                android:fontFamily="@font/poppins_semibold"
+                android:textColor="@color/color_negrita"
+                android:textSize="@dimen/completar_perfil_tamanyo_titulo"
+                tools:text="Termina de crear tu perfil" />
+
+            <FrameLayout
+                android:id="@+id/contenedorFotoPerfil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/completar_perfil_espacio_titulo_foto">
+
+                <ImageView
+                    android:id="@+id/imgFotoPerfil"
+                    android:layout_width="@dimen/completar_perfil_tamanyo_foto"
+                    android:layout_height="@dimen/completar_perfil_tamanyo_foto"
+                    android:background="@drawable/bg_circulo_opciones_inactivo"
+                    android:contentDescription="@string/imagen_foto_perfil"
+                    android:padding="@dimen/completar_perfil_padding_foto"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_usuario_inactivo" />
+
+                <ImageButton
+                    android:id="@+id/btnEditarFotoPerfil"
+                    android:layout_width="@dimen/completar_perfil_tamanyo_boton_editar"
+                    android:layout_height="@dimen/completar_perfil_tamanyo_boton_editar"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/bg_cuadrado_activo"
+                    android:contentDescription="@string/editar_foto_perfil"
+                    android:padding="@dimen/completar_perfil_padding_boton_editar"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_lapiz_activo" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/contenedorFormularioCompletarPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/completar_perfil_margen_lateral"
+                android:layout_marginTop="@dimen/completar_perfil_espacio_foto_formulario"
+                android:layout_marginEnd="@dimen/completar_perfil_margen_lateral"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/inputUsuarioClank"
+                    layout="@layout/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <FrameLayout
         android:id="@+id/contenedorBotonContinuar"
