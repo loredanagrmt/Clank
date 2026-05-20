@@ -9,8 +9,8 @@ import com.clank.app.data.repository.AuthRepository;
 import com.clank.app.data.repository.ClankRepository;
 import com.clank.app.data.repository.LikeRepository;
 import com.clank.app.data.repository.UsuarioRepository;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,10 +50,8 @@ public class FeedViewModel extends ViewModel {
   public String            getCurrentUserId()     { return authRepository.getUid(); }
 
   /////////////////////////guery/////////////////////////
-  public FirestoreRecyclerOptions<Clank> buildFeedOptions() {
-    return new FirestoreRecyclerOptions.Builder<Clank>()
-      .setQuery(clankRepository.getTodosAcabados(), Clank.class)
-      .build();
+  public Query getFeedQuery() {
+    return clankRepository.getTodosAcabados();
   }
 
   /////////////////////////likes/////////////////////////
@@ -104,8 +102,6 @@ public class FeedViewModel extends ViewModel {
     likeRepository.toggleLike(clankId, uid)
       .addOnSuccessListener(ahoraLikeado -> {
         obtenerOCrearEstado(clankId).setValue(ahoraLikeado);
-        // El contador se actualizará solo vía el snapshot listener,
-        // no lo tocamos aquí para evitar doble actualización.
         likeEnProceso.put(clankId, false);
       })
       .addOnFailureListener(e -> likeEnProceso.put(clankId, false));

@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.clank.app.data.model.Categoria;
+import com.clank.app.data.repository.CategoriaRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +21,16 @@ public class FiltrosViewModel extends ViewModel {
     private final MutableLiveData<List<Categoria>> _categorias = new MutableLiveData<>();
     public LiveData<List<Categoria>> categorias = _categorias;
 
-    private final FirebaseFirestore db;
+    private final CategoriaRepository categoriaRepository;
 
     @Inject
-    public FiltrosViewModel(FirebaseFirestore db) {
-        this.db = db;
+    public FiltrosViewModel(CategoriaRepository categoriaRepository) {
+        this.categoriaRepository = categoriaRepository;
         cargarCategorias();
     }
 
     private void cargarCategorias() {
-        db.collection("categorias")
-                .get()
+        categoriaRepository.getTodas()
                 .addOnSuccessListener(snapshot -> {
                     List<Categoria> lista = new ArrayList<>();
                     for (DocumentSnapshot doc : snapshot.getDocuments()) {

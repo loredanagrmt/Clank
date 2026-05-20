@@ -32,8 +32,20 @@ public class ResultadosFragment extends Fragment {
   private ResultadosViewModel viewModel;
   private FeedAdapter adapter;
   private String categoria;
+  private String nombreCategoria;
 
   private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    categoria = getArguments() != null
+            ? getArguments().getString("categoria", "")
+            : "";
+    nombreCategoria = getArguments() != null
+            ? getArguments().getString("nombreCategoria", "")
+            : "";
+  }
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater,
@@ -44,9 +56,9 @@ public class ResultadosFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
-        ((NavbarHost) requireActivity())
-                .mostrarNavbarConVolver(categoria != null ? categoria : "");
+      super.onResume();
+      ((NavbarHost) requireActivity())
+              .mostrarNavbarConVolver(nombreCategoria != null ? nombreCategoria : "");
     }
 
   @Override
@@ -55,24 +67,8 @@ public class ResultadosFragment extends Fragment {
 
     viewModel = new ViewModelProvider(this).get(ResultadosViewModel.class);
 
-        categoria = getArguments() != null
-                ? getArguments().getString("categoria", "")
-                : "";
-
     configurarRecyclerView();
     cargarAdapter();
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-    if (adapter != null) adapter.startListening();
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-    if (adapter != null) adapter.stopListening();
   }
 
   @Override

@@ -59,18 +59,6 @@ public class FeedFragment extends Fragment {
   }
 
   @Override
-  public void onStart() {
-    super.onStart();
-    if (adapter != null) adapter.startListening();
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-    if (adapter != null) adapter.stopListening();
-  }
-
-  @Override
   public void onDestroyView() {
     super.onDestroyView();
     if (adapter != null) adapter.cerrar();
@@ -110,7 +98,11 @@ public class FeedFragment extends Fragment {
 
   /////////////////////////adapter/////////////////////////
   private void cargarAdapter() {
-    FirestoreRecyclerOptions<Clank> options = viewModel.buildFeedOptions();
+    FirestoreRecyclerOptions<Clank> options =
+            new FirestoreRecyclerOptions.Builder<Clank>()
+                    .setQuery(viewModel.getFeedQuery(), Clank.class)
+                    .setLifecycleOwner(getViewLifecycleOwner())
+                    .build();
 
     adapter = new FeedAdapter(
       options,
