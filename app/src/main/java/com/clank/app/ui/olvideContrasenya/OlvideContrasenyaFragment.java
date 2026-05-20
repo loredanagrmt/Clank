@@ -11,11 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentOlvideContrasenyaBinding;
+import com.clank.app.ui.comun.NavbarHost;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -50,16 +51,25 @@ public class OlvideContrasenyaFragment extends Fragment {
         viewModel = new ViewModelProvider(this)
                 .get(OlvideContrasenyaViewModel.class);
 
-        configurarNavbar();
         configurarInputCorreo();
         configurarBotonContinuar();
         observarViewModel();
     }
 
-    private void configurarNavbar() {
-        binding.navbarOlvideContrasenya.btnNavbarAccion.setVisibility(View.GONE);
+    @Override
+    public void onResume() {
+        super.onResume();
+        configurarNavbar();
+    }
 
-        binding.navbarOlvideContrasenya.btnNavbarVolver.setOnClickListener(v ->
+    private void configurarNavbar() {
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver(
+                getString(R.string.olvide_contrasenya_titulo_navbar)
+        );
+
+        host.configurarAccionVolver(v ->
                 Navigation.findNavController(requireView()).navigateUp()
         );
     }

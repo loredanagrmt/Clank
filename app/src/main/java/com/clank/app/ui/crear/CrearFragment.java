@@ -31,6 +31,7 @@ import com.clank.app.R;
 import com.clank.app.databinding.FragmentCrearBinding;
 import com.clank.app.databinding.ItemInstruccionBinding;
 import com.clank.app.ui.comun.HojaOpciones;
+import com.clank.app.ui.comun.NavbarHost;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,35 +50,57 @@ public class CrearFragment extends Fragment {
   private Uri uriPortadaSeleccionada = null;
   private Uri uriFotoTemporal = null;
 
-
-
   ///////////////////////// launchers /////////////////////////
+
   private final ActivityResultLauncher<String> galeriaLauncher =
           registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-            if (uri != null) procesarImagenSeleccionada(uri);
+            if (uri != null) {
+              procesarImagenSeleccionada(uri);
+            }
           });
 
   private final ActivityResultLauncher<Uri> camaraLauncher =
           registerForActivityResult(new ActivityResultContracts.TakePicture(), success -> {
-            if (Boolean.TRUE.equals(success) && uriFotoTemporal != null)
+            if (Boolean.TRUE.equals(success) && uriFotoTemporal != null) {
               procesarImagenSeleccionada(uriFotoTemporal);
+            }
           });
 
   private final ActivityResultLauncher<String> permisoCamaraLauncher =
           registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-            if (Boolean.TRUE.equals(granted)) abrirCamara();
-            else Toast.makeText(requireContext(),
-                    getString(R.string.error_permiso_camara), Toast.LENGTH_SHORT).show();
+            if (Boolean.TRUE.equals(granted)) {
+              abrirCamara();
+            } else {
+              Toast.makeText(
+                      requireContext(),
+                      getString(R.string.error_permiso_camara),
+                      Toast.LENGTH_SHORT
+              ).show();
+            }
           });
 
-
-
   ///////////////////////// on create /////////////////////////
+
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater,
-                           ViewGroup container, Bundle savedInstanceState) {
+                           ViewGroup container,
+                           Bundle savedInstanceState) {
     binding = FragmentCrearBinding.inflate(inflater, container, false);
     return binding.getRoot();
+  }
+
+  @Override
+  public void onViewCreated(@NonNull View view,
+                            @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    viewModel = new ViewModelProvider(this).get(CrearViewModel.class);
+
+    configurarNavbar();
+    configurarListeners(view);
+    observarViewModel();
+    anyadirFilaMaterial(false);
+    anyadirFilaInstruccion();
   }
 
   @Override
@@ -86,37 +109,19 @@ public class CrearFragment extends Fragment {
     binding = null;
   }
 
-
-
-  ///////////////////////// on view created /////////////////////////
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    viewModel = new ViewModelProvider(this).get(CrearViewModel.class);
-    configurarNavbar();
-    configurarListeners(view);
-    observarViewModel();
-    anyadirFilaMaterial(false);
-    anyadirFilaInstruccion();
-  }
-
-
   ///////////////////////// navbar /////////////////////////
-  private void configurarNavbar() {
-    binding.navbar.tvNavbarTitulo.setText(getString(R.string.crear_titulo));
-    binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_delete_inactivo);
-    binding.navbar.btnNavbarAccion.setVisibility(View.VISIBLE);
-  }
 
+  private void configurarNavbar() {
+    ((NavbarHost) requireActivity()).mostrarNavbarConVolver(
+            getString(R.string.crear_titulo),
+            R.drawable.ic_delete_inactivo,
+            v -> mostrarConfirmarEliminar(requireView())
+    );
+  }
 
   ///////////////////////// listeners /////////////////////////
+
   private void configurarListeners(View v) {
-    binding.navbar.btnNavbarVolver.setOnClickListener(b ->
-            Navigation.findNavController(v).navigateUp());
-
-    binding.navbar.btnNavbarAccion.setOnClickListener(b ->
-            mostrarConfirmarEliminar(v));
-
     binding.framePortada.setOnClickListener(b ->
             mostrarDialogoSeleccionImagen(null));
 
@@ -145,18 +150,22 @@ public class CrearFragment extends Fragment {
             anyadirFilaInstruccion());
   }
 
-
   ///////////////////////// imagen /////////////////////////
+
   private void mostrarDialogoSeleccionImagen(@Nullable View target) {
     targetActivo = target;
+
     new AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.crear_seleccionar_imagen))
             .setItems(new CharSequence[]{
                     getString(R.string.crear_desde_galeria),
                     getString(R.string.crear_desde_camara)
             }, (dialog, which) -> {
-              if (which == 0) galeriaLauncher.launch("image/*");
-              else solicitarPermisoCamara();
+              if (which == 0) {
+                galeriaLauncher.launch("image/*");
+              } else {
+                solicitarPermisoCamara();
+              }
             })
             .show();
   }
@@ -173,22 +182,29 @@ public class CrearFragment extends Fragment {
   private void abrirCamara() {
     try {
       File dir = requireContext().getExternalFilesDir(
-              android.os.Environment.DIRECTORY_PICTURES);
+              android.os.Environment.DIRECTORY_PICTURES
+      );
 
-      if (dir != null) dir.mkdirs();
+      if (dir != null) {
+        dir.mkdirs();
+      }
 
       File archivo = new File(dir, "foto_" + UUID.randomUUID() + ".jpg");
 
       uriFotoTemporal = FileProvider.getUriForFile(
               requireContext(),
               requireContext().getPackageName() + ".fileprovider",
-              archivo);
+              archivo
+      );
 
       camaraLauncher.launch(uriFotoTemporal);
 
     } catch (Exception e) {
-      Toast.makeText(requireContext(),
-              getString(R.string.error_camara), Toast.LENGTH_SHORT).show();
+      Toast.makeText(
+              requireContext(),
+              getString(R.string.error_camara),
+              Toast.LENGTH_SHORT
+      ).show();
     }
   }
 
@@ -200,7 +216,7 @@ public class CrearFragment extends Fragment {
       binding.ivPortadaPreview.setVisibility(View.VISIBLE);
       binding.llAnyadirPortada.setVisibility(View.GONE);
       Glide.with(this).load(uri).centerCrop().into(binding.ivPortadaPreview);
-    }else {
+    } else {
       View fila = targetActivo;
       View boton = fila.findViewById(R.id.llBotonImagenInstruccion);
       ImageView preview = fila.findViewById(R.id.ivPreviewInstruccion);
@@ -235,13 +251,16 @@ public class CrearFragment extends Fragment {
   }
 
   private void mostrarImagenCompleta(Uri uri) {
-    Dialog dialog = new Dialog(requireContext(),
-            android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+    Dialog dialog = new Dialog(
+            requireContext(),
+            android.R.style.Theme_Black_NoTitleBar_Fullscreen
+    );
 
     ImageView iv = new ImageView(requireContext());
     iv.setLayoutParams(new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT));
+            ViewGroup.LayoutParams.MATCH_PARENT
+    ));
 
     iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
     iv.setBackgroundColor(Color.BLACK);
@@ -254,8 +273,8 @@ public class CrearFragment extends Fragment {
     dialog.show();
   }
 
-
   ///////////////////////// tiempo /////////////////////////
+
   private void seleccionarTiempo(int indice) {
     tiempoSeleccionado = indice;
     ocultarErrorTiempo();
@@ -268,17 +287,25 @@ public class CrearFragment extends Fragment {
 
     for (int i = 0; i < botones.length; i++) {
       if (i == indice) {
-        botones[i].setBackground(ContextCompat.getDrawable(requireContext(),
-                R.drawable.bg_boton_principal));
+        botones[i].setBackground(ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.bg_boton_principal
+        ));
 
-        botones[i].setImageTintList(ContextCompat.getColorStateList(requireContext(),
-                R.color.clank_background_light));
+        botones[i].setImageTintList(ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.clank_background_light
+        ));
       } else {
-        botones[i].setBackground(ContextCompat.getDrawable(requireContext(),
-                R.drawable.bg_boton_tiempo));
+        botones[i].setBackground(ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.bg_boton_tiempo
+        ));
 
-        botones[i].setImageTintList(ContextCompat.getColorStateList(requireContext(),
-                R.color.color_texto_inactivo));
+        botones[i].setImageTintList(ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.color_texto_inactivo
+        ));
       }
     }
   }
@@ -291,16 +318,20 @@ public class CrearFragment extends Fragment {
     };
 
     for (android.widget.ImageButton boton : botones) {
-      boton.setBackground(ContextCompat.getDrawable(requireContext(),
-              R.drawable.bg_boton_tiempo));
+      boton.setBackground(ContextCompat.getDrawable(
+              requireContext(),
+              R.drawable.bg_boton_tiempo
+      ));
 
-      boton.setImageTintList(ContextCompat.getColorStateList(requireContext(),
-              R.color.color_texto_inactivo));
+      boton.setImageTintList(ContextCompat.getColorStateList(
+              requireContext(),
+              R.color.color_texto_inactivo
+      ));
     }
   }
 
-
   ///////////////////////// añadir filas /////////////////////////
+
   private void anyadirFilaMaterial(boolean esHerramienta) {
     LinearLayout contenedor = esHerramienta
             ? binding.llContenedorHerramientas
@@ -311,6 +342,7 @@ public class CrearFragment extends Fragment {
 
     if (esHerramienta) {
       fila.findViewById(R.id.etCantidad).setVisibility(View.GONE);
+
       ((EditText) fila.findViewById(R.id.etNombreElemento))
               .setHint(getString(R.string.crear_hint_herramienta));
     }
@@ -319,8 +351,11 @@ public class CrearFragment extends Fragment {
       if (contenedor.getChildCount() > 1 || esHerramienta) {
         contenedor.removeView(fila);
       } else {
-        Toast.makeText(requireContext(),
-                getString(R.string.crear_error_min_material), Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                requireContext(),
+                getString(R.string.crear_error_min_material),
+                Toast.LENGTH_SHORT
+        ).show();
       }
     });
 
@@ -329,34 +364,41 @@ public class CrearFragment extends Fragment {
 
   private void anyadirFilaInstruccion() {
     ItemInstruccionBinding itemBinding = ItemInstruccionBinding.inflate(
-      LayoutInflater.from(requireContext()),
-      binding.llContenedorInstrucciones,
-      false);
+            LayoutInflater.from(requireContext()),
+            binding.llContenedorInstrucciones,
+            false
+    );
 
     itemBinding.btnEliminarInstruccion.setOnClickListener(b -> {
       if (binding.llContenedorInstrucciones.getChildCount() > 1) {
         binding.llContenedorInstrucciones.removeView(itemBinding.getRoot());
         renumerarInstrucciones();
       } else {
-        Toast.makeText(requireContext(),
-                getString(R.string.crear_error_min_instruccion), Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                requireContext(),
+                getString(R.string.crear_error_min_instruccion),
+                Toast.LENGTH_SHORT
+        ).show();
       }
     });
 
     itemBinding.llBotonImagenInstruccion.setOnClickListener(b ->
-      mostrarDialogoSeleccionImagen(itemBinding.getRoot()));
+            mostrarDialogoSeleccionImagen(itemBinding.getRoot()));
 
     itemBinding.ivPreviewInstruccion.setOnClickListener(b -> {
       Uri uri = (Uri) itemBinding.getRoot().getTag(R.id.ivPreviewInstruccion);
-      if (uri != null) mostrarDialogoAccionesImagen(uri, itemBinding.getRoot());
+
+      if (uri != null) {
+        mostrarDialogoAccionesImagen(uri, itemBinding.getRoot());
+      }
     });
 
     binding.llContenedorInstrucciones.addView(itemBinding.getRoot());
     renumerarInstrucciones();
   }
 
-
   ///////////////////////// publicar /////////////////////////
+
   private void intentarPublicar() {
     String titulo = binding.etTitulo.getText().toString().trim();
     String descripcion = binding.etDescripcion.getText().toString().trim();
@@ -421,7 +463,9 @@ public class CrearFragment extends Fragment {
       View fila = binding.llContenedorInstrucciones.getChildAt(i);
 
       String texto = ((EditText) fila.findViewById(R.id.etTextoInstruccion))
-              .getText().toString().trim();
+              .getText()
+              .toString()
+              .trim();
 
       if (!texto.isEmpty()) {
         textosInstrucciones.add(texto);
@@ -443,12 +487,15 @@ public class CrearFragment extends Fragment {
   }
 
   private void guardarBoceto() {
-    Toast.makeText(requireContext(),
-            getString(R.string.crear_boceto_proximamente), Toast.LENGTH_SHORT).show();
+    Toast.makeText(
+            requireContext(),
+            getString(R.string.crear_boceto_proximamente),
+            Toast.LENGTH_SHORT
+    ).show();
   }
 
-
   ///////////////////////// hoja descartar clank /////////////////////////
+
   private void mostrarConfirmarEliminar(View v) {
     HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
             getString(R.string.crear_descartar_clank_titulo),
@@ -517,8 +564,8 @@ public class CrearFragment extends Fragment {
     }
   }
 
-
   ///////////////////////// recoger datos clank /////////////////////////
+
   private List<String[]> recogerMateriales() {
     List<String[]> lista = new ArrayList<>();
 
@@ -526,13 +573,22 @@ public class CrearFragment extends Fragment {
       View fila = binding.llContenedorMateriales.getChildAt(i);
 
       String cant = ((EditText) fila.findViewById(R.id.etCantidad))
-              .getText().toString().trim();
+              .getText()
+              .toString()
+              .trim();
 
       String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
-              .getText().toString().trim();
+              .getText()
+              .toString()
+              .trim();
 
-      if (cant.isEmpty()) cant = "1";
-      if (!nombre.isEmpty()) lista.add(new String[]{cant, nombre});
+      if (cant.isEmpty()) {
+        cant = "1";
+      }
+
+      if (!nombre.isEmpty()) {
+        lista.add(new String[]{cant, nombre});
+      }
     }
 
     return lista;
@@ -545,9 +601,13 @@ public class CrearFragment extends Fragment {
       View fila = binding.llContenedorHerramientas.getChildAt(i);
 
       String nombre = ((EditText) fila.findViewById(R.id.etNombreElemento))
-              .getText().toString().trim();
+              .getText()
+              .toString()
+              .trim();
 
-      if (!nombre.isEmpty()) lista.add(nombre);
+      if (!nombre.isEmpty()) {
+        lista.add(nombre);
+      }
     }
 
     return lista;
@@ -571,11 +631,13 @@ public class CrearFragment extends Fragment {
     return seleccionadas;
   }
 
-
   ///////////////////////// observadores /////////////////////////
+
   private void observarViewModel() {
     viewModel.getEstadoPublicacion().observe(getViewLifecycleOwner(), estado -> {
-      if (estado == null) return;
+      if (estado == null) {
+        return;
+      }
 
       switch (estado.estado) {
         case CARGANDO:
@@ -586,6 +648,7 @@ public class CrearFragment extends Fragment {
         case EXITO:
           binding.overlayCargando.setVisibility(View.GONE);
           binding.btnPublicar.setEnabled(true);
+
           Navigation.findNavController(requireView())
                   .navigate(R.id.action_crear_a_perfil);
           break;
@@ -603,13 +666,16 @@ public class CrearFragment extends Fragment {
       }
     });
 
-    viewModel.getCategorias().observe(getViewLifecycleOwner(),
-            this::cargarChipsCategorias);
+    viewModel.getCategorias().observe(
+            getViewLifecycleOwner(),
+            this::cargarChipsCategorias
+    );
   }
 
-
   private void cargarChipsCategorias(List<String[]> categorias) {
-    if (categorias == null || categorias.isEmpty()) return;
+    if (categorias == null || categorias.isEmpty()) {
+      return;
+    }
 
     binding.flexboxCategorias.removeAllViews();
 
@@ -624,17 +690,26 @@ public class CrearFragment extends Fragment {
 
       ViewGroup.MarginLayoutParams lp =
               (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
+
       lp.setMargins(0, 0, 8, 8);
       chip.setLayoutParams(lp);
 
       chip.setOnClickListener(b -> {
         boolean activo = chip.isSelected();
         chip.setSelected(!activo);
-        chip.setBackgroundResource(!activo ? R.drawable.bg_boton_principal : R.drawable.bg_boton_secundario);
-        chip.setTextColor(ContextCompat.getColor(requireContext(),
+
+        chip.setBackgroundResource(
+                !activo
+                        ? R.drawable.bg_boton_principal
+                        : R.drawable.bg_boton_secundario
+        );
+
+        chip.setTextColor(ContextCompat.getColor(
+                requireContext(),
                 !activo
                         ? R.color.clank_background_light
-                        : R.color.color_texto_inactivo));
+                        : R.color.color_texto_inactivo
+        ));
       });
 
       binding.flexboxCategorias.addView(chip);
@@ -718,8 +793,10 @@ public class CrearFragment extends Fragment {
     binding.tvErrorTiempo.setVisibility(View.GONE);
     binding.tvErrorTiempo.setText("");
   }
+
   private void renumerarInstrucciones() {
     int total = binding.llContenedorInstrucciones.getChildCount();
+
     for (int i = 0; i < total; i++) {
       View fila = binding.llContenedorInstrucciones.getChildAt(i);
       ItemInstruccionBinding itemBinding = ItemInstruccionBinding.bind(fila);

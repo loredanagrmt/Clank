@@ -8,36 +8,13 @@
     android:background="@color/clank_background_light"
     tools:context=".ui.codigoRecuperacionContrasenya.CodigoRecuperacionContrasenyaFragment">
 
-    <include
-        android:id="@+id/navbarCodigoRecuperacionContrasenya"
-        layout="@layout/navbar_superior"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tvTituloNavbarCodigoRecuperacionContrasenya"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:text="@string/codigo_recuperacion_contrasenya_titulo_navbar"
-        android:textColor="@color/color_clank_activo"
-        android:textSize="@dimen/codigo_recuperacion_contrasenya_texto_titulo_navbar"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="@id/navbarCodigoRecuperacionContrasenya"
-        app:layout_constraintBottom_toBottomOf="@id/navbarCodigoRecuperacionContrasenya"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollCodigoRecuperacionContrasenya"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
         android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/navbarCodigoRecuperacionContrasenya"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/contenedorBotonCodigoRecuperacionContrasenya"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

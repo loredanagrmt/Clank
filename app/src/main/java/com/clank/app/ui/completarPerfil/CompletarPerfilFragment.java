@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCompletarPerfilBinding;
 import com.clank.app.ui.auth.RegistroCompartidoViewModel;
+import com.clank.app.ui.comun.NavbarHost;
 import com.clank.app.util.Recurso;
 
 import java.io.File;
@@ -66,8 +67,11 @@ public class CompletarPerfilFragment extends Fragment {
         super.onCreate(estadoGuardado);
 
         if (estadoGuardado != null) {
-            String fotoPerfilGuardada = estadoGuardado.getString(CLAVE_URI_FOTO_PERFIL);
-            String fotoCamaraGuardada = estadoGuardado.getString(CLAVE_URI_FOTO_CAMARA_TEMPORAL);
+            String fotoPerfilGuardada =
+                    estadoGuardado.getString(CLAVE_URI_FOTO_PERFIL);
+
+            String fotoCamaraGuardada =
+                    estadoGuardado.getString(CLAVE_URI_FOTO_CAMARA_TEMPORAL);
 
             if (fotoPerfilGuardada != null && !fotoPerfilGuardada.isEmpty()) {
                 uriFotoPerfil = Uri.parse(fotoPerfilGuardada);
@@ -85,15 +89,23 @@ public class CompletarPerfilFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup contenedor,
                              Bundle estadoGuardado) {
-        binding = FragmentCompletarPerfilBinding.inflate(inflater, contenedor, false);
+        binding = FragmentCompletarPerfilBinding.inflate(
+                inflater,
+                contenedor,
+                false
+        );
+
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
+    public void onViewCreated(@NonNull View vista,
+                              @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
 
-        viewModel = new ViewModelProvider(this).get(CompletarPerfilViewModel.class);
+        viewModel = new ViewModelProvider(this)
+                .get(CompletarPerfilViewModel.class);
+
         vistaModeloCompartida = new ViewModelProvider(requireActivity())
                 .get(RegistroCompartidoViewModel.class);
 
@@ -102,6 +114,12 @@ public class CompletarPerfilFragment extends Fragment {
         observarViewModel();
         restaurarPreviewFotoPerfil();
         precargarFotoPerfilGoogleSiProcede();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        configurarNavbar();
     }
 
     private void configurarLanzadoresImagen() {
@@ -120,7 +138,8 @@ public class CompletarPerfilFragment extends Fragment {
         lanzadorCamara = registerForActivityResult(
                 new ActivityResultContracts.TakePicture(),
                 resultado -> {
-                    if (Boolean.TRUE.equals(resultado) && uriFotoCamaraTemporal != null) {
+                    if (Boolean.TRUE.equals(resultado)
+                            && uriFotoCamaraTemporal != null) {
                         uriFotoPerfil = uriFotoCamaraTemporal;
                         mostrarPreviewFotoPerfil(uriFotoPerfil);
                     }
@@ -147,49 +166,78 @@ public class CompletarPerfilFragment extends Fragment {
     }
 
     private void configurarVista() {
-        configurarNavbar();
         configurarFormulario();
         configurarPopup();
     }
 
     private void configurarNavbar() {
-        binding.navbar.tvNavbarTitulo.setText(getString(R.string.completar_perfil_titulo));
-        binding.navbar.btnNavbarAccion.setVisibility(View.GONE);
+        NavbarHost host = (NavbarHost) requireActivity();
+
+        host.mostrarNavbarConVolver(
+                getString(R.string.completar_perfil_titulo)
+        );
+
+        host.configurarAccionVolver(v ->
+                volverPantallaAnterior()
+        );
     }
 
     private void configurarFormulario() {
-        binding.tvTituloCompletarPerfil.setText(getString(R.string.completar_perfil_titulo_pantalla));
-
-        binding.imgFotoPerfil.setContentDescription(getString(R.string.imagen_foto_perfil));
-        binding.btnEditarFotoPerfil.setContentDescription(getString(R.string.editar_foto_perfil));
-
-        binding.inputUsuarioClank.tvInputTitulo.setText(getString(R.string.clank_user));
-        binding.inputUsuarioClank.customEditText.setHint(getString(R.string.ejemplo_clank_user));
-        binding.inputUsuarioClank.customEditText.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL
+        binding.tvTituloCompletarPerfil.setText(
+                getString(R.string.completar_perfil_titulo_pantalla)
         );
+
+        binding.imgFotoPerfil.setContentDescription(
+                getString(R.string.imagen_foto_perfil)
+        );
+
+        binding.btnEditarFotoPerfil.setContentDescription(
+                getString(R.string.editar_foto_perfil)
+        );
+
+        binding.inputUsuarioClank.tvInputTitulo.setText(
+                getString(R.string.clank_user)
+        );
+
+        binding.inputUsuarioClank.customEditText.setHint(
+                getString(R.string.ejemplo_clank_user)
+        );
+
+        binding.inputUsuarioClank.customEditText.setInputType(
+                InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_NORMAL
+        );
+
         binding.inputUsuarioClank.inputTrailingIcon.setVisibility(View.GONE);
 
-        binding.btnContinuar.btnSecundario.setText(getString(R.string.continuar));
+        binding.btnContinuar.btnSecundario.setText(
+                getString(R.string.continuar)
+        );
     }
 
     private void configurarPopup() {
         binding.capaPopup.setVisibility(View.GONE);
 
-        binding.popup.tvTituloPopup.setText(getString(R.string.popup_completar_perfil_titulo));
-        binding.popup.tvMensajePopup.setText(getString(R.string.popup_completar_perfil_mensaje));
-        binding.popup.imgIconoPopup.setImageResource(R.drawable.ic_check_inactivo);
+        binding.popup.tvTituloPopup.setText(
+                getString(R.string.popup_completar_perfil_titulo)
+        );
+
+        binding.popup.tvMensajePopup.setText(
+                getString(R.string.popup_completar_perfil_mensaje)
+        );
+
+        binding.popup.imgIconoPopup.setImageResource(
+                R.drawable.ic_check_inactivo
+        );
+
         binding.popup.imgIconoPopup.setContentDescription(
                 getString(R.string.popup_completar_perfil_icono_desc)
         );
+
         binding.popup.contenedorBotonPopup.setVisibility(View.GONE);
     }
 
     private void configurarListeners() {
-        binding.navbar.btnNavbarVolver.setOnClickListener(vista ->
-                volverPantallaAnterior()
-        );
-
         binding.btnEditarFotoPerfil.setOnClickListener(vista ->
                 seleccionarFotoPerfil()
         );
@@ -229,7 +277,8 @@ public class CompletarPerfilFragment extends Fragment {
     }
 
     private void procesarCompletarPerfil() {
-        String usuarioClank = getTexto(binding.inputUsuarioClank.customEditText.getText());
+        String usuarioClank =
+                getTexto(binding.inputUsuarioClank.customEditText.getText());
 
         limpiarErroresFormulario();
 
@@ -350,8 +399,10 @@ public class CompletarPerfilFragment extends Fragment {
     }
 
     private void abrirCamaraConPermiso() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED) {
             abrirCamara();
             return;
         }
@@ -364,7 +415,9 @@ public class CompletarPerfilFragment extends Fragment {
             File archivoFoto = File.createTempFile(
                     System.currentTimeMillis() + "_foto_perfil",
                     ".jpg",
-                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    requireContext().getExternalFilesDir(
+                            Environment.DIRECTORY_PICTURES
+                    )
             );
 
             uriFotoCamaraTemporal = FileProvider.getUriForFile(
@@ -374,6 +427,7 @@ public class CompletarPerfilFragment extends Fragment {
             );
 
             lanzadorCamara.launch(uriFotoCamaraTemporal);
+
         } catch (IOException error) {
             mostrarError(
                     binding.inputUsuarioClank.customEditText,
@@ -410,7 +464,8 @@ public class CompletarPerfilFragment extends Fragment {
             return;
         }
 
-        String fotoPerfilGoogle = vistaModeloCompartida.getFotoPerfilGoogle();
+        String fotoPerfilGoogle =
+                vistaModeloCompartida.getFotoPerfilGoogle();
 
         if (fotoPerfilGoogle == null || fotoPerfilGoogle.trim().isEmpty()) {
             return;
@@ -459,7 +514,10 @@ public class CompletarPerfilFragment extends Fragment {
             navegarPantallaSiguiente();
         };
 
-        temporizador.postDelayed(accionDespuesPopup, DURACION_POPUP_MILISEGUNDOS);
+        temporizador.postDelayed(
+                accionDespuesPopup,
+                DURACION_POPUP_MILISEGUNDOS
+        );
     }
 
     private void bloquearFormulario(boolean bloqueado) {
@@ -469,7 +527,9 @@ public class CompletarPerfilFragment extends Fragment {
 
         boolean habilitado = !bloqueado;
 
-        binding.navbar.btnNavbarVolver.setEnabled(habilitado);
+        ((NavbarHost) requireActivity())
+                .habilitarVolverNavbar(habilitado);
+
         binding.btnEditarFotoPerfil.setEnabled(habilitado);
         binding.imgFotoPerfil.setEnabled(habilitado);
         binding.btnContinuar.btnSecundario.setEnabled(habilitado);
@@ -482,6 +542,7 @@ public class CompletarPerfilFragment extends Fragment {
         );
 
         float transparencia = bloqueado ? 0.6f : 1f;
+
         binding.btnContinuar.btnSecundario.setAlpha(transparencia);
         binding.btnEditarFotoPerfil.setAlpha(transparencia);
         binding.imgFotoPerfil.setAlpha(transparencia);
@@ -504,7 +565,8 @@ public class CompletarPerfilFragment extends Fragment {
         NavController navegador = Navigation.findNavController(requireView());
 
         if (navegador.getCurrentDestination() == null
-                || navegador.getCurrentDestination().getId() != R.id.completarPerfilFragment) {
+                || navegador.getCurrentDestination().getId()
+                != R.id.completarPerfilFragment) {
             return;
         }
 
@@ -516,11 +578,17 @@ public class CompletarPerfilFragment extends Fragment {
         super.onSaveInstanceState(estadoSalida);
 
         if (uriFotoPerfil != null) {
-            estadoSalida.putString(CLAVE_URI_FOTO_PERFIL, uriFotoPerfil.toString());
+            estadoSalida.putString(
+                    CLAVE_URI_FOTO_PERFIL,
+                    uriFotoPerfil.toString()
+            );
         }
 
         if (uriFotoCamaraTemporal != null) {
-            estadoSalida.putString(CLAVE_URI_FOTO_CAMARA_TEMPORAL, uriFotoCamaraTemporal.toString());
+            estadoSalida.putString(
+                    CLAVE_URI_FOTO_CAMARA_TEMPORAL,
+                    uriFotoCamaraTemporal.toString()
+            );
         }
     }
 

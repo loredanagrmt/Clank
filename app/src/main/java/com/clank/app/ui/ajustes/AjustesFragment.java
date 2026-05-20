@@ -19,6 +19,7 @@ import com.clank.app.R;
 import com.clank.app.databinding.FragmentAjustesBinding;
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
+import com.clank.app.ui.comun.NavbarHost;
 import com.clank.app.util.GestorIdioma;
 import com.clank.app.util.GestorTema;
 
@@ -37,29 +38,31 @@ public class AjustesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup contenedor, @Nullable Bundle estadoGuardado) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup contenedor,
+                             @Nullable Bundle estadoGuardado) {
         binding = FragmentAjustesBinding.inflate(inflater, contenedor, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View vista, @Nullable Bundle estadoGuardado) {
+    public void onViewCreated(@NonNull View vista,
+                              @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
 
         vistaModelo = new ViewModelProvider(this).get(AjustesViewModel.class);
 
-        configurarNavbar();
         configurarListeners();
         configurarEstadoInicial();
         observarVistaModelo();
     }
 
-    private void configurarNavbar() {
-        binding.navbarAjustes.tvNavbarTitulo.setText(R.string.ajustes_titulo);
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        binding.navbarAjustes.btnNavbarAccion.setVisibility(View.GONE);
-
-        binding.navbarAjustes.btnNavbarVolver.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
+        ((NavbarHost) requireActivity())
+                .mostrarNavbarConVolver(getString(R.string.ajustes_titulo));
     }
 
     private void configurarListeners() {
@@ -68,24 +71,15 @@ public class AjustesFragment extends Fragment {
         binding.btnCambiarContrasenya.setOnClickListener(v -> navegarACambiarContrasenya());
         binding.btnBorrarCuenta.setOnClickListener(v -> mostrarConfirmacionBorrarCuenta());
 
-        binding.switchTemaOscuro.setOnCheckedChangeListener((boton, activado) -> GestorTema.cambiarModoOscuro(requireContext(), activado));
+        binding.switchTemaOscuro.setOnCheckedChangeListener(
+                (boton, activado) ->
+                        GestorTema.cambiarModoOscuro(requireContext(), activado)
+        );
     }
 
     private void configurarEstadoInicial() {
         binding.switchTemaOscuro.setChecked(
                 GestorTema.obtenerModoOscuroGuardado(requireContext())
-        );
-
-        configurarDisponibilidadCambioContrasenya();
-    }
-
-    private void configurarDisponibilidadCambioContrasenya() {
-        boolean puedeCambiarContrasenya =
-                vistaModelo.puedeCambiarContrasenya();
-
-        binding.btnCambiarContrasenya.setEnabled(puedeCambiarContrasenya);
-        binding.btnCambiarContrasenya.setAlpha(
-                puedeCambiarContrasenya ? 1f : 0.5f
         );
     }
 
@@ -113,7 +107,11 @@ public class AjustesFragment extends Fragment {
                     break;
 
                 case ERROR_GENERAL:
-                    Toast.makeText(requireContext(), R.string.ajustes_error_eliminar_cuenta, Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                            requireContext(),
+                            R.string.ajustes_error_eliminar_cuenta,
+                            Toast.LENGTH_LONG
+                    ).show();
 
                     vistaModelo.limpiarEstadoEliminacionCuenta();
                     break;
@@ -124,7 +122,8 @@ public class AjustesFragment extends Fragment {
     private void cerrarSesion() {
         vistaModelo.cerrarSesion();
 
-        Navigation.findNavController(requireView()).navigate(R.id.action_ajustes_a_inicio_sesion);
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_ajustes_a_inicio_sesion);
     }
 
     private void mostrarSelectorIdiomas() {
@@ -136,12 +135,20 @@ public class AjustesFragment extends Fragment {
                     reiniciarAppTrasCambioIdioma();
                 }
         );
+
         hoja.show(getChildFragmentManager(), "selector_idioma_ajustes");
     }
 
     private void mostrarConfirmacionBorrarCuenta() {
-        HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(getString(R.string.ajustes_eliminar_cuenta_titulo), getString(R.string.ajustes_eliminar_cuenta_mensaje), getString(R.string.ajustes_eliminar_cuenta_cancelar), getString(R.string.ajustes_eliminar_cuenta_confirmar), () -> {
-        }, () -> vistaModelo.eliminarCuentaCompleta());
+        HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
+                getString(R.string.ajustes_eliminar_cuenta_titulo),
+                getString(R.string.ajustes_eliminar_cuenta_mensaje),
+                getString(R.string.ajustes_eliminar_cuenta_cancelar),
+                getString(R.string.ajustes_eliminar_cuenta_confirmar),
+                () -> {
+                },
+                () -> vistaModelo.eliminarCuentaCompleta()
+        );
 
         hoja.show(getChildFragmentManager(), "confirmacion_borrar_cuenta");
     }
@@ -149,7 +156,11 @@ public class AjustesFragment extends Fragment {
     private void reiniciarAppTrasCambioIdioma() {
         Intent intent = requireActivity().getIntent();
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+        );
 
         startActivity(intent);
         requireActivity().finish();
@@ -169,23 +180,27 @@ public class AjustesFragment extends Fragment {
     }
 
     private void navegarACambiarContrasenya() {
-        if (!vistaModelo.puedeCambiarContrasenya()) {
-            return;
-        }
-
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_ajustes_a_cambiar_contrasenya);
     }
+
     private void navegarABienvenida() {
         NavController navegador = Navigation.findNavController(requireView());
 
-        if (navegador.getCurrentDestination() == null || navegador.getCurrentDestination().getId() != R.id.ajustesFragment) {
+        if (navegador.getCurrentDestination() == null ||
+                navegador.getCurrentDestination().getId() != R.id.ajustesFragment) {
             return;
         }
 
-        NavOptions opcionesNavegacion = new NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build();
+        NavOptions opcionesNavegacion = new NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build();
 
-        navegador.navigate(R.id.bienvenidaFragment, null, opcionesNavegacion);
+        navegador.navigate(
+                R.id.bienvenidaFragment,
+                null,
+                opcionesNavegacion
+        );
     }
 
     @Override

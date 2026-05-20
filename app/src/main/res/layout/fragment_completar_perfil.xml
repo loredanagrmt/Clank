@@ -7,15 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/clank_background_light">
 
-    <include
-        android:id="@+id/navbar"
-        layout="@layout/navbar_superior"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/crear_cabecera_height"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <TextView
         android:id="@+id/tvTituloCompletarPerfil"
         android:layout_width="0dp"
@@ -26,7 +17,7 @@
         android:fontFamily="@font/poppins_semibold"
         android:textColor="@color/color_negrita"
         android:textSize="@dimen/completar_perfil_tamanyo_titulo"
-        app:layout_constraintTop_toBottomOf="@id/navbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Termina de crear tu perfil" />

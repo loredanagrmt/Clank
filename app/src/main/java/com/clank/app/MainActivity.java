@@ -4,16 +4,13 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.clank.app.databinding.ActivityMainBinding;
 import com.clank.app.databinding.NavbarSuperiorBinding;
@@ -32,14 +29,6 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
 
     private ActivityMainBinding binding;
     private NavbarSuperiorBinding navbarBinding;
-    private View navbarView;
-    private ImageButton btnNavbarVolver;
-    private ImageButton btnNavbarAccion;
-    private TextView tvNavbarTitulo;
-
-    private FrameLayout frameBottomBar;
-    private View btnNavFeed, btnNavCrear, btnNavPerfil;
-    private View indicadorFeed, indicadorCrear, indicadorPerfil;
 
     // Se oculta en Logo e Idioma, Portada, Bienvenida, InicioSesion,
     // Registro, EditarPerfil, CompletarPerfil, CambiarContrasenia, BorrarCuenta, CerrarSesion, OpcionesClankPerfil,
@@ -87,19 +76,44 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
         setContentView(binding.getRoot());
 
         navbarBinding = NavbarSuperiorBinding.bind(binding.navbar.getRoot());
+
         configurarNavbar();
+
+        binding.getRoot().post(this::configurarBottombar);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        configurarBottombar();
-    }
+    ///////////////////////// configuración inicial navbar /////////////////////////
 
     private void configurarNavbar() {
-        navbarBinding.btnNavbarVolver.setOnClickListener(v ->
-                obtenerNavController().navigateUp());
+        restaurarAccionVolverPorDefecto();
     }
+
+    private void restaurarAccionVolverPorDefecto() {
+        navbarBinding.btnNavbarVolver.setOnClickListener(v ->
+                obtenerNavController().navigateUp()
+        );
+    }
+
+    private void prepararNavbar(String titulo, boolean mostrarVolver) {
+        navbarBinding.tvNavbarTitulo.setText(titulo);
+
+        navbarBinding.btnNavbarVolver.setVisibility(
+                mostrarVolver ? View.VISIBLE : View.GONE
+        );
+        navbarBinding.btnNavbarVolver.setEnabled(true);
+        navbarBinding.btnNavbarVolver.setAlpha(1f);
+        restaurarAccionVolverPorDefecto();
+
+        navbarBinding.btnNavbarAccion.setVisibility(View.GONE);
+        navbarBinding.btnNavbarAccion.setOnClickListener(null);
+
+        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
+        navbarBinding.btnNavbarFiltrar.setOnClickListener(null);
+
+        binding.navbar.getRoot().setVisibility(View.VISIBLE);
+    }
+
+    ///////////////////////// configuración bottom bar /////////////////////////
 
     private void configurarBottombar() {
         NavController nav = obtenerNavController();
@@ -113,6 +127,18 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
                 actualizarIndicador(destination.getId());
             }
         });
+
+        ///////////////////////// estado inicial de la bottom bar /////////////////////////
+        if (nav.getCurrentDestination() != null) {
+            int destinoActual = nav.getCurrentDestination().getId();
+
+            if (FRAGMENTS_SIN_BOTTOMBAR.contains(destinoActual)) {
+                binding.frameBottomBar.setVisibility(View.GONE);
+            } else {
+                binding.frameBottomBar.setVisibility(View.VISIBLE);
+                actualizarIndicador(destinoActual);
+            }
+        }
 
         ///////////////////////// listeners /////////////////////////
         binding.bottomBar.btnNavFeed.setOnClickListener(v -> {
@@ -150,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
     }
 
     ///////////////////////// indicador al pulsar botones /////////////////////////
+
     private void actualizarIndicador(int fragmentId) {
         binding.bottomBar.indicadorFeed.setVisibility(View.INVISIBLE);
         binding.bottomBar.indicadorCrear.setVisibility(View.INVISIBLE);
@@ -164,60 +191,89 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
         }
     }
 
-    ///////////////////////// métodos NavbarHost/////////////////////////
-    @Override
-    public void mostrarNavbar(String titulo, @Nullable Integer iconoAccion, @Nullable View.OnClickListener onAccion) {
-      navbarBinding.tvNavbarTitulo.setText(titulo);
-      navbarBinding.btnNavbarVolver.setVisibility(View.GONE);
-      navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
-      binding.navbar.getRoot().setVisibility(View.VISIBLE);
+    ///////////////////////// métodos NavbarHost /////////////////////////
 
-      if (iconoAccion != null && onAccion != null) {
-        navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
-        navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
-        navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
-      } else {
-        navbarBinding.btnNavbarAccion.setOnClickListener(null);
-        navbarBinding.btnNavbarAccion.setVisibility(View.GONE);
-      }
-    }
     @Override
     public void mostrarNavbar(String titulo) {
-        navbarBinding.tvNavbarTitulo.setText(titulo);
-        navbarBinding.btnNavbarVolver.setVisibility(View.GONE);
-        navbarBinding.btnNavbarAccion.setVisibility(View.GONE);
-        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
-        binding.navbar.getRoot().setVisibility(View.VISIBLE);
+        prepararNavbar(titulo, false);
     }
 
     @Override
-    public void mostrarNavbar(String titulo, @DrawableRes int iconoAccion, View.OnClickListener onAccion) {
-        navbarBinding.tvNavbarTitulo.setText(titulo);
-        navbarBinding.btnNavbarVolver.setVisibility(View.GONE);
+    public void mostrarNavbar(
+            String titulo,
+            @DrawableRes int iconoAccion,
+            View.OnClickListener onAccion
+    ) {
+        prepararNavbar(titulo, false);
+
         navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
         navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
         navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
-        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
-        binding.navbar.getRoot().setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void mostrarNavbar(
+            String titulo,
+            @Nullable Integer iconoAccion,
+            @Nullable View.OnClickListener onAccion
+    ) {
+        prepararNavbar(titulo, false);
+
+        if (iconoAccion != null && onAccion != null) {
+            navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
+            navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
+            navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void mostrarNavbarConVolver(String titulo) {
-        navbarBinding.tvNavbarTitulo.setText(titulo);
-        navbarBinding.btnNavbarVolver.setVisibility(View.VISIBLE);
-        navbarBinding.btnNavbarAccion.setVisibility(View.GONE);
-        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
-        binding.navbar.getRoot().setVisibility(View.VISIBLE);
+        prepararNavbar(titulo, true);
     }
 
     @Override
-    public void mostrarNavbarConVolver(String titulo, @DrawableRes int iconoAccion, View.OnClickListener onAccion) {
-        navbarBinding.tvNavbarTitulo.setText(titulo);
-        navbarBinding.btnNavbarVolver.setVisibility(View.VISIBLE);
+    public void mostrarNavbarConVolver(
+            String titulo,
+            @DrawableRes int iconoAccion,
+            View.OnClickListener onAccion
+    ) {
+        prepararNavbar(titulo, true);
+
         navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
         navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
         navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
-        navbarBinding.btnNavbarFiltrar.setVisibility(View.GONE);
-        binding.navbar.getRoot().setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void mostrarNavbarConAccionYFiltro(
+            String titulo,
+            @DrawableRes int iconoAccion,
+            View.OnClickListener onAccion,
+            View.OnClickListener onFiltrar
+    ) {
+        prepararNavbar(titulo, false);
+
+        navbarBinding.btnNavbarAccion.setImageResource(iconoAccion);
+        navbarBinding.btnNavbarAccion.setOnClickListener(onAccion);
+        navbarBinding.btnNavbarAccion.setVisibility(View.VISIBLE);
+
+        navbarBinding.btnNavbarFiltrar.setOnClickListener(onFiltrar);
+        navbarBinding.btnNavbarFiltrar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void configurarAccionVolver(@Nullable View.OnClickListener onVolver) {
+        if (onVolver != null) {
+            navbarBinding.btnNavbarVolver.setOnClickListener(onVolver);
+        } else {
+            restaurarAccionVolverPorDefecto();
+        }
+    }
+
+    @Override
+    public void habilitarVolverNavbar(boolean habilitado) {
+        navbarBinding.btnNavbarVolver.setEnabled(habilitado);
+        navbarBinding.btnNavbarVolver.setAlpha(habilitado ? 1f : 0.5f);
     }
 
     @Override
@@ -225,12 +281,25 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
         binding.navbar.getRoot().setVisibility(View.GONE);
     }
 
+    ///////////////////////// utilidades navegación /////////////////////////
+
     private NavController obtenerNavController() {
-        return Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment == null) {
+            throw new IllegalStateException(
+                    "No se ha encontrado el NavHostFragment principal."
+            );
+        }
+
+        return navHostFragment.getNavController();
     }
 
     private int fragmentActual() {
         NavController nav = obtenerNavController();
+
         return nav.getCurrentDestination() != null
                 ? nav.getCurrentDestination().getId()
                 : -1;
