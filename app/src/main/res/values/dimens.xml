@@ -285,4 +285,15 @@
   <dimen name="cambiar_contrasenya_footer_height">88dp</dimen>
   <dimen name="cambiar_contrasenya_boton_width">132dp</dimen>
   <dimen name="cambiar_contrasenya_boton_height">48dp</dimen>
+
+  <!-- ── Bottom bar ──────────────────────────────────── -->
+  <dimen name="bottombar_alto_contenedor">88dp</dimen>
+  <dimen name="bottombar_alto_barra">56dp</dimen>
+  <dimen name="bottombar_margen_inferior">16dp</dimen>
+  <dimen name="bottombar_padding_horizontal">20dp</dimen>
+  <dimen name="bottombar_item_padding_horizontal">16dp</dimen>
+  <dimen name="bottombar_tamanyo_icono">24dp</dimen>
+  <dimen name="bottombar_ancho_indicador">16dp</dimen>
+  <dimen name="bottombar_alto_indicador">2dp</dimen>
+  <dimen name="bottombar_margen_superior_indicador">3dp</dimen>
 </resources>

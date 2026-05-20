@@ -33,7 +33,7 @@
   <FrameLayout
       android:id="@+id/frameBottomBar"
       android:layout_width="0dp"
-      android:layout_height="100dp"
+      android:layout_height="@dimen/bottombar_alto_contenedor"
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="parent"
