@@ -49,6 +49,7 @@ public class CrearFragment extends Fragment {
   private View targetActivo = null;
   private Uri uriPortadaSeleccionada = null;
   private Uri uriFotoTemporal = null;
+  private boolean esPublicacion = false;
 
   ///////////////////////// launchers /////////////////////////
 
@@ -453,6 +454,8 @@ public class CrearFragment extends Fragment {
   }
 
   private void publicarClankConfirmado() {
+    esPublicacion = true;
+
     String titulo = binding.etTitulo.getText().toString().trim();
     String descripcion = binding.etDescripcion.getText().toString().trim();
 
@@ -487,11 +490,19 @@ public class CrearFragment extends Fragment {
   }
 
   private void guardarBoceto() {
-    Toast.makeText(
-            requireContext(),
-            getString(R.string.crear_boceto_proximamente),
-            Toast.LENGTH_SHORT
-    ).show();
+    esPublicacion = false;
+
+    viewModel.guardarBoceto(
+            binding.etTitulo.getText().toString().trim(),
+            binding.etDescripcion.getText().toString().trim(),
+            tiempoSeleccionado,
+            uriPortadaSeleccionada,
+            recogerMateriales(),
+            recogerHerramientas(),
+            recogerTextosInstrucciones(),
+            recogerImagenesInstrucciones(),
+            recogerCategoriasSeleccionadas()
+    );
   }
 
   ///////////////////////// hoja descartar clank /////////////////////////
@@ -642,20 +653,29 @@ public class CrearFragment extends Fragment {
       switch (estado.estado) {
         case CARGANDO:
           binding.btnPublicar.setEnabled(false);
+          binding.btnGuardarBoceto.setEnabled(false);
           binding.overlayCargando.setVisibility(View.VISIBLE);
           break;
 
         case EXITO:
           binding.overlayCargando.setVisibility(View.GONE);
           binding.btnPublicar.setEnabled(true);
+          binding.btnGuardarBoceto.setEnabled(true);
+
+          Bundle args = new Bundle();
+          args.putString(
+                  "tabInicial",
+                  esPublicacion ? "clanks" : "bocetos"
+          );
 
           Navigation.findNavController(requireView())
-                  .navigate(R.id.action_crear_a_perfil);
+                  .navigate(R.id.action_crear_a_perfil, args);
           break;
 
         case ERROR:
           binding.overlayCargando.setVisibility(View.GONE);
           binding.btnPublicar.setEnabled(true);
+          binding.btnGuardarBoceto.setEnabled(true);
 
           String msg = estado.mensaje != null
                   ? estado.mensaje
@@ -802,5 +822,33 @@ public class CrearFragment extends Fragment {
       ItemInstruccionBinding itemBinding = ItemInstruccionBinding.bind(fila);
       itemBinding.tvNumeroInstruccion.setText((i + 1) + ".");
     }
+  }
+
+  private List<String> recogerTextosInstrucciones() {
+    List<String> lista = new ArrayList<>();
+
+    for (int i = 0; i < binding.llContenedorInstrucciones.getChildCount(); i++) {
+      View fila = binding.llContenedorInstrucciones.getChildAt(i);
+
+      String texto = ((EditText) fila.findViewById(R.id.etTextoInstruccion))
+              .getText()
+              .toString()
+              .trim();
+
+      lista.add(texto);
+    }
+
+    return lista;
+  }
+
+  private List<Uri> recogerImagenesInstrucciones() {
+    List<Uri> lista = new ArrayList<>();
+
+    for (int i = 0; i < binding.llContenedorInstrucciones.getChildCount(); i++) {
+      View fila = binding.llContenedorInstrucciones.getChildAt(i);
+      lista.add((Uri) fila.getTag(R.id.ivPreviewInstruccion));
+    }
+
+    return lista;
   }
 }
