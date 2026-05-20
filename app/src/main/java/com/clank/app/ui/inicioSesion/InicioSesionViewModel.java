@@ -26,6 +26,9 @@ public class InicioSesionViewModel extends ViewModel {
 
     private final AuthRepository repositorioAutenticacion;
     private final UsuarioRepository repositorioUsuario;
+    private String nombreGoogle = "";
+    private String correoGoogle = "";
+    private String fotoPerfilGoogle = "";
 
     @Inject
     public InicioSesionViewModel(
@@ -79,6 +82,8 @@ public class InicioSesionViewModel extends ViewModel {
             return;
         }
 
+        guardarDatosGoogle(cuenta);
+
         resultadoInicioSesion.setValue(Recurso.cargando());
 
         repositorioAutenticacion.iniciarSesionGoogle(cuenta)
@@ -119,4 +124,35 @@ public class InicioSesionViewModel extends ViewModel {
         )
       );
   }
+
+    private void guardarDatosGoogle(GoogleSignInAccount cuenta) {
+        nombreGoogle = limpiarTexto(cuenta.getDisplayName());
+        correoGoogle = limpiarTexto(cuenta.getEmail());
+
+        if (cuenta.getPhotoUrl() != null) {
+            fotoPerfilGoogle = cuenta.getPhotoUrl().toString();
+        } else {
+            fotoPerfilGoogle = "";
+        }
+    }
+
+    private String limpiarTexto(String texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        return texto.trim();
+    }
+
+    public String getNombreGoogle() {
+        return nombreGoogle;
+    }
+
+    public String getCorreoGoogle() {
+        return correoGoogle;
+    }
+
+    public String getFotoPerfilGoogle() {
+        return fotoPerfilGoogle;
+    }
 }

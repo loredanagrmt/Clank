@@ -114,6 +114,23 @@ public class RegistroFragment extends Fragment {
         binding.inputConfirmarContrasenya.inputTrailingIcon.setImageResource(R.drawable.ic_contrasenya_oculta);
 
         binding.btnRegistrarme.btnSecundario.setText(getString(R.string.registrarme));
+        configurarModoRegistroGoogle();
+    }
+
+
+    private void configurarModoRegistroGoogle() {
+        boolean registroConGoogle = vistaModeloCompartida.isRegistroConGoogle();
+
+        int visibilidadContrasenya = registroConGoogle
+                ? View.GONE
+                : View.VISIBLE;
+
+        binding.inputContrasenya.getRoot().setVisibility(visibilidadContrasenya);
+        binding.inputConfirmarContrasenya.getRoot().setVisibility(visibilidadContrasenya);
+
+        if (registroConGoogle) {
+            binding.inputCorreo.customEditText.setEnabled(false);
+        }
     }
 
     private void configurarPopup() {
@@ -154,18 +171,18 @@ public class RegistroFragment extends Fragment {
 
         vistaModeloCompartida.recargarDatosGuardados();
 
-        if (!vistaModeloCompartida.tieneDatosRegistro()) {
-            vistaModeloCompartida.limpiar();
-            limpiarCamposFormulario();
-            return;
-        }
-
         binding.inputNombreCompleto.customEditText.setText(vistaModeloCompartida.getNombre());
         binding.inputCorreo.customEditText.setText(vistaModeloCompartida.getCorreo());
         binding.inputTelefono.customEditText.setText(vistaModeloCompartida.getTelefono());
         binding.inputFechaNacimiento.customEditText.setText(vistaModeloCompartida.getFechaNacimiento());
-        binding.inputContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
-        binding.inputConfirmarContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
+
+        if (vistaModeloCompartida.isRegistroConGoogle()) {
+            binding.inputContrasenya.customEditText.setText("");
+            binding.inputConfirmarContrasenya.customEditText.setText("");
+        } else {
+            binding.inputContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
+            binding.inputConfirmarContrasenya.customEditText.setText(vistaModeloCompartida.getContrasenya());
+        }
     }
 
     private void limpiarCamposFormulario() {
@@ -178,16 +195,32 @@ public class RegistroFragment extends Fragment {
     }
 
     private void procesarRegistro() {
+        boolean registroConGoogle = vistaModeloCompartida.isRegistroConGoogle();
+
         String nombre = getTexto(binding.inputNombreCompleto.customEditText.getText());
         String correo = getTexto(binding.inputCorreo.customEditText.getText());
         String telefono = getTexto(binding.inputTelefono.customEditText.getText());
         String fechaNacimiento = getTexto(binding.inputFechaNacimiento.customEditText.getText());
-        String contrasenya = getContrasenya(binding.inputContrasenya.customEditText.getText());
-        String confirmarContrasenya = getContrasenya(binding.inputConfirmarContrasenya.customEditText.getText());
+
+        String contrasenya = registroConGoogle
+                ? ""
+                : getContrasenya(binding.inputContrasenya.customEditText.getText());
+
+        String confirmarContrasenya = registroConGoogle
+                ? ""
+                : getContrasenya(binding.inputConfirmarContrasenya.customEditText.getText());
 
         limpiarErroresFormulario();
 
-        if (!validarFormulario(nombre, correo, telefono, fechaNacimiento, contrasenya, confirmarContrasenya)) {
+        if (!validarFormulario(
+                nombre,
+                correo,
+                telefono,
+                fechaNacimiento,
+                contrasenya,
+                confirmarContrasenya,
+                registroConGoogle
+        )) {
             return;
         }
 
@@ -201,13 +234,13 @@ public class RegistroFragment extends Fragment {
 
         mostrarPopupRegistro();
     }
-
     private boolean validarFormulario(String nombre,
                                       String correo,
                                       String telefono,
                                       String fechaNacimiento,
                                       String contrasenya,
-                                      String confirmarContrasenya) {
+                                      String confirmarContrasenya,
+                                      boolean registroConGoogle) {
         if (nombre.isEmpty()) {
             mostrarError(
                     binding.inputNombreCompleto.customEditText,
@@ -232,14 +265,6 @@ public class RegistroFragment extends Fragment {
             return false;
         }
 
-        if (telefono.isEmpty()) {
-            mostrarError(
-                    binding.inputTelefono.customEditText,
-                    R.string.registro_error_telefono_vacio
-            );
-            return false;
-        }
-
         if (fechaNacimiento.isEmpty()) {
             mostrarError(
                     binding.inputFechaNacimiento.customEditText,
@@ -248,36 +273,38 @@ public class RegistroFragment extends Fragment {
             return false;
         }
 
-        if (contrasenya.isEmpty()) {
-            mostrarError(
-                    binding.inputContrasenya.customEditText,
-                    R.string.registro_error_contrasenya_vacia
-            );
-            return false;
-        }
+        if (!registroConGoogle) {
+            if (contrasenya.isEmpty()) {
+                mostrarError(
+                        binding.inputContrasenya.customEditText,
+                        R.string.registro_error_contrasenya_vacia
+                );
+                return false;
+            }
 
-        if (contrasenya.length() < 6) {
-            mostrarError(
-                    binding.inputContrasenya.customEditText,
-                    R.string.registro_error_contrasenya_corta
-            );
-            return false;
-        }
+            if (contrasenya.length() < 6) {
+                mostrarError(
+                        binding.inputContrasenya.customEditText,
+                        R.string.registro_error_contrasenya_corta
+                );
+                return false;
+            }
 
-        if (confirmarContrasenya.isEmpty()) {
-            mostrarError(
-                    binding.inputConfirmarContrasenya.customEditText,
-                    R.string.registro_error_confirmar_contrasenya_vacia
-            );
-            return false;
-        }
+            if (confirmarContrasenya.isEmpty()) {
+                mostrarError(
+                        binding.inputConfirmarContrasenya.customEditText,
+                        R.string.registro_error_confirmar_contrasenya_vacia
+                );
+                return false;
+            }
 
-        if (!contrasenya.equals(confirmarContrasenya)) {
-            mostrarError(
-                    binding.inputConfirmarContrasenya.customEditText,
-                    R.string.registro_error_contrasenyas_distintas
-            );
-            return false;
+            if (!contrasenya.equals(confirmarContrasenya)) {
+                mostrarError(
+                        binding.inputConfirmarContrasenya.customEditText,
+                        R.string.registro_error_contrasenyas_distintas
+                );
+                return false;
+            }
         }
 
         return true;
@@ -342,14 +369,17 @@ public class RegistroFragment extends Fragment {
         binding.tvIrInicioSesion.setEnabled(habilitado);
 
         binding.inputNombreCompleto.customEditText.setEnabled(habilitado);
-        binding.inputCorreo.customEditText.setEnabled(habilitado);
         binding.inputTelefono.customEditText.setEnabled(habilitado);
         binding.inputFechaNacimiento.customEditText.setEnabled(habilitado);
-        binding.inputContrasenya.customEditText.setEnabled(habilitado);
-        binding.inputConfirmarContrasenya.customEditText.setEnabled(habilitado);
 
-        binding.inputContrasenya.inputTrailingIcon.setEnabled(habilitado);
-        binding.inputConfirmarContrasenya.inputTrailingIcon.setEnabled(habilitado);
+        boolean registroConGoogle = vistaModeloCompartida.isRegistroConGoogle();
+
+        binding.inputCorreo.customEditText.setEnabled(habilitado && !registroConGoogle);
+        binding.inputContrasenya.customEditText.setEnabled(habilitado && !registroConGoogle);
+        binding.inputConfirmarContrasenya.customEditText.setEnabled(habilitado && !registroConGoogle);
+
+        binding.inputContrasenya.inputTrailingIcon.setEnabled(habilitado && !registroConGoogle);
+        binding.inputConfirmarContrasenya.inputTrailingIcon.setEnabled(habilitado && !registroConGoogle);
 
         float transparencia = bloqueado ? 0.6f : 1f;
         binding.btnRegistrarme.btnSecundario.setAlpha(transparencia);
