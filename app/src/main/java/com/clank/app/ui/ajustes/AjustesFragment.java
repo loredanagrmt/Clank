@@ -72,7 +72,21 @@ public class AjustesFragment extends Fragment {
     }
 
     private void configurarEstadoInicial() {
-        binding.switchTemaOscuro.setChecked(GestorTema.obtenerModoOscuroGuardado(requireContext()));
+        binding.switchTemaOscuro.setChecked(
+                GestorTema.obtenerModoOscuroGuardado(requireContext())
+        );
+
+        configurarDisponibilidadCambioContrasenya();
+    }
+
+    private void configurarDisponibilidadCambioContrasenya() {
+        boolean puedeCambiarContrasenya =
+                vistaModelo.puedeCambiarContrasenya();
+
+        binding.btnCambiarContrasenya.setEnabled(puedeCambiarContrasenya);
+        binding.btnCambiarContrasenya.setAlpha(
+                puedeCambiarContrasenya ? 1f : 0.5f
+        );
     }
 
     private void observarVistaModelo() {
@@ -155,9 +169,13 @@ public class AjustesFragment extends Fragment {
     }
 
     private void navegarACambiarContrasenya() {
-        Navigation.findNavController(requireView()).navigate(R.id.action_ajustes_a_cambiar_contrasenya);
-    }
+        if (!vistaModelo.puedeCambiarContrasenya()) {
+            return;
+        }
 
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_ajustes_a_cambiar_contrasenya);
+    }
     private void navegarABienvenida() {
         NavController navegador = Navigation.findNavController(requireView());
 

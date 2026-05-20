@@ -16,6 +16,8 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
     private static final String CLAVE_TELEFONO = "telefono";
     private static final String CLAVE_FECHA_NACIMIENTO = "fechaNacimiento";
     private static final String CLAVE_CONTRASENYA = "contrasenya";
+    private static final String CLAVE_REGISTRO_CON_GOOGLE = "registroConGoogle";
+    private static final String CLAVE_FOTO_PERFIL_GOOGLE = "fotoPerfilGoogle";
 
     private final SharedPreferences preferencias;
 
@@ -24,6 +26,8 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
     private String telefono = "";
     private String fechaNacimiento = "";
     private String contrasenya = "";
+    private boolean registroConGoogle = false;
+    private String fotoPerfilGoogle = "";
 
     public RegistroCompartidoViewModel(@NonNull Application application) {
         super(application);
@@ -37,14 +41,42 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
         limpiar();
     }
 
-    public void guardarDatosRegistro(String nombre, String correo, String telefono, String fechaNacimiento, String contrasenya) {
+    public void iniciarNuevoRegistroGoogle(String nombre, String correo, String fotoPerfilGoogle) {
+        limpiar();
+
+        this.registroConGoogle = true;
+        this.nombre = limpiarTexto(nombre);
+        this.correo = limpiarTexto(correo);
+        this.fotoPerfilGoogle = limpiarTexto(fotoPerfilGoogle);
+
+        preferencias.edit()
+                .putBoolean(CLAVE_REGISTRO_CON_GOOGLE, true)
+                .putString(CLAVE_NOMBRE, this.nombre)
+                .putString(CLAVE_CORREO, this.correo)
+                .putString(CLAVE_FOTO_PERFIL_GOOGLE, this.fotoPerfilGoogle)
+                .commit();
+    }
+
+    public void guardarDatosRegistro(String nombre,
+                                     String correo,
+                                     String telefono,
+                                     String fechaNacimiento,
+                                     String contrasenya) {
         this.nombre = limpiarTexto(nombre);
         this.correo = limpiarTexto(correo);
         this.telefono = limpiarTexto(telefono);
         this.fechaNacimiento = limpiarTexto(fechaNacimiento);
         this.contrasenya = limpiarContrasenya(contrasenya);
 
-        preferencias.edit().putString(CLAVE_NOMBRE, this.nombre).putString(CLAVE_CORREO, this.correo).putString(CLAVE_TELEFONO, this.telefono).putString(CLAVE_FECHA_NACIMIENTO, this.fechaNacimiento).putString(CLAVE_CONTRASENYA, this.contrasenya).commit();
+        preferencias.edit()
+                .putString(CLAVE_NOMBRE, this.nombre)
+                .putString(CLAVE_CORREO, this.correo)
+                .putString(CLAVE_TELEFONO, this.telefono)
+                .putString(CLAVE_FECHA_NACIMIENTO, this.fechaNacimiento)
+                .putString(CLAVE_CONTRASENYA, this.contrasenya)
+                .putBoolean(CLAVE_REGISTRO_CON_GOOGLE, this.registroConGoogle)
+                .putString(CLAVE_FOTO_PERFIL_GOOGLE, this.fotoPerfilGoogle)
+                .commit();
     }
 
     public void recargarDatosGuardados() {
@@ -53,12 +85,23 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
         telefono = preferencias.getString(CLAVE_TELEFONO, "");
         fechaNacimiento = preferencias.getString(CLAVE_FECHA_NACIMIENTO, "");
         contrasenya = preferencias.getString(CLAVE_CONTRASENYA, "");
+        registroConGoogle = preferencias.getBoolean(CLAVE_REGISTRO_CON_GOOGLE, false);
+        fotoPerfilGoogle = preferencias.getString(CLAVE_FOTO_PERFIL_GOOGLE, "");
     }
 
     public boolean tieneDatosRegistro() {
         recargarDatosGuardados();
 
-        return !estaVacio(nombre) && !estaVacio(correo) && !estaVacio(telefono) && !estaVacio(fechaNacimiento) && !estaVacio(contrasenya);
+        if (registroConGoogle) {
+            return !estaVacio(nombre)
+                    && !estaVacio(correo)
+                    && !estaVacio(fechaNacimiento);
+        }
+
+        return !estaVacio(nombre)
+                && !estaVacio(correo)
+                && !estaVacio(fechaNacimiento)
+                && !estaVacio(contrasenya);
     }
 
     public String getNombre() {
@@ -86,14 +129,34 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
         return contrasenya;
     }
 
+    public boolean isRegistroConGoogle() {
+        recargarDatosGuardados();
+        return registroConGoogle;
+    }
+
+    public String getFotoPerfilGoogle() {
+        recargarDatosGuardados();
+        return fotoPerfilGoogle;
+    }
+
     public void limpiar() {
         nombre = "";
         correo = "";
         telefono = "";
         fechaNacimiento = "";
         contrasenya = "";
+        registroConGoogle = false;
+        fotoPerfilGoogle = "";
 
-        preferencias.edit().remove(CLAVE_NOMBRE).remove(CLAVE_CORREO).remove(CLAVE_TELEFONO).remove(CLAVE_FECHA_NACIMIENTO).remove(CLAVE_CONTRASENYA).commit();
+        preferencias.edit()
+                .remove(CLAVE_NOMBRE)
+                .remove(CLAVE_CORREO)
+                .remove(CLAVE_TELEFONO)
+                .remove(CLAVE_FECHA_NACIMIENTO)
+                .remove(CLAVE_CONTRASENYA)
+                .remove(CLAVE_REGISTRO_CON_GOOGLE)
+                .remove(CLAVE_FOTO_PERFIL_GOOGLE)
+                .commit();
     }
 
     private String limpiarTexto(String texto) {

@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import com.google.firebase.auth.UserInfo;
 
 @Singleton
 public class AuthRepository {
@@ -69,6 +70,22 @@ public class AuthRepository {
         }
 
         return usuarioActual.getEmail();
+    }
+
+    public boolean puedeCambiarContrasenya() {
+        FirebaseUser usuarioActual = autenticacion.getCurrentUser();
+
+        if (usuarioActual == null) {
+            return false;
+        }
+
+        for (UserInfo proveedor : usuarioActual.getProviderData()) {
+            if (EmailAuthProvider.PROVIDER_ID.equals(proveedor.getProviderId())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Task<HttpsCallableResult> solicitarCodigoRecuperacion(String correo) {

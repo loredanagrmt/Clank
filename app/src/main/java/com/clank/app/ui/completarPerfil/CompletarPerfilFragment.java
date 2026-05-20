@@ -101,6 +101,7 @@ public class CompletarPerfilFragment extends Fragment {
         configurarListeners();
         observarViewModel();
         restaurarPreviewFotoPerfil();
+        precargarFotoPerfilGoogleSiProcede();
     }
 
     private void configurarLanzadoresImagen() {
@@ -253,7 +254,9 @@ public class CompletarPerfilFragment extends Fragment {
                 vistaModeloCompartida.getFechaNacimiento(),
                 vistaModeloCompartida.getContrasenya(),
                 usuarioClank,
-                uriFotoPerfil
+                uriFotoPerfil,
+                vistaModeloCompartida.isRegistroConGoogle(),
+                vistaModeloCompartida.getFotoPerfilGoogle()
         );
     }
 
@@ -396,6 +399,29 @@ public class CompletarPerfilFragment extends Fragment {
         if (uriFotoPerfil != null) {
             mostrarPreviewFotoPerfil(uriFotoPerfil);
         }
+    }
+
+    private void precargarFotoPerfilGoogleSiProcede() {
+        if (uriFotoPerfil != null) {
+            return;
+        }
+
+        if (!vistaModeloCompartida.isRegistroConGoogle()) {
+            return;
+        }
+
+        String fotoPerfilGoogle = vistaModeloCompartida.getFotoPerfilGoogle();
+
+        if (fotoPerfilGoogle == null || fotoPerfilGoogle.trim().isEmpty()) {
+            return;
+        }
+
+        Glide.with(this)
+                .load(fotoPerfilGoogle)
+                .circleCrop()
+                .placeholder(R.drawable.ic_usuario_inactivo)
+                .error(R.drawable.ic_usuario_inactivo)
+                .into(binding.imgFotoPerfil);
     }
 
     private void mostrarError(EditText editText, int mensajeError) {

@@ -59,7 +59,7 @@
     <string name="registro_titulo">Registro</string>
     <string name="nombre_completo">Nombre</string>
     <string name="nombre_apellidos">Nombre</string>
-    <string name="numero_telefono">Número de teléfono</string>
+    <string name="numero_telefono">Número de teléfono (Opcional)</string>
     <string name="ejemplo_telefono">123 456 789</string>
     <string name="fecha_nacimiento">Fecha de nacimiento</string>
     <string name="ejemplo_fecha_nacimiento">DD / MM / YYYY</string>

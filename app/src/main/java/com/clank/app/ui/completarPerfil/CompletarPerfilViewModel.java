@@ -23,7 +23,6 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import com.google.firebase.Timestamp;
 
 @HiltViewModel
 public class CompletarPerfilViewModel extends AndroidViewModel {
@@ -58,9 +57,18 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
                                 String fechaNacimiento,
                                 String contrasenya,
                                 String usuarioClank,
-                                Uri uriFotoPerfil) {
+                                Uri uriFotoPerfil,
+                                boolean registroConGoogle,
+                                String fotoPerfilGoogle) {
 
-        if (datosRegistroIncompletos(nombre, correo, telefono, fechaNacimiento, contrasenya)) {
+        if (datosRegistroIncompletos(
+                nombre,
+                correo,
+                telefono,
+                fechaNacimiento,
+                contrasenya,
+                registroConGoogle
+        )) {
             estado.setValue(Recurso.error(ERROR_DATOS_REGISTRO));
             return;
         }
@@ -81,15 +89,27 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
                         return;
                     }
 
-                    crearCuenta(
-                            nombre.trim(),
-                            correo.trim(),
-                            telefono.trim(),
-                            fechaNacimiento.trim(),
-                            contrasenya,
-                            usuarioClankNormalizado,
-                            uriFotoPerfil
-                    );
+                    if (registroConGoogle) {
+                        completarPerfilGoogle(
+                                nombre.trim(),
+                                correo.trim(),
+                                telefono.trim(),
+                                fechaNacimiento.trim(),
+                                usuarioClankNormalizado,
+                                uriFotoPerfil,
+                                fotoPerfilGoogle
+                        );
+                    } else {
+                        crearCuentaTradicional(
+                                nombre.trim(),
+                                correo.trim(),
+                                telefono.trim(),
+                                fechaNacimiento.trim(),
+                                contrasenya,
+                                usuarioClankNormalizado,
+                                uriFotoPerfil
+                        );
+                    }
                 })
                 .addOnFailureListener(error -> {
                     Log.e(
@@ -102,7 +122,7 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
                 });
     }
 
-    private void crearCuenta(String nombre, String correo, String telefono, String fechaNacimiento, String contrasenya, String usuarioClank, Uri uriFotoPerfil) {
+    private void crearCuentaTradicional(String nombre, String correo, String telefono, String fechaNacimiento, String contrasenya, String usuarioClank, Uri uriFotoPerfil) {
         repositorioAutenticacion.registrar(correo, contrasenya).addOnCompleteListener(tareaAutenticacion -> {
             if (!tareaAutenticacion.isSuccessful()) {
                 Exception error = tareaAutenticacion.getException();
@@ -124,6 +144,49 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
             }
             subirFotoPerfil(uid, correo, nombre, telefono, fechaNacimiento, usuarioClank, uriFotoPerfil);
         });
+    }
+
+    private void completarPerfilGoogle(String nombre,
+                                       String correo,
+                                       String telefono,
+                                       String fechaNacimiento,
+                                       String usuarioClank,
+                                       Uri uriFotoPerfil,
+                                       String fotoPerfilGoogle) {
+        String uid = repositorioAutenticacion.getUid();
+
+        if (uid == null || uid.isEmpty()) {
+            estado.setValue(Recurso.error(ERROR_REGISTRO));
+            return;
+        }
+
+        String correoSesion = repositorioAutenticacion.getCorreo();
+        String correoFinal = !estaVacio(correoSesion)
+                ? correoSesion.trim()
+                : correo.trim();
+
+        if (uriFotoPerfil == null) {
+            guardarUsuario(
+                    uid,
+                    correoFinal,
+                    nombre,
+                    telefono,
+                    fechaNacimiento,
+                    usuarioClank,
+                    limpiarTextoOpcional(fotoPerfilGoogle)
+            );
+            return;
+        }
+
+        subirFotoPerfil(
+                uid,
+                correoFinal,
+                nombre,
+                telefono,
+                fechaNacimiento,
+                usuarioClank,
+                uriFotoPerfil
+        );
     }
 
     private void subirFotoPerfil(String uid, String correo, String nombre, String telefono, String fechaNacimiento, String usuarioClank, Uri uriFotoPerfil) {
@@ -150,12 +213,30 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
         });
     }
 
-    private boolean datosRegistroIncompletos(String nombre, String correo, String telefono, String fechaNacimiento, String contrasenya) {
-        return estaVacio(nombre) || estaVacio(correo) || estaVacio(telefono) || estaVacio(fechaNacimiento) || estaVacio(contrasenya);
-    }
+    private boolean datosRegistroIncompletos(String nombre,
+                                             String correo,
+                                             String telefono,
+                                             String fechaNacimiento,
+                                             String contrasenya,
+                                             boolean registroConGoogle) {
+        if (estaVacio(nombre)
+                || estaVacio(correo)
+                || estaVacio(fechaNacimiento)) {
+            return true;
+        }
 
+        return !registroConGoogle && estaVacio(contrasenya);
+    }
     private boolean estaVacio(String texto) {
         return texto == null || texto.trim().isEmpty();
+    }
+
+    private String limpiarTextoOpcional(String texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        return texto.trim();
     }
 
     private String normalizarUsuarioClank(String usuarioClank) {

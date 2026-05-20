@@ -216,7 +216,7 @@ public class InicioSesionFragment extends Fragment {
 
     private void gestionarInicioCorrecto(InicioSesionViewModel.DestinoNavegacion destinoNavegacion) {
         if (destinoNavegacion == InicioSesionViewModel.DestinoNavegacion.REGISTRO) {
-            navegarRegistro();
+            navegarRegistroGoogle();
             return;
         }
 
@@ -236,7 +236,20 @@ public class InicioSesionFragment extends Fragment {
 
     private void navegarRegistro() {
         vistaModeloRegistro.iniciarNuevoRegistro();
+        ejecutarNavegacionRegistro();
+    }
 
+    private void navegarRegistroGoogle() {
+        vistaModeloRegistro.iniciarNuevoRegistroGoogle(
+                vistaModelo.getNombreGoogle(),
+                vistaModelo.getCorreoGoogle(),
+                vistaModelo.getFotoPerfilGoogle()
+        );
+
+        ejecutarNavegacionRegistro();
+    }
+
+    private void ejecutarNavegacionRegistro() {
         NavController navegador = Navigation.findNavController(requireView());
 
         if (navegador.getCurrentDestination() == null

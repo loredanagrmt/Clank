@@ -82,6 +82,9 @@ public class AjustesViewModel extends ViewModel {
                 });
     }
 
+    public boolean puedeCambiarContrasenya() {
+        return repositorioAutenticacion.puedeCambiarContrasenya();
+    }
     public void limpiarEstadoEliminacionCuenta() {
         estadoEliminacionCuenta.setValue(null);
     }
