@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.clank.app.databinding.HojaOpcionesBinding;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
@@ -96,6 +99,21 @@ public class HojaOpciones extends BottomSheetDialogFragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (!(getDialog() instanceof BottomSheetDialog)) {
+            return;
+        }
+
+        BottomSheetDialog dialogo = (BottomSheetDialog) getDialog();
+        BottomSheetBehavior<FrameLayout> comportamiento = dialogo.getBehavior();
+
+        comportamiento.setFitToContents(true);
+        comportamiento.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
     private void configurarModoLista() {
         binding.listaOpciones.setVisibility(View.VISIBLE);
         binding.textoConfirmacion.setVisibility(View.GONE);
@@ -110,6 +128,7 @@ public class HojaOpciones extends BottomSheetDialogFragment {
                     if (callback != null) {
                         callback.alSeleccionar(item.id);
                     }
+
                     dismiss();
                 })
         );
@@ -129,6 +148,7 @@ public class HojaOpciones extends BottomSheetDialogFragment {
             if (accionCancelar != null) {
                 accionCancelar.ejecutar();
             }
+
             dismiss();
         });
 
@@ -136,6 +156,7 @@ public class HojaOpciones extends BottomSheetDialogFragment {
             if (accionConfirmar != null) {
                 accionConfirmar.ejecutar();
             }
+
             dismiss();
         });
     }
