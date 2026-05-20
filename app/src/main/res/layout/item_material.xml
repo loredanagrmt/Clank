@@ -12,7 +12,7 @@
     android:id="@+id/ivDragHandle"
     android:layout_width="20dp"
     android:layout_height="20dp"
-    android:src="@drawable/ic_delete"
+    android:src="@drawable/ic_delete_inactivo"
     app:tint="@color/color_texto_inactivo" />
 
   <!-- Cantidad (oculto para herramientas vía código) -->
@@ -55,7 +55,7 @@
     android:layout_marginStart="8dp"
     android:background="@drawable/bg_input"
     android:padding="9dp"
-    android:src="@drawable/ic_delete"
+    android:src="@drawable/ic_delete_inactivo"
     app:tint="@color/color_clank_activo" />
 
 </LinearLayout>

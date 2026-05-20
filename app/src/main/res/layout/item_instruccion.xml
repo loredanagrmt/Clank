@@ -18,7 +18,7 @@
       android:layout_width="20dp"
       android:layout_height="20dp"
       android:layout_marginTop="12dp"
-      android:src="@drawable/ic_delete"
+      android:src="@drawable/ic_delete_inactivo"
       app:tint="@color/color_texto_inactivo" />
 
     <EditText
@@ -47,7 +47,7 @@
       android:layout_marginTop="2dp"
       android:background="@drawable/bg_input"
       android:padding="9dp"
-      android:src="@drawable/ic_delete"
+      android:src="@drawable/ic_delete_inactivo"
       app:tint="@color/color_clank_activo" />
 
   </LinearLayout>

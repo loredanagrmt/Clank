@@ -103,7 +103,7 @@ public class CrearFragment extends Fragment {
   ///////////////////////// navbar /////////////////////////
   private void configurarNavbar() {
     binding.navbar.tvNavbarTitulo.setText(getString(R.string.crear_titulo));
-    binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_delete);
+    binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_delete_inactivo);
     binding.navbar.btnNavbarAccion.setVisibility(View.VISIBLE);
   }
 
