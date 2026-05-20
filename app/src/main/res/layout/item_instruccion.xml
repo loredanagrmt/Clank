@@ -13,13 +13,17 @@
     android:gravity="top"
     android:orientation="horizontal">
 
-    <ImageView
-      android:id="@+id/ivDragHandle"
+    <TextView
+      android:id="@+id/tvNumeroInstruccion"
       android:layout_width="20dp"
-      android:layout_height="20dp"
+      android:layout_height="wrap_content"
       android:layout_marginTop="12dp"
-      android:src="@drawable/ic_delete"
-      app:tint="@color/color_texto_inactivo" />
+      android:fontFamily="@font/poppins_family"
+      android:textColor="@color/color_texto_inactivo"
+      android:textSize="13sp"
+      android:textStyle="bold"
+      android:gravity="center"
+      android:text="1." />
 
     <EditText
       android:id="@+id/etTextoInstruccion"
@@ -47,7 +51,7 @@
       android:layout_marginTop="2dp"
       android:background="@drawable/bg_input"
       android:padding="9dp"
-      android:src="@drawable/ic_delete"
+      android:src="@drawable/ic_delete_inactivo"
       app:tint="@color/color_clank_activo" />
 
   </LinearLayout>

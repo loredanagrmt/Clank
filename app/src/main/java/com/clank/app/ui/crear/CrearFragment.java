@@ -29,6 +29,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCrearBinding;
+import com.clank.app.databinding.ItemInstruccionBinding;
 import com.clank.app.ui.comun.HojaOpciones;
 
 import java.io.File;
@@ -103,7 +104,7 @@ public class CrearFragment extends Fragment {
   ///////////////////////// navbar /////////////////////////
   private void configurarNavbar() {
     binding.navbar.tvNavbarTitulo.setText(getString(R.string.crear_titulo));
-    binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_delete);
+    binding.navbar.btnNavbarAccion.setImageResource(R.drawable.ic_delete_inactivo);
     binding.navbar.btnNavbarAccion.setVisibility(View.VISIBLE);
   }
 
@@ -327,28 +328,31 @@ public class CrearFragment extends Fragment {
   }
 
   private void anyadirFilaInstruccion() {
-    View fila = LayoutInflater.from(requireContext())
-            .inflate(R.layout.item_instruccion, binding.llContenedorInstrucciones, false);
+    ItemInstruccionBinding itemBinding = ItemInstruccionBinding.inflate(
+      LayoutInflater.from(requireContext()),
+      binding.llContenedorInstrucciones,
+      false);
 
-    fila.findViewById(R.id.btnEliminarInstruccion).setOnClickListener(b -> {
+    itemBinding.btnEliminarInstruccion.setOnClickListener(b -> {
       if (binding.llContenedorInstrucciones.getChildCount() > 1) {
-        binding.llContenedorInstrucciones.removeView(fila);
+        binding.llContenedorInstrucciones.removeView(itemBinding.getRoot());
+        renumerarInstrucciones();
       } else {
         Toast.makeText(requireContext(),
                 getString(R.string.crear_error_min_instruccion), Toast.LENGTH_SHORT).show();
       }
     });
 
-    View botonImagen = fila.findViewById(R.id.llBotonImagenInstruccion);
-    botonImagen.setOnClickListener(b -> mostrarDialogoSeleccionImagen(fila));
+    itemBinding.llBotonImagenInstruccion.setOnClickListener(b ->
+      mostrarDialogoSeleccionImagen(itemBinding.getRoot()));
 
-    ImageView preview = fila.findViewById(R.id.ivPreviewInstruccion);
-    preview.setOnClickListener(b -> {
-      Uri uri = (Uri) fila.getTag(R.id.ivPreviewInstruccion);
-      if (uri != null) mostrarDialogoAccionesImagen(uri, fila);
+    itemBinding.ivPreviewInstruccion.setOnClickListener(b -> {
+      Uri uri = (Uri) itemBinding.getRoot().getTag(R.id.ivPreviewInstruccion);
+      if (uri != null) mostrarDialogoAccionesImagen(uri, itemBinding.getRoot());
     });
 
-    binding.llContenedorInstrucciones.addView(fila);
+    binding.llContenedorInstrucciones.addView(itemBinding.getRoot());
+    renumerarInstrucciones();
   }
 
 
@@ -713,5 +717,13 @@ public class CrearFragment extends Fragment {
   private void ocultarErrorTiempo() {
     binding.tvErrorTiempo.setVisibility(View.GONE);
     binding.tvErrorTiempo.setText("");
+  }
+  private void renumerarInstrucciones() {
+    int total = binding.llContenedorInstrucciones.getChildCount();
+    for (int i = 0; i < total; i++) {
+      View fila = binding.llContenedorInstrucciones.getChildAt(i);
+      ItemInstruccionBinding itemBinding = ItemInstruccionBinding.bind(fila);
+      itemBinding.tvNumeroInstruccion.setText((i + 1) + ".");
+    }
   }
 }

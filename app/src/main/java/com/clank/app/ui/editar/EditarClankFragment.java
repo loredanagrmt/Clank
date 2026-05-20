@@ -33,7 +33,7 @@ import com.bumptech.glide.Glide;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCrearBinding;
 import com.clank.app.ui.comun.NavbarHost;
-import com.clank.app.util.Recurso;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +121,7 @@ public class EditarClankFragment extends Fragment {
     NavbarHost host = (NavbarHost) requireActivity();
     host.mostrarNavbar(
       getString(R.string.editar_titulo),
-      R.drawable.ic_delete,
+      R.drawable.ic_delete_inactivo,
       v -> mostrarConfirmarEliminar(requireView())
     );
   }
