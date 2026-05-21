@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -369,21 +368,12 @@ public class InicioSesionFragment extends Fragment {
     }
 
     private void mostrarMensaje(String mensaje) {
-        if (mensaje == null || mensaje.trim().isEmpty()) {
-            Toast.makeText(
-                    requireContext(),
-                    "Ha ocurrido un error",
-                    Toast.LENGTH_LONG
-            ).show();
+        String textoError = mensaje != null && !mensaje.trim().isEmpty()
+                ? mensaje
+                : getString(R.string.error_generico);
 
-            return;
-        }
-
-        Toast.makeText(
-                requireContext(),
-                mensaje,
-                Toast.LENGTH_LONG
-        ).show();
+        binding.inputCorreo.customEditText.setError(textoError);
+        binding.inputCorreo.customEditText.requestFocus();
     }
 
     @Override

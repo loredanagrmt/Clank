@@ -203,7 +203,6 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
         usuario.setUsuarioClank(usuarioClank);
         usuario.setFotoPerfil(fotoPerfil);
         usuario.setFechaCreacion(obtenerFechaActual());
-        usuario.setEnLinea(true);
         repositorioUsuario.crear(usuario).addOnCompleteListener(tareaBaseDatos -> {
             if (tareaBaseDatos.isSuccessful()) {
                 estado.setValue(Recurso.exito(null));

@@ -12,7 +12,6 @@ public class Usuario {
   private String fotoPerfil;
   private String fechaCreacion;
   private String fechaNacimiento;
-  private boolean enLinea;
   private String usuarioClank;
 
   public Usuario() {
@@ -72,12 +71,6 @@ public class Usuario {
 
   public void setFechaNacimiento(String fechaNacimiento) {
     this.fechaNacimiento = fechaNacimiento;
-  }
-  public boolean isEnLinea() {
-    return enLinea;
-  }
-  public void setEnLinea(boolean enLinea) {
-    this.enLinea = enLinea;
   }
 
   public String getUsuarioClank() {

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -449,12 +448,6 @@ public class PerfilFragment extends Fragment {
                     if (!isAdded()) {
                         return;
                     }
-
-                    Toast.makeText(
-                            requireContext(),
-                            getString(R.string.perfil_error_eliminar_clank),
-                            Toast.LENGTH_LONG
-                    ).show();
                 });
     }
 
