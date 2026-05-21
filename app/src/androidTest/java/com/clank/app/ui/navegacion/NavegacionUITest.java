@@ -1,4 +1,4 @@
-package com.clank.app.ui;
+package com.clank.app.ui.navegacion;
 
 import androidx.navigation.Navigation;
 import androidx.navigation.NavController;
