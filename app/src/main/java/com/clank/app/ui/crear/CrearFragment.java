@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -72,11 +71,9 @@ public class CrearFragment extends Fragment {
             if (Boolean.TRUE.equals(granted)) {
               abrirCamara();
             } else {
-              Toast.makeText(
-                      requireContext(),
-                      getString(R.string.error_permiso_camara),
-                      Toast.LENGTH_SHORT
-              ).show();
+              if (targetActivo == null) {
+                mostrarErrorPortada();
+              }
             }
           });
 
@@ -201,11 +198,9 @@ public class CrearFragment extends Fragment {
       camaraLauncher.launch(uriFotoTemporal);
 
     } catch (Exception e) {
-      Toast.makeText(
-              requireContext(),
-              getString(R.string.error_camara),
-              Toast.LENGTH_SHORT
-      ).show();
+      if (targetActivo == null) {
+        mostrarErrorPortada();
+      }
     }
   }
 
@@ -352,11 +347,7 @@ public class CrearFragment extends Fragment {
       if (contenedor.getChildCount() > 1 || esHerramienta) {
         contenedor.removeView(fila);
       } else {
-        Toast.makeText(
-                requireContext(),
-                getString(R.string.crear_error_min_material),
-                Toast.LENGTH_SHORT
-        ).show();
+        mostrarErrorPrimerMaterial();
       }
     });
 
@@ -375,11 +366,7 @@ public class CrearFragment extends Fragment {
         binding.llContenedorInstrucciones.removeView(itemBinding.getRoot());
         renumerarInstrucciones();
       } else {
-        Toast.makeText(
-                requireContext(),
-                getString(R.string.crear_error_min_instruccion),
-                Toast.LENGTH_SHORT
-        ).show();
+        mostrarErrorPrimeraInstruccion();
       }
     });
 
@@ -677,11 +664,13 @@ public class CrearFragment extends Fragment {
           binding.btnPublicar.setEnabled(true);
           binding.btnGuardarBoceto.setEnabled(true);
 
-          String msg = estado.mensaje != null
-                  ? estado.mensaje
-                  : getString(R.string.crear_error_publicar);
+          binding.etTitulo.setError(
+                  estado.mensaje != null
+                          ? estado.mensaje
+                          : getString(R.string.crear_error_publicar)
+          );
 
-          Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
+          binding.etTitulo.requestFocus();
           break;
       }
     });

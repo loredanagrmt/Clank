@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -99,11 +98,8 @@ public class EditarClankFragment extends Fragment {
                     if (Boolean.TRUE.equals(granted)) {
                       abrirCamara();
                     } else {
-                      Toast.makeText(
-                              requireContext(),
-                              getString(R.string.error_permiso_camara),
-                              Toast.LENGTH_SHORT
-                      ).show();
+                      binding.etTitulo.setError(getString(R.string.error_permiso_camara));
+                      binding.etTitulo.requestFocus();
                     }
                   }
           );
@@ -319,11 +315,8 @@ public class EditarClankFragment extends Fragment {
       camaraLauncher.launch(uriFotoTemporal);
 
     } catch (Exception e) {
-      Toast.makeText(
-              requireContext(),
-              getString(R.string.error_camara),
-              Toast.LENGTH_SHORT
-      ).show();
+      binding.etTitulo.setError(getString(R.string.error_camara));
+      binding.etTitulo.requestFocus();
     }
   }
 
@@ -412,6 +405,9 @@ public class EditarClankFragment extends Fragment {
   private void seleccionarTiempo(int indice) {
     tiempoSeleccionado = indice;
 
+    binding.tvErrorTiempo.setVisibility(View.GONE);
+    binding.tvErrorTiempo.setText("");
+
     android.widget.ImageButton[] botones = {
             binding.btnTiempoCohete,
             binding.btnTiempoLiebre,
@@ -467,11 +463,12 @@ public class EditarClankFragment extends Fragment {
         contenedor.removeView(fila);
         viewModel.marcarCambios();
       } else {
-        Toast.makeText(
-                requireContext(),
-                getString(R.string.crear_error_min_material),
-                Toast.LENGTH_SHORT
-        ).show();
+        EditText etNombreMaterial = fila.findViewById(R.id.etNombreElemento);
+
+        if (etNombreMaterial != null) {
+          etNombreMaterial.setError(getString(R.string.crear_error_min_material));
+          etNombreMaterial.requestFocus();
+        }
       }
     });
 
@@ -491,11 +488,12 @@ public class EditarClankFragment extends Fragment {
         binding.llContenedorInstrucciones.removeView(fila);
         viewModel.marcarCambios();
       } else {
-        Toast.makeText(
-                requireContext(),
-                getString(R.string.crear_error_min_instruccion),
-                Toast.LENGTH_SHORT
-        ).show();
+        EditText etTextoInstruccion = fila.findViewById(R.id.etTextoInstruccion);
+
+        if (etTextoInstruccion != null) {
+          etTextoInstruccion.setError(getString(R.string.crear_error_min_instruccion));
+          etTextoInstruccion.requestFocus();
+        }
       }
     });
 
@@ -535,11 +533,8 @@ public class EditarClankFragment extends Fragment {
     }
 
     if (tiempoSeleccionado == -1) {
-      Toast.makeText(
-              requireContext(),
-              getString(R.string.crear_error_tiempo),
-              Toast.LENGTH_SHORT
-      ).show();
+      binding.tvErrorTiempo.setText(getString(R.string.crear_error_tiempo));
+      binding.tvErrorTiempo.setVisibility(View.VISIBLE);
       return;
     }
 
@@ -629,11 +624,8 @@ public class EditarClankFragment extends Fragment {
                 return;
               }
 
-              Toast.makeText(
-                      requireContext(),
-                      getString(R.string.perfil_error_eliminar_clank),
-                      Toast.LENGTH_LONG
-              ).show();
+              binding.etTitulo.setError(getString(R.string.perfil_error_eliminar_clank));
+              binding.etTitulo.requestFocus();
             });
   }
 
@@ -776,15 +768,13 @@ public class EditarClankFragment extends Fragment {
           binding.btnPublicar.setEnabled(viewModel.hayCambios());
           binding.btnGuardarBoceto.setEnabled(true);
 
-          String msg = recurso.mensaje != null
-                  ? recurso.mensaje
-                  : getString(R.string.crear_error_publicar);
+          binding.etTitulo.setError(
+                  recurso.mensaje != null
+                          ? recurso.mensaje
+                          : getString(R.string.crear_error_publicar)
+          );
 
-          Toast.makeText(
-                  requireContext(),
-                  msg,
-                  Toast.LENGTH_LONG
-          ).show();
+          binding.etTitulo.requestFocus();
           break;
       }
     });
@@ -861,11 +851,12 @@ public class EditarClankFragment extends Fragment {
         binding.llContenedorMateriales.removeView(fila);
         viewModel.marcarCambios();
       } else {
-        Toast.makeText(
-                requireContext(),
-                getString(R.string.crear_error_min_material),
-                Toast.LENGTH_SHORT
-        ).show();
+        EditText etNombreMaterial = fila.findViewById(R.id.etNombreElemento);
+
+        if (etNombreMaterial != null) {
+          etNombreMaterial.setError(getString(R.string.crear_error_min_material));
+          etNombreMaterial.requestFocus();
+        }
       }
     });
 
@@ -926,11 +917,12 @@ public class EditarClankFragment extends Fragment {
         binding.llContenedorInstrucciones.removeView(fila);
         viewModel.marcarCambios();
       } else {
-        Toast.makeText(
-                requireContext(),
-                getString(R.string.crear_error_min_instruccion),
-                Toast.LENGTH_SHORT
-        ).show();
+        EditText etTextoInstruccion = fila.findViewById(R.id.etTextoInstruccion);
+
+        if (etTextoInstruccion != null) {
+          etTextoInstruccion.setError(getString(R.string.crear_error_min_instruccion));
+          etTextoInstruccion.requestFocus();
+        }
       }
     });
 
