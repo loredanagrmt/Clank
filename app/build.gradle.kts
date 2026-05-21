@@ -19,7 +19,7 @@ android {
     versionCode = 1
     versionName = "1.0"
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner = "com.clank.app.HiltTestRunner"
   }
 
   buildTypes {
@@ -89,6 +89,10 @@ dependencies {
   androidTestImplementation("androidx.navigation:navigation-testing:2.8.9")
   androidTestImplementation("androidx.fragment:fragment-testing:1.8.5")
   androidTestImplementation("org.mockito:mockito-android:5.11.0")
+
+  // Hilt en androidTest
+  androidTestImplementation("com.google.dagger:hilt-android-testing:2.51")
+  androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.51")
 
   // Imagen circular (perfil)
   implementation(libs.circleimageview)

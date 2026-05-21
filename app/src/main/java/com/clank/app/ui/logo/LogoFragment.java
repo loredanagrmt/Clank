@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.clank.app.R;
@@ -27,19 +28,7 @@ public class LogoFragment extends Fragment {
     private final Runnable navegarRunnable = new Runnable() {
         @Override
         public void run() {
-            View vista = getView();
-
-            if (vista == null) {
-                return;
-            }
-
-            if (vistaModelo.haySesionIniciada()) {
-                Navigation.findNavController(vista)
-                        .navigate(R.id.action_logo_a_feed);
-            } else {
-                Navigation.findNavController(vista)
-                        .navigate(R.id.action_logo_a_idioma);
-            }
+            navegarSiSigueEnLogo();
         }
     };
 
@@ -58,18 +47,56 @@ public class LogoFragment extends Fragment {
 
         vistaModelo = new ViewModelProvider(this).get(LogoViewModel.class);
 
+        handler.removeCallbacks(navegarRunnable);
         handler.postDelayed(navegarRunnable, 1000);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ((NavbarHost) requireActivity()).ocultarNavbar();
+
+        if (getActivity() instanceof NavbarHost) {
+            ((NavbarHost) requireActivity()).ocultarNavbar();
+        }
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         handler.removeCallbacks(navegarRunnable);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        handler.removeCallbacks(navegarRunnable);
+        super.onDestroy();
+    }
+
+    private void navegarSiSigueEnLogo() {
+        if (!isAdded()) {
+            return;
+        }
+
+        View vista = getView();
+
+        if (vista == null) {
+            return;
+        }
+
+        NavController navController = Navigation.findNavController(vista);
+
+        if (navController.getCurrentDestination() == null) {
+            return;
+        }
+
+        if (navController.getCurrentDestination().getId() != R.id.logoFragment) {
+            return;
+        }
+
+        if (vistaModelo != null && vistaModelo.haySesionIniciada()) {
+            navController.navigate(R.id.action_logo_a_feed);
+        } else {
+            navController.navigate(R.id.action_logo_a_idioma);
+        }
     }
 }
