@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.hilt.android)
   alias(libs.plugins.google.services)
+  alias(libs.plugins.allure)
 }
 
 android {
@@ -36,6 +37,10 @@ android {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
+}
+
+allure {
+  version.set("2.24.0")
 }
 
 dependencies {
@@ -76,12 +81,16 @@ dependencies {
 
   implementation(libs.flexbox)
 
-//UNIT TESTS (JVM local)
+  // Imagen circular (perfil)
+  implementation(libs.circleimageview)
+
+  // UNIT TESTS (JVM local)
   testImplementation("junit:junit:4.13.2")
   testImplementation("org.mockito:mockito-core:5.11.0")
   testImplementation("androidx.arch.core:core-testing:2.2.0")
+  testImplementation(libs.allure.junit4)
 
-//INSTRUMENTED TESTS (emulador)
+  // INSTRUMENTED TESTS (emulador)
   androidTestImplementation("androidx.test.ext:junit:1.2.1")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
   androidTestImplementation("androidx.test:rules:1.6.1")
@@ -94,6 +103,7 @@ dependencies {
   androidTestImplementation("com.google.dagger:hilt-android-testing:2.51")
   androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.51")
 
-  // Imagen circular (perfil)
-  implementation(libs.circleimageview)
+  // Allure para reportes visuales en androidTest
+  androidTestImplementation(libs.allure.kotlin.android)
+  androidTestImplementation(libs.allure.kotlin.junit4)
 }

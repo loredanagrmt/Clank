@@ -11,6 +11,7 @@ import androidx.test.filters.LargeTest;
 
 import com.clank.app.MainActivity;
 import com.clank.app.R;
+import com.clank.app.test.util.AllureScreenshotWatcher;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,13 +22,25 @@ import org.junit.runner.RunWith;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
+import io.qameta.allure.kotlin.Description;
+import io.qameta.allure.kotlin.Epic;
+import io.qameta.allure.kotlin.Feature;
+import io.qameta.allure.kotlin.Severity;
+import io.qameta.allure.kotlin.SeverityLevel;
+import io.qameta.allure.kotlin.Story;
+
 @HiltAndroidTest
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Epic("UI Tests")
+@Feature("Clanks")
 public class CrearClankUITest {
 
-  @Rule
+  @Rule(order = 0)
   public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+  @Rule(order = 1)
+  public AllureScreenshotWatcher screenshotWatcher = new AllureScreenshotWatcher();
 
   private ActivityScenario<MainActivity> escenario;
 
@@ -52,9 +65,10 @@ public class CrearClankUITest {
     );
   }
 
-  /////////////////////////estructura principal/////////////////////////
-
   @Test
+  @Story("Visualización del formulario de creación")
+  @Description("El área de portada del clank debe ser visible al cargar la pantalla.")
+  @Severity(SeverityLevel.NORMAL)
   public void framePortada_estaVisible() {
     navegarACrear();
 
@@ -63,6 +77,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Visualización del formulario de creación")
+  @Description("El campo de título debe estar visible al cargar la pantalla.")
+  @Severity(SeverityLevel.CRITICAL)
   public void campoTitulo_estaVisible() {
     navegarACrear();
 
@@ -71,6 +88,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Visualización del formulario de creación")
+  @Description("El campo de descripción debe estar visible al cargar la pantalla.")
+  @Severity(SeverityLevel.NORMAL)
   public void campoDescripcion_estaVisible() {
     navegarACrear();
 
@@ -78,9 +98,10 @@ public class CrearClankUITest {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
   }
 
-  /////////////////////////botones tiempo/////////////////////////
-
   @Test
+  @Story("Selector de tiempo")
+  @Description("El selector rápido representado por el cohete debe estar visible.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnTiempoCohete_estaVisible() {
     navegarACrear();
 
@@ -90,6 +111,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Selector de tiempo")
+  @Description("El selector de dificultad/tiempo medio representado por la liebre debe estar visible.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnTiempoLiebre_estaVisible() {
     navegarACrear();
 
@@ -99,6 +123,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Selector de tiempo")
+  @Description("El selector lento representado por la tortuga debe estar visible.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnTiempoTortuga_estaVisible() {
     navegarACrear();
 
@@ -107,9 +134,10 @@ public class CrearClankUITest {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
   }
 
-  /////////////////////////botones de seccion/////////////////////////
-
   @Test
+  @Story("Secciones del clank")
+  @Description("El botón para añadir material debe estar visible.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnAnyadirMaterial_estaVisible() {
     navegarACrear();
 
@@ -119,6 +147,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Secciones del clank")
+  @Description("El botón para añadir herramienta debe estar visible.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnAnyadirHerramienta_estaVisible() {
     navegarACrear();
 
@@ -128,6 +159,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Secciones del clank")
+  @Description("El botón para añadir instrucción debe estar visible.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnAnyadirInstruccion_estaVisible() {
     navegarACrear();
 
@@ -136,9 +170,10 @@ public class CrearClankUITest {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
   }
 
-  /////////////////////////botones principales/////////////////////////
-
   @Test
+  @Story("Publicación y guardado")
+  @Description("El botón de publicar debe estar visible dentro del formulario de creación.")
+  @Severity(SeverityLevel.CRITICAL)
   public void btnPublicar_estaVisible() {
     navegarACrear();
 
@@ -148,6 +183,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Publicación y guardado")
+  @Description("El botón de guardar como boceto debe estar visible dentro del formulario de creación.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnGuardarBoceto_estaVisible() {
     navegarACrear();
 
@@ -156,9 +194,10 @@ public class CrearClankUITest {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
   }
 
-  /////////////////////////interaccion con campos/////////////////////////
-
   @Test
+  @Story("Introducción de datos del clank")
+  @Description("Al escribir en el campo título, el texto introducido debe mostrarse correctamente.")
+  @Severity(SeverityLevel.CRITICAL)
   public void campoTitulo_escribirTexto_muestraTextoEscrito() {
     navegarACrear();
 
@@ -173,6 +212,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Introducción de datos del clank")
+  @Description("Al escribir en el campo descripción, el texto introducido debe mostrarse correctamente.")
+  @Severity(SeverityLevel.NORMAL)
   public void campoDescripcion_escribirTexto_muestraTextoEscrito() {
     navegarACrear();
 
@@ -186,9 +228,10 @@ public class CrearClankUITest {
             .check(ViewAssertions.matches(ViewMatchers.withText("Una bonita maceta hecha a mano")));
   }
 
-  /////////////////////////clicks/////////////////////////
-
   @Test
+  @Story("Selector de tiempo")
+  @Description("El selector rápido representado por el cohete debe ser clickable.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnTiempoCohete_esClickable() {
     navegarACrear();
 
@@ -198,6 +241,9 @@ public class CrearClankUITest {
   }
 
   @Test
+  @Story("Secciones del clank")
+  @Description("El botón de añadir material debe ser clickable.")
+  @Severity(SeverityLevel.NORMAL)
   public void btnAnyadirMaterial_esClickable() {
     navegarACrear();
 
