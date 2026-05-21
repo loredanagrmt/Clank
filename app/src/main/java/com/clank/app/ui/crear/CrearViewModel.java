@@ -8,16 +8,15 @@ import androidx.lifecycle.ViewModel;
 
 import com.clank.app.data.repository.AuthRepository;
 import com.clank.app.util.Recurso;
+import com.clank.app.util.TraductorCategorias;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import com.clank.app.util.TraductorCategorias;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +34,10 @@ public class CrearViewModel extends ViewModel {
   private final FirebaseStorage storage;
   private final AuthRepository authRepository;
   private final TraductorCategorias traductorCategorias;
+
   private final MutableLiveData<Recurso<Void>> estadoPublicacion = new MutableLiveData<>();
   private final MutableLiveData<List<String[]>> categorias = new MutableLiveData<>();
+
   private FirebaseAuth.AuthStateListener authStateListener;
   private boolean categoriasCargadas = false;
 
@@ -60,9 +61,8 @@ public class CrearViewModel extends ViewModel {
     return categorias;
   }
 
-  /// //////////////////////categorias de bbdd/////////////////////////
+  /// ////////////////////// categorias de bbdd /////////////////////////
 
-  //espera a que auth este lista antes de consultar en bbdd
   private void cargarCategoriasEsperandoAuth() {
     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -73,16 +73,17 @@ public class CrearViewModel extends ViewModel {
 
     authStateListener = firebaseAuth -> {
       FirebaseUser user = firebaseAuth.getCurrentUser();
+
       if (user != null && !categoriasCargadas) {
         categoriasCargadas = true;
         ejecutarCargaCategorias();
         FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
       }
     };
+
     FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
   }
 
-  // Consulta categorias y carga resultado
   private void ejecutarCargaCategorias() {
     db.collection("categorias").get()
             .addOnSuccessListener(snapshot -> {
@@ -97,44 +98,37 @@ public class CrearViewModel extends ViewModel {
               }
 
               traductorCategorias.traducirSiProcede(lista)
-                      .addOnSuccessListener(listaTraducida ->
-                              categorias.setValue(listaTraducida)
+                      .addOnSuccessListener(categoriasTraducidas ->
+                              categorias.setValue(categoriasTraducidas)
                       )
-                      .addOnFailureListener(e ->
+                      .addOnFailureListener(error ->
                               categorias.setValue(lista)
                       );
             })
-            .addOnFailureListener(e ->
+            .addOnFailureListener(error ->
                     categorias.setValue(new ArrayList<>())
             );
   }
 
-  /// //////////////////////publicar clank/////////////////////////
-  public void publicarClank(String titulo, String descripcion, int tiempo, Uri portadaUri,
-                            List<String[]> materiales, List<String> herramientas, List<String> instrucciones,
-                            List<Uri> imagenesInstrucciones, List<String> categoriasSeleccionadas) {
-    estadoPublicacion.setValue(Recurso.cargando());
+  /// ////////////////////// publicar clank /////////////////////////
 
-    String uid = authRepository.getUid();
+  public void publicarClank(String titulo,
+                            String descripcion,
+                            int tiempo,
+                            Uri portadaUri,
+                            List<String[]> materiales,
+                            List<String> herramientas,
+                            List<String> instrucciones,
+                            List<Uri> imagenesInstrucciones,
+                            List<String> categoriasSeleccionadas) {
 
-    String clankId = db.collection("clanks").document().getId();
-
-    if (uid == null || uid.isEmpty()) {
-      estadoPublicacion.setValue(Recurso.error("No hay sesion activa"));
-      return;
-    }
-    if (portadaUri == null) {
-      estadoPublicacion.setValue(Recurso.error("Debes añadir una portada"));
-      return;
-    }
-
-    subirPortadaYContinuar(
-            portadaUri,
-            uid,
-            clankId,
+    guardarNuevoClank(
+            true,
+            true,
             titulo,
             descripcion,
             tiempo,
+            portadaUri,
             materiales,
             herramientas,
             instrucciones,
@@ -143,57 +137,225 @@ public class CrearViewModel extends ViewModel {
     );
   }
 
-  /// //////////////////////subir portada/////////////////////////
-  private void subirPortadaYContinuar(Uri portadaUri, String uid, String clankId, String titulo, String descripcion, int tiempo, List<String[]> materiales,
-                                      List<String> herramientas, List<String> instrucciones, List<Uri> imagenesInstrucciones, List<String> cats) {
-    StorageReference ref = storage.getReference().child(uid + "/" + clankId + "/portada/portada.jpg");
+  /// ////////////////////// guardar boceto /////////////////////////
 
-    ref.putFile(portadaUri).continueWithTask(task -> {
-        if (!task.isSuccessful()) throw task.getException();
-        return ref.getDownloadUrl();
-      }).addOnSuccessListener(downloadUri ->
-        subirImagenesInstruccionesYCrear(downloadUri.toString(), uid, clankId, titulo, descripcion, tiempo,
-          materiales, herramientas, instrucciones, imagenesInstrucciones, cats))
-      .addOnFailureListener(e -> estadoPublicacion.setValue(Recurso.error(e.getMessage())));
+  public void guardarBoceto(String titulo,
+                            String descripcion,
+                            int tiempo,
+                            Uri portadaUri,
+                            List<String[]> materiales,
+                            List<String> herramientas,
+                            List<String> instrucciones,
+                            List<Uri> imagenesInstrucciones,
+                            List<String> categoriasSeleccionadas) {
+
+    guardarNuevoClank(
+            false,
+            false,
+            titulo,
+            descripcion,
+            tiempo,
+            portadaUri,
+            materiales,
+            herramientas,
+            instrucciones,
+            imagenesInstrucciones,
+            categoriasSeleccionadas
+    );
   }
 
-  /// //////////////////////subir fotos pasos/////////////////////////
-  private void subirImagenesInstruccionesYCrear(String portadaUrl, String uid, String clankId, String titulo, String descripcion, int tiempo,
-                                                List<String[]> materiales, List<String> herramientas, List<String> instrucciones,
-                                                List<Uri> imagenesInstrucciones, List<String> cats) {
+  /// ////////////////////// guardar nuevo clank /////////////////////////
+
+  private void guardarNuevoClank(boolean acabado,
+                                 boolean portadaObligatoria,
+                                 String titulo,
+                                 String descripcion,
+                                 int tiempo,
+                                 Uri portadaUri,
+                                 List<String[]> materiales,
+                                 List<String> herramientas,
+                                 List<String> instrucciones,
+                                 List<Uri> imagenesInstrucciones,
+                                 List<String> categoriasSeleccionadas) {
+
+    estadoPublicacion.setValue(Recurso.cargando());
+
+    String uid = authRepository.getUid();
+    String clankId = db.collection("clanks").document().getId();
+
+    if (uid == null || uid.isEmpty()) {
+      estadoPublicacion.setValue(Recurso.error("No hay sesion activa"));
+      return;
+    }
+
+    if (portadaObligatoria && portadaUri == null) {
+      estadoPublicacion.setValue(Recurso.error("Debes añadir una portada"));
+      return;
+    }
+
+    if (portadaUri != null) {
+      subirPortadaYContinuar(
+              portadaUri,
+              uid,
+              clankId,
+              titulo,
+              descripcion,
+              tiempo,
+              materiales,
+              herramientas,
+              instrucciones,
+              imagenesInstrucciones,
+              categoriasSeleccionadas,
+              acabado
+      );
+    } else {
+      subirImagenesInstruccionesYCrear(
+              "",
+              uid,
+              clankId,
+              titulo,
+              descripcion,
+              tiempo,
+              materiales,
+              herramientas,
+              instrucciones,
+              imagenesInstrucciones,
+              categoriasSeleccionadas,
+              acabado
+      );
+    }
+  }
+
+  /// ////////////////////// subir portada /////////////////////////
+
+  private void subirPortadaYContinuar(Uri portadaUri,
+                                      String uid,
+                                      String clankId,
+                                      String titulo,
+                                      String descripcion,
+                                      int tiempo,
+                                      List<String[]> materiales,
+                                      List<String> herramientas,
+                                      List<String> instrucciones,
+                                      List<Uri> imagenesInstrucciones,
+                                      List<String> categoriasSeleccionadas,
+                                      boolean acabado) {
+
+    StorageReference ref = storage.getReference()
+            .child(uid + "/" + clankId + "/portada/portada.jpg");
+
+    ref.putFile(portadaUri)
+            .continueWithTask(tarea -> {
+              if (!tarea.isSuccessful()) {
+                throw tarea.getException();
+              }
+
+              return ref.getDownloadUrl();
+            })
+            .addOnSuccessListener(downloadUri ->
+                    subirImagenesInstruccionesYCrear(
+                            downloadUri.toString(),
+                            uid,
+                            clankId,
+                            titulo,
+                            descripcion,
+                            tiempo,
+                            materiales,
+                            herramientas,
+                            instrucciones,
+                            imagenesInstrucciones,
+                            categoriasSeleccionadas,
+                            acabado
+                    )
+            )
+            .addOnFailureListener(error ->
+                    estadoPublicacion.setValue(Recurso.error(error.getMessage()))
+            );
+  }
+
+  /// ////////////////////// subir fotos de instrucciones /////////////////////////
+
+  private void subirImagenesInstruccionesYCrear(String portadaUrl,
+                                                String uid,
+                                                String clankId,
+                                                String titulo,
+                                                String descripcion,
+                                                int tiempo,
+                                                List<String[]> materiales,
+                                                List<String> herramientas,
+                                                List<String> instrucciones,
+                                                List<Uri> imagenesInstrucciones,
+                                                List<String> categoriasSeleccionadas,
+                                                boolean acabado) {
+
     List<Task<Uri>> tareas = new ArrayList<>();
 
     for (int i = 0; i < imagenesInstrucciones.size(); i++) {
       Uri uri = imagenesInstrucciones.get(i);
+
       if (uri != null) {
-        StorageReference ref = storage.getReference().child(uid + "/" + clankId + "/instrucciones/" + i + ".jpg");
-        Task<Uri> t = ref.putFile(uri)
-          .continueWithTask(task -> {
-            if (!task.isSuccessful()) throw task.getException();
-            return ref.getDownloadUrl();
-          });
-        tareas.add(t);
+        StorageReference ref = storage.getReference()
+                .child(uid + "/" + clankId + "/instrucciones/" + i + ".jpg");
+
+        Task<Uri> tarea = ref.putFile(uri)
+                .continueWithTask(resultado -> {
+                  if (!resultado.isSuccessful()) {
+                    throw resultado.getException();
+                  }
+
+                  return ref.getDownloadUrl();
+                });
+
+        tareas.add(tarea);
       } else {
         tareas.add(Tasks.forResult(null));
       }
     }
-    Tasks.whenAllComplete(tareas).addOnCompleteListener(allDone -> {
-      List<String> urlsImagenes = new ArrayList<>();
-      for (Task<?> t : tareas) {
-        if (t.isSuccessful() && t.getResult() instanceof Uri)
-          urlsImagenes.add(((Uri) t.getResult()).toString());
-        else
-          urlsImagenes.add(null);
-      }
-      crearDocumentoClank(portadaUrl, uid, clankId, titulo, descripcion, tiempo, materiales, herramientas,
-        instrucciones, urlsImagenes, cats);
-    });
+
+    Tasks.whenAllComplete(tareas)
+            .addOnCompleteListener(resultado -> {
+              List<String> urlsImagenes = new ArrayList<>();
+
+              for (Task<?> tarea : tareas) {
+                if (tarea.isSuccessful() && tarea.getResult() instanceof Uri) {
+                  urlsImagenes.add(((Uri) tarea.getResult()).toString());
+                } else {
+                  urlsImagenes.add(null);
+                }
+              }
+
+              crearDocumentoClank(
+                      portadaUrl,
+                      uid,
+                      clankId,
+                      titulo,
+                      descripcion,
+                      tiempo,
+                      materiales,
+                      herramientas,
+                      instrucciones,
+                      urlsImagenes,
+                      categoriasSeleccionadas,
+                      acabado
+              );
+            });
   }
 
-  /// //////////////////////crea clank/////////////////////////
-  private void crearDocumentoClank(String portadaUrl, String uid, String clankId, String titulo, String descripcion, int tiempo,
-                                   List<String[]> materiales, List<String> herramientas, List<String> instrucciones, List<String> urlsImagenes,
-                                   List<String> cats) {
+  /// ////////////////////// crear documento clank /////////////////////////
+
+  private void crearDocumentoClank(String portadaUrl,
+                                   String uid,
+                                   String clankId,
+                                   String titulo,
+                                   String descripcion,
+                                   int tiempo,
+                                   List<String[]> materiales,
+                                   List<String> herramientas,
+                                   List<String> instrucciones,
+                                   List<String> urlsImagenes,
+                                   List<String> categoriasSeleccionadas,
+                                   boolean acabado) {
+
     Map<String, Object> clank = new HashMap<>();
 
     clank.put("clankId", clankId);
@@ -204,66 +366,108 @@ public class CrearViewModel extends ViewModel {
     clank.put("usuarioId", uid);
     clank.put("fechaPublicacion", Timestamp.now());
     clank.put("numLikes", 0L);
-    clank.put("estadoAcabado", true);
-    if (cats != null && !cats.isEmpty()) clank.put("categorias", cats);
+    clank.put("estadoAcabado", acabado);
 
-    db.collection("clanks").document(clankId).set(clank)
-      .addOnSuccessListener(v ->
-        guardarSubcolecciones(clankId, materiales, herramientas,
-          instrucciones, urlsImagenes))
-      .addOnFailureListener(e ->
-        estadoPublicacion.setValue(Recurso.error(e.getMessage())));
+    if (categoriasSeleccionadas != null && !categoriasSeleccionadas.isEmpty()) {
+      clank.put("categorias", categoriasSeleccionadas);
+    }
+
+    db.collection("clanks")
+            .document(clankId)
+            .set(clank)
+            .addOnSuccessListener(resultado ->
+                    guardarSubcolecciones(
+                            clankId,
+                            materiales,
+                            herramientas,
+                            instrucciones,
+                            urlsImagenes
+                    )
+            )
+            .addOnFailureListener(error ->
+                    estadoPublicacion.setValue(Recurso.error(error.getMessage()))
+            );
   }
 
+  /// ////////////////////// subcolecciones /////////////////////////
 
-  /// //////////////////////subcolecciones/////////////////////////
-  private void guardarSubcolecciones(String clankId, List<String[]> materiales, List<String> herramientas,
-                                     List<String> instrucciones, List<String> urlsImagenes) {
+  private void guardarSubcolecciones(String clankId,
+                                     List<String[]> materiales,
+                                     List<String> herramientas,
+                                     List<String> instrucciones,
+                                     List<String> urlsImagenes) {
+
     var batch = db.batch();
 
     for (int i = 0; i < materiales.size(); i++) {
-      String[] m = materiales.get(i);
-      var ref = db.collection("clanks").document(clankId).collection("materiales").document();
-      Map<String, Object> mat = new HashMap<>();
-      mat.put("matId", ref.getId());
-      mat.put("cantidad", Integer.parseInt(m[0]));
-      mat.put("material", m[1]);
-      batch.set(ref, mat);
+      String[] material = materiales.get(i);
+
+      var ref = db.collection("clanks")
+              .document(clankId)
+              .collection("materiales")
+              .document();
+
+      Map<String, Object> mapaMaterial = new HashMap<>();
+
+      mapaMaterial.put("matId", ref.getId());
+      mapaMaterial.put("cantidad", Integer.parseInt(material[0]));
+      mapaMaterial.put("material", material[1]);
+
+      batch.set(ref, mapaMaterial);
     }
 
-    for (String h : herramientas) {
-      var ref = db.collection("clanks").document(clankId).collection("herramientas").document();
-      Map<String, Object> herr = new HashMap<>();
-      herr.put("herrId", ref.getId());
-      herr.put("herramienta", h);
-      batch.set(ref, herr);
+    for (String herramienta : herramientas) {
+      var ref = db.collection("clanks")
+              .document(clankId)
+              .collection("herramientas")
+              .document();
+
+      Map<String, Object> mapaHerramienta = new HashMap<>();
+
+      mapaHerramienta.put("herrId", ref.getId());
+      mapaHerramienta.put("herramienta", herramienta);
+
+      batch.set(ref, mapaHerramienta);
     }
 
     for (int i = 0; i < instrucciones.size(); i++) {
-      var ref = db.collection("clanks").document(clankId).collection("instrucciones").document();
-      Map<String, Object> paso = new HashMap<>();
-      paso.put("orden", i + 1);
-      paso.put("instruccion", instrucciones.get(i));
-      if (i < urlsImagenes.size() && urlsImagenes.get(i) != null)
-        paso.put("imagen", urlsImagenes.get(i));
-      batch.set(ref, paso);
+      var ref = db.collection("clanks")
+              .document(clankId)
+              .collection("instrucciones")
+              .document();
+
+      Map<String, Object> mapaInstruccion = new HashMap<>();
+
+      mapaInstruccion.put("orden", i + 1);
+      mapaInstruccion.put("instruccion", instrucciones.get(i));
+
+      if (i < urlsImagenes.size() && urlsImagenes.get(i) != null) {
+        mapaInstruccion.put("imagen", urlsImagenes.get(i));
+      }
+
+      batch.set(ref, mapaInstruccion);
     }
 
-    batch.commit().addOnSuccessListener(v ->
-        estadoPublicacion.setValue(Recurso.exito(null)))
-      .addOnFailureListener(e ->
-        estadoPublicacion.setValue(Recurso.error(e.getMessage())));
+    batch.commit()
+            .addOnSuccessListener(resultado ->
+                    estadoPublicacion.setValue(Recurso.exito(null))
+            )
+            .addOnFailureListener(error ->
+                    estadoPublicacion.setValue(Recurso.error(error.getMessage()))
+            );
   }
 
+  /// ////////////////////// limpieza /////////////////////////
 
-  /// //////////////////////limpieza/////////////////////////
   @Override
   protected void onCleared() {
     super.onCleared();
+
     if (authStateListener != null) {
       FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
       authStateListener = null;
     }
+
     traductorCategorias.cerrar();
   }
 }

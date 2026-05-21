@@ -89,7 +89,9 @@ public class PerfilViewModel extends ViewModel {
   /////////////////////////queries/////////////////////////
   public FirestoreRecyclerOptions<Clank> buildClankOptionsAcabados(String idUser) {
     Query query = clankRepository.getPorUsuario(idUser)
-            .whereEqualTo("estadoAcabado", true);
+            .whereEqualTo("estadoAcabado", true)
+            .orderBy("fechaPublicacion", Query.Direction.DESCENDING);
+
     return new FirestoreRecyclerOptions.Builder<Clank>()
             .setQuery(query, Clank.class)
             .build();
@@ -97,7 +99,9 @@ public class PerfilViewModel extends ViewModel {
 
   public FirestoreRecyclerOptions<Clank> buildClankOptionsBocetos(String idUser) {
     Query query = clankRepository.getPorUsuario(idUser)
-            .whereEqualTo("estadoAcabado", false);
+            .whereEqualTo("estadoAcabado", false)
+            .orderBy("fechaPublicacion", Query.Direction.DESCENDING);
+
     return new FirestoreRecyclerOptions.Builder<Clank>()
             .setQuery(query, Clank.class)
             .build();
