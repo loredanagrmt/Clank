@@ -1,4 +1,4 @@
-package com.clank.app.ui;
+package com.clank.app.ui.inicio;
 
 import androidx.navigation.Navigation;
 import androidx.test.espresso.Espresso;

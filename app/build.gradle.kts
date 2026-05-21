@@ -86,7 +86,9 @@ dependencies {
   androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
   androidTestImplementation("androidx.test:rules:1.6.1")
   androidTestImplementation("androidx.test:runner:1.6.2")
-  androidTestImplementation("androidx.navigation:navigation-testing:2.7.7")
+  androidTestImplementation("androidx.navigation:navigation-testing:2.8.9")
+  androidTestImplementation("androidx.fragment:fragment-testing:1.8.5")
+  androidTestImplementation("org.mockito:mockito-android:5.11.0")
 
   // Imagen circular (perfil)
   implementation(libs.circleimageview)
