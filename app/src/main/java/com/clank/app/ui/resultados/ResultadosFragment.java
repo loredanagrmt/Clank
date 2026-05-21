@@ -103,27 +103,30 @@ public class ResultadosFragment extends Fragment {
   ///////////////////////// recyclerView /////////////////////////
 
   private void configurarRecyclerView() {
-    binding.rvResultados.setLayoutManager(
-            new LinearLayoutManager(requireContext())
-    );
+      binding.rvResultados.setLayoutManager(
+              new LinearLayoutManager(requireContext())
+      );
 
-    binding.rvResultados.setHasFixedSize(false);
+      binding.rvResultados.setHasFixedSize(false);
 
-    int spacing = (int) getResources().getDimension(
-            R.dimen.feed_item_spacing
-    );
+      int spacing = (int) getResources().getDimension(
+              R.dimen.feed_item_spacing
+      );
 
-    binding.rvResultados.addItemDecoration(new RecyclerView.ItemDecoration() {
-      @Override
-      public void getItemOffsets(@NonNull Rect outRect,
-                                 @NonNull View view,
-                                 @NonNull RecyclerView parent,
-                                 @NonNull RecyclerView.State state) {
-        if (parent.getChildAdapterPosition(view) > 0) {
-          outRect.top = spacing;
-        }
-      }
-    });
+      binding.rvResultados.addItemDecoration(new RecyclerView.ItemDecoration() {
+          @Override
+          public void getItemOffsets(@NonNull Rect outRect,
+                                     @NonNull View view,
+                                     @NonNull RecyclerView parent,
+                                     @NonNull RecyclerView.State state) {
+              if (parent.getChildAdapterPosition(view) > 0) {
+                  outRect.top = spacing;
+              }
+          }
+      });
+
+      binding.rvResultados.setVisibility(View.INVISIBLE);
+      binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
   }
 
   ///////////////////////// adapter /////////////////////////
@@ -138,62 +141,64 @@ public class ResultadosFragment extends Fragment {
                     .setLifecycleOwner(getViewLifecycleOwner())
                     .build();
 
-    adapter = new FeedAdapter(
-            options,
-            requireContext(),
-            viewModel.getUsuarioRepository(),
-            viewModel.getCurrentUserId(),
+      adapter = new FeedAdapter(
+              options,
+              requireContext(),
+              viewModel.getUsuarioRepository(),
+              viewModel.getCurrentUserId(),
 
-            new FeedAdapter.OnClankClickListener() {
-              @Override
-              public void onClankClick(String clankId) {
-                Bundle args = new Bundle();
-                args.putString("clankId", clankId);
+              new FeedAdapter.OnClankClickListener() {
+                  @Override
+                  public void onClankClick(String clankId) {
+                      Bundle args = new Bundle();
+                      args.putString("clankId", clankId);
 
-                Navigation.findNavController(requireView())
-                        .navigate(
-                                R.id.action_resultadosFragment_to_detalleClankFragment,
-                                args
-                        );
+                      Navigation.findNavController(requireView())
+                              .navigate(
+                                      R.id.action_resultadosFragment_to_detalleClankFragment,
+                                      args
+                              );
+                  }
+
+                  @Override
+                  public void onUsuarioClick(String usuarioId) {
+                      Bundle args = new Bundle();
+                      args.putString("usuarioId", usuarioId);
+
+                      Navigation.findNavController(requireView())
+                              .navigate(
+                                      R.id.action_resultadosFragment_to_perfilFragment,
+                                      args
+                              );
+                  }
+              },
+
+              clankId -> viewModel.toggleLike(clankId),
+
+              (clankIds, numLikesIniciales) ->
+                      arrancarObservadoresLikes(
+                              clankIds,
+                              numLikesIniciales
+                      ),
+
+              new FeedAdapter.OnPreparacionTarjetasListener() {
+                  @Override
+                  public void alIniciarPreparacion() {
+                      if (binding != null) {
+                          binding.rvResultados.setVisibility(View.INVISIBLE);
+                          binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
+                      }
+                  }
+
+                  @Override
+                  public void alFinalizarPreparacion() {
+                      if (binding != null) {
+                          binding.overlayCargandoResultados.setVisibility(View.GONE);
+                          binding.rvResultados.setVisibility(View.VISIBLE);
+                      }
+                  }
               }
-
-              @Override
-              public void onUsuarioClick(String usuarioId) {
-                Bundle args = new Bundle();
-                args.putString("usuarioId", usuarioId);
-
-                Navigation.findNavController(requireView())
-                        .navigate(
-                                R.id.action_resultadosFragment_to_perfilFragment,
-                                args
-                        );
-              }
-            },
-
-            clankId -> viewModel.toggleLike(clankId),
-
-            (clankIds, numLikesIniciales) ->
-                    arrancarObservadoresLikes(
-                            clankIds,
-                            numLikesIniciales
-                    ),
-
-            new FeedAdapter.OnPreparacionTarjetasListener() {
-              @Override
-              public void alIniciarPreparacion() {
-                if (binding != null) {
-                  binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
-                }
-              }
-
-              @Override
-              public void alFinalizarPreparacion() {
-                if (binding != null) {
-                  binding.overlayCargandoResultados.setVisibility(View.GONE);
-                }
-              }
-            }
-    );
+      );
 
     binding.rvResultados.setAdapter(adapter);
   }
