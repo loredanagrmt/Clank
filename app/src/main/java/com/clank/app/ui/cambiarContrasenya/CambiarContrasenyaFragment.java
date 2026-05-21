@@ -5,7 +5,6 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -267,12 +266,11 @@ public class CambiarContrasenyaFragment extends Fragment {
                     break;
 
                 case ERROR_GENERAL:
-                    Toast.makeText(
-                            requireContext(),
-                            R.string.cambiar_contrasenya_error_general,
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    binding.inputContrasenyaActual.customEditText.setError(
+                            getString(R.string.cambiar_contrasenya_error_general)
+                    );
 
+                    binding.inputContrasenyaActual.customEditText.requestFocus();
                     viewModel.limpiarEstadoCambio();
                     break;
             }

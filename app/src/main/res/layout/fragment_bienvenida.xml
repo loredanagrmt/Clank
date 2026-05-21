@@ -6,248 +6,269 @@
     android:layout_height="match_parent"
     android:background="@color/clank_background_light">
 
-    <LinearLayout
-        android:id="@+id/contenedorMosaico"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollBienvenida"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tvTitulo"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:id="@+id/filaImagenesUno"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contenedorBienvenida"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="6dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:background="@color/clank_background_light">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardBienvenidaUno"
+            <LinearLayout
+                android:id="@+id/contenedorMosaico"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                android:layout_height="0dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tvTitulo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgBienvenidaUno"
+                <LinearLayout
+                    android:id="@+id/filaImagenesUno"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_bienvenida_1"
-                    app:shapeAppearanceOverlay="@style/RoundedImage" />
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBienvenidaUno"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="3dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardBienvenidaDos"
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgBienvenidaUno"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_bienvenida_1"
+                            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBienvenidaDos"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="3dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgBienvenidaDos"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="25dp"
+                            android:layout_marginBottom="5dp"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_bienvenida_2"
+                            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filaImagenesDos"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBienvenidaTres"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="3dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgBienvenidaTres"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_bienvenida_3"
+                            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBienvenidaCuatro"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="3dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgBienvenidaCuatro"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="25dp"
+                            android:layout_marginBottom="5dp"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_bienvenida_4"
+                            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filaImagenesTres"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBienvenidaCinco"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="3dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgBienvenidaCinco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginEnd="10dp"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_bienvenida_5"
+                            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBienvenidaSeis"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="3dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgBienvenidaSeis"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="25dp"
+                            android:layout_marginBottom="5dp"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_bienvenida_6"
+                            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTitulo"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="6dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="@string/bienvenida_titulo"
+                android:textColor="@color/color_negrita"
+                android:textSize="26sp"
+                app:layout_constraintBottom_toTopOf="@id/tvSubtitulo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgBienvenidaDos"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_bienvenida_2"
-                    app:shapeAppearanceOverlay="@style/RoundedImage" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/filaImagenesDos"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="6dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardBienvenidaTres"
+            <TextView
+                android:id="@+id/tvSubtitulo"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center"
+                android:maxLines="3"
+                android:text="@string/bienvenida_subtitulo"
+                android:textColor="@color/color_negrita"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toTopOf="@id/btnSoyNuevo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgBienvenidaTres"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_bienvenida_3"
-                    app:shapeAppearanceOverlay="@style/RoundedImage" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardBienvenidaCuatro"
+            <include
+                android:id="@+id/btnSoyNuevo"
+                layout="@layout/bt_secundario"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                android:layout_height="56dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@id/btnYaHeEstado"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.56" />
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgBienvenidaCuatro"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_bienvenida_4"
-                    app:shapeAppearanceOverlay="@style/RoundedImage" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/filaImagenesTres"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardBienvenidaCinco"
+            <include
+                android:id="@+id/btnYaHeEstado"
+                layout="@layout/bt_secundario"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                android:layout_height="56dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.56" />
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgBienvenidaCinco"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="10dp"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_bienvenida_5"
-                    app:shapeAppearanceOverlay="@style/RoundedImage" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardBienvenidaSeis"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgBienvenidaSeis"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_bienvenida_6"
-                    app:shapeAppearanceOverlay="@style/RoundedImage" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="6dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:gravity="center"
-        android:maxLines="2"
-        android:text="@string/bienvenida_titulo"
-        android:textColor="@color/color_negrita"
-        android:textSize="26sp"
-        app:layout_constraintBottom_toTopOf="@id/tvSubtitulo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tvSubtitulo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="@font/poppins_regular"
-        android:gravity="center"
-        android:maxLines="3"
-        android:text="@string/bienvenida_subtitulo"
-        android:textColor="@color/color_negrita"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@id/btnSoyNuevo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <include
-        android:id="@+id/btnSoyNuevo"
-        layout="@layout/bt_secundario"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@id/btnYaHeEstado"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.56" />
-
-    <include
-        android:id="@+id/btnYaHeEstado"
-        layout="@layout/bt_secundario"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.56" />
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

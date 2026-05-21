@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -139,11 +138,7 @@ public class DetalleClankFragment extends Fragment {
 
     viewModel.getError().observe(getViewLifecycleOwner(), msg -> {
       if (msg != null) {
-        Toast.makeText(
-                requireContext(),
-                msg,
-                Toast.LENGTH_LONG
-        ).show();
+        binding.overlayCargando.setVisibility(View.GONE);
       }
     });
   }
@@ -493,12 +488,6 @@ public class DetalleClankFragment extends Fragment {
               if (!isAdded()) {
                 return;
               }
-
-              Toast.makeText(
-                      requireContext(),
-                      getString(R.string.perfil_error_eliminar_clank),
-                      Toast.LENGTH_LONG
-              ).show();
             });
   }
 
@@ -563,12 +552,6 @@ public class DetalleClankFragment extends Fragment {
                 if (!isAdded()) {
                   return;
                 }
-
-                Toast.makeText(
-                        requireContext(),
-                        getString(R.string.error_generico),
-                        Toast.LENGTH_SHORT
-                ).show();
               });
     });
   }
