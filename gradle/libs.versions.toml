@@ -17,11 +17,10 @@ flexbox = "3.0.0"
 play-services-auth = "21.5.1"
 firebase-ui = "8.0.2"
 circleimageview = "3.1.0"
-
-# Allure
 allurePlugin = "2.12.0"
-allureJava = "2.24.0"
 allureKotlin = "2.4.0"
+
+lifecycleViewmodel = "2.10.0"
 
 
 [libraries]
@@ -48,11 +47,9 @@ flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref 
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
 firebase-ui-firestore = { group = "com.firebaseui", name = "firebase-ui-firestore", version.ref = "firebase-ui" }
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimageview" }
-
-# Allure
-allure-junit4 = { group = "io.qameta.allure", name = "allure-junit4", version.ref = "allureJava" }
 allure-kotlin-android = { group = "io.qameta.allure", name = "allure-kotlin-android", version.ref = "allureKotlin" }
 allure-kotlin-junit4 = { group = "io.qameta.allure", name = "allure-kotlin-junit4", version.ref = "allureKotlin" }
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
 
 
 [plugins]

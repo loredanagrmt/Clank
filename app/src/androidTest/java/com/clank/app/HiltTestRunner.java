@@ -3,11 +3,10 @@ package com.clank.app;
 import android.app.Application;
 import android.content.Context;
 
-import androidx.test.runner.AndroidJUnitRunner;
-
 import dagger.hilt.android.testing.HiltTestApplication;
+import io.qameta.allure.android.runners.AllureAndroidJUnitRunner;
 
-public class HiltTestRunner extends AndroidJUnitRunner {
+public class HiltTestRunner extends AllureAndroidJUnitRunner {
 
     @Override
     public Application newApplication(
@@ -15,7 +14,6 @@ public class HiltTestRunner extends AndroidJUnitRunner {
             String className,
             Context context
     ) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-
         return super.newApplication(
                 cl,
                 HiltTestApplication.class.getName(),
