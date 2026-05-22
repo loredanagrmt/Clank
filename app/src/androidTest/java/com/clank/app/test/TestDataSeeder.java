@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 public class TestDataSeeder {
+    public static final String TEST_BOCETO_ID = "test-boceto-fase4";
+    public static final String TEST_BOCETO_TITULO = "Boceto de prueba Fase4";
     private String uidAutenticadoTest;
     public static final String TEST_PASSWORD = "Password123!";
     public static final String TEST_UID = "test-uid-fase4";
@@ -497,6 +499,49 @@ public class TestDataSeeder {
 
         Tasks.await(
                 batch.commit(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void insertarBocetoAutenticadoTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = getUidAutenticadoTest();
+
+        Map<String, Object> boceto = new HashMap<>();
+        boceto.put("clankId", TEST_BOCETO_ID);
+        boceto.put("usuarioId", uid);
+        boceto.put("titulo", TEST_BOCETO_TITULO);
+        boceto.put("descripcion", "Descripción de boceto para tests de perfil");
+        boceto.put("portada", "");
+        boceto.put("tiempo", 1);
+        boceto.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
+        boceto.put("estadoAcabado", false);
+        boceto.put("numLikes", 0);
+        boceto.put("fechaPublicacion", new Date());
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .set(boceto),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void eliminarBocetoAutenticadoTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_MATERIALES);
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_HERRAMIENTAS);
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_INSTRUCCIONES);
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_LIKES);
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .delete(),
                 TIMEOUT_S,
                 TimeUnit.SECONDS
         );
