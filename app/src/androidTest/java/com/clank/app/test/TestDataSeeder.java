@@ -14,8 +14,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 public class TestDataSeeder {
-
+    private String uidAutenticadoTest;
+    public static final String TEST_PASSWORD = "Password123!";
     public static final String TEST_UID = "test-uid-fase4";
     public static final String TEST_EMAIL = "test-fase4@clank.test";
     public static final String TEST_NOMBRE = "Usuario Test Fase4";
@@ -328,6 +333,144 @@ public class TestDataSeeder {
                 TIMEOUT_S,
                 TimeUnit.SECONDS
         );
+    }
+
+    public String crearOIniciarSesionUsuarioAuthTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signOut();
+
+        AuthResult resultado;
+
+        try {
+            resultado = Tasks.await(
+                    auth.createUserWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
+                    TIMEOUT_S,
+                    TimeUnit.SECONDS
+            );
+        } catch (ExecutionException errorCreacion) {
+            Throwable causa = errorCreacion.getCause();
+
+            if (causa instanceof FirebaseAuthUserCollisionException) {
+                resultado = Tasks.await(
+                        auth.signInWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
+                        TIMEOUT_S,
+                        TimeUnit.SECONDS
+                );
+            } else {
+                throw errorCreacion;
+            }
+        }
+
+        FirebaseUser usuario = resultado.getUser();
+
+        if (usuario == null || usuario.getUid() == null || usuario.getUid().isEmpty()) {
+            throw new IllegalStateException(
+                    "No se pudo obtener UID del usuario autenticado de test."
+            );
+        }
+
+        uidAutenticadoTest = usuario.getUid();
+        return uidAutenticadoTest;
+    }
+
+    public String getUidAutenticadoTest() {
+        if (uidAutenticadoTest != null && !uidAutenticadoTest.isEmpty()) {
+            return uidAutenticadoTest;
+        }
+
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (usuario == null || usuario.getUid() == null || usuario.getUid().isEmpty()) {
+            throw new IllegalStateException(
+                    "No hay usuario autenticado de test. Llama antes a crearOIniciarSesionUsuarioAuthTest()."
+            );
+        }
+
+        uidAutenticadoTest = usuario.getUid();
+        return uidAutenticadoTest;
+    }
+
+    public void cerrarSesionAuthTest() {
+        FirebaseAuth.getInstance().signOut();
+        uidAutenticadoTest = null;
+    }
+
+    public void insertarUsuarioAutenticadoTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = getUidAutenticadoTest();
+
+        Map<String, Object> usuario = new HashMap<>();
+        usuario.put("uid", uid);
+        usuario.put("nombre", TEST_NOMBRE);
+        usuario.put("correo", TEST_EMAIL);
+        usuario.put("telefono", "600000000");
+        usuario.put("usuarioClank", TEST_USUARIO_CLANK);
+        usuario.put("fotoPerfil", "");
+        usuario.put("fotoPortada", "");
+        usuario.put("fechaCreacion", "2026-05-22");
+        usuario.put("fechaNacimiento", "2000-01-01");
+        usuario.put("enLinea", false);
+
+        Tasks.await(
+                db.collection(COL_USUARIOS)
+                        .document(uid)
+                        .set(usuario),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void eliminarUsuarioAutenticadoFirestore()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid;
+
+        try {
+            uid = getUidAutenticadoTest();
+        } catch (IllegalStateException error) {
+            return;
+        }
+
+        Tasks.await(
+                db.collection(COL_USUARIOS)
+                        .document(uid)
+                        .delete(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void insertarClankAutenticadoTest(int numLikes, boolean conSubcol)
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = getUidAutenticadoTest();
+
+        Map<String, Object> clank = new HashMap<>();
+        clank.put("clankId", TEST_CLANK_ID);
+        clank.put("usuarioId", uid);
+        clank.put("titulo", TEST_CLANK_TITULO);
+        clank.put("descripcion", "Descripción de prueba para tests de integración");
+        clank.put("portada", "");
+        clank.put("tiempo", 1);
+        clank.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
+        clank.put("estadoAcabado", true);
+        clank.put("numLikes", numLikes);
+        clank.put("fechaPublicacion", new Date());
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_CLANK_ID)
+                        .set(clank),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+
+        if (conSubcol) {
+            insertarSubcoleccionesTest(TEST_CLANK_ID);
+        }
     }
 
     private void borrarSubcoleccion(String clankId, String subcoleccion)
