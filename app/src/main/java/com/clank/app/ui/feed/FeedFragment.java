@@ -96,6 +96,8 @@ public class FeedFragment extends Fragment {
         }
       }
     });
+    binding.rvFeed.setVisibility(View.INVISIBLE);
+    binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
   }
 
   ///////////////////////// adapter /////////////////////////
@@ -237,6 +239,7 @@ public class FeedFragment extends Fragment {
       return;
     }
 
+    binding.rvFeed.setVisibility(View.INVISIBLE);
     binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
   }
 
@@ -246,5 +249,6 @@ public class FeedFragment extends Fragment {
     }
 
     binding.overlayCargandoFeed.setVisibility(View.GONE);
+    binding.rvFeed.setVisibility(View.VISIBLE);
   }
 }

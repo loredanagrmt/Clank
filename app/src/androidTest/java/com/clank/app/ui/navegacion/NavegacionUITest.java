@@ -1,4 +1,4 @@
-package com.clank.app.ui;
+package com.clank.app.ui.navegacion;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
