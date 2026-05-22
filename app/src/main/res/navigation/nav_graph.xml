@@ -247,7 +247,7 @@
         tools:layout="@layout/fragment_editar_perfil">
         <action
             android:id="@+id/action_editar_perfil_a_cambiar_contrasenya"
-            app:destination="@id/ajustesFragment" />
+            app:destination="@id/cambiarContrasenyaFragment" />
     </fragment>
     <fragment
         android:id="@+id/feedFragment"
