@@ -61,7 +61,8 @@ public class TestDataSeeder {
         usuario.put("usuarioClank", TEST_USUARIO_CLANK);
         usuario.put("fotoPerfil", "");
         usuario.put("fotoPortada", "");
-        usuario.put("fechaCreacion", new Date());
+        usuario.put("fechaCreacion", "2026-05-22");
+        usuario.put("fechaNacimiento", "2000-01-01");
         usuario.put("enLinea", false);
 
         Tasks.await(
