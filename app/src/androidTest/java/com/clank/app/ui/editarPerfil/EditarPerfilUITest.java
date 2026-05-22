@@ -17,13 +17,22 @@ import androidx.test.filters.LargeTest;
 
 import com.clank.app.MainActivity;
 import com.clank.app.R;
+import com.clank.app.test.TestDataSeeder;
 import com.clank.app.test.util.AllureScreenshotWatcher;
+import com.clank.app.test.util.FirebaseEmulatorRule;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -42,27 +51,64 @@ import io.qameta.allure.kotlin.Story;
 @Feature("Perfil")
 public class EditarPerfilUITest {
 
+    private static final long TIMEOUT_MS = 7000;
+    private static final long INTERVALO_MS = 250;
+    private static final long TIMEOUT_FIRESTORE_S = 10;
+
+    private static final String NOMBRE_EDITADO = "Nombre Editado Test";
+    private static final String USUARIO_CLANK_EDITADO = "@perfil_editado_test";
+    private static final String TELEFONO_EDITADO = "699111222";
+
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public FirebaseEmulatorRule emulatorRule = new FirebaseEmulatorRule();
 
     @Rule(order = 1)
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+    @Rule(order = 2)
     public AllureScreenshotWatcher screenshotWatcher = new AllureScreenshotWatcher();
 
     private ActivityScenario<MainActivity> escenario;
+    private TestDataSeeder seeder;
 
     @Before
-    public void setUp() {
+    public void setUp() throws ExecutionException, InterruptedException, TimeoutException {
         hiltRule.inject();
+
+        seeder = new TestDataSeeder();
+
+        seeder.crearOIniciarSesionUsuarioAuthTest();
+
+        limpiarDatosFirestore();
+
+        seeder.insertarUsuarioAutenticadoTest();
+
         escenario = ActivityScenario.launch(MainActivity.class);
         esperar(600);
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws ExecutionException, InterruptedException, TimeoutException {
         if (escenario != null) {
             escenario.close();
             escenario = null;
         }
+
+        limpiarDatosFirestore();
+
+        if (seeder != null) {
+            seeder.cerrarSesionAuthTest();
+        }
+    }
+
+    private void limpiarDatosFirestore()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        if (seeder == null) {
+            return;
+        }
+
+        seeder.eliminarUsuarioAutenticadoFirestore();
     }
 
     private void navegarAEditarPerfil() {
@@ -191,6 +237,83 @@ public class EditarPerfilUITest {
         });
 
         esperar(500);
+    }
+
+    private void esperarHastaEditarPerfilCargado() {
+        long inicio = SystemClock.elapsedRealtime();
+        final boolean[] cargado = new boolean[1];
+
+        while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
+            cargado[0] = false;
+
+            escenario.onActivity(activity -> {
+                TextView nombre =
+                        obtenerCampoDesdeContenedor(activity, R.id.inputNombre);
+
+                TextView correo =
+                        obtenerCampoDesdeContenedor(activity, R.id.inputCorreo);
+
+                if (TestDataSeeder.TEST_NOMBRE.equals(nombre.getText().toString())
+                        && TestDataSeeder.TEST_EMAIL.equals(correo.getText().toString())) {
+                    cargado[0] = true;
+                }
+            });
+
+            if (cargado[0]) {
+                return;
+            }
+
+            esperar(INTERVALO_MS);
+        }
+
+        throw new AssertionError(
+                "No se cargaron los datos del usuario autenticado en editar perfil."
+        );
+    }
+
+    private void esperarHastaPopupExitoVisible() {
+        long inicio = SystemClock.elapsedRealtime();
+        final boolean[] visible = new boolean[1];
+
+        while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
+            visible[0] = false;
+
+            escenario.onActivity(activity -> {
+                View capaPopup = activity.findViewById(R.id.capaPopup);
+
+                assertNotNull(
+                        "No se encontró capaPopup.",
+                        capaPopup
+                );
+
+                visible[0] = capaPopup.isShown();
+            });
+
+            if (visible[0]) {
+                return;
+            }
+
+            esperar(INTERVALO_MS);
+        }
+
+        throw new AssertionError(
+                "No apareció el popup de éxito tras guardar cambios."
+        );
+    }
+
+    private DocumentSnapshot obtenerDocumentoUsuarioAutenticado()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = seeder.getUidAutenticadoTest();
+
+        return Tasks.await(
+                FirebaseFirestore.getInstance()
+                        .collection("usuarios")
+                        .document(uid)
+                        .get(),
+                TIMEOUT_FIRESTORE_S,
+                TimeUnit.SECONDS
+        );
     }
 
     ///////////////////////// navegación /////////////////////////
@@ -391,6 +514,7 @@ public class EditarPerfilUITest {
     @Severity(SeverityLevel.CRITICAL)
     public void campoNombre_escribirTexto_muestraTextoEscrito() {
         navegarAEditarPerfil();
+        esperarHastaEditarPerfilCargado();
 
         escribirTextoCampo(R.id.inputNombre, "Ana García");
 
@@ -406,6 +530,7 @@ public class EditarPerfilUITest {
     @Severity(SeverityLevel.CRITICAL)
     public void campoUsuarioClank_escribirTexto_muestraTextoEscrito() {
         navegarAEditarPerfil();
+        esperarHastaEditarPerfilCargado();
 
         escribirTextoCampo(R.id.inputUsuarioClank, "@ana_clank");
 
@@ -421,6 +546,7 @@ public class EditarPerfilUITest {
     @Severity(SeverityLevel.NORMAL)
     public void campoTelefono_escribirTexto_muestraTextoEscrito() {
         navegarAEditarPerfil();
+        esperarHastaEditarPerfilCargado();
 
         escribirTextoCampo(R.id.inputTelefono, "600123123");
 
@@ -438,6 +564,7 @@ public class EditarPerfilUITest {
     @Severity(SeverityLevel.CRITICAL)
     public void nombreVacio_muestraError() {
         navegarAEditarPerfil();
+        esperarHastaEditarPerfilCargado();
 
         escribirTextoCampo(R.id.inputNombre, "");
         escribirTextoCampo(R.id.inputUsuarioClank, "@ana_clank");
@@ -464,6 +591,7 @@ public class EditarPerfilUITest {
     @Severity(SeverityLevel.CRITICAL)
     public void usuarioClankVacio_muestraError() {
         navegarAEditarPerfil();
+        esperarHastaEditarPerfilCargado();
 
         escribirTextoCampo(R.id.inputNombre, "Ana García");
         escribirTextoCampo(R.id.inputUsuarioClank, "");
@@ -481,6 +609,49 @@ public class EditarPerfilUITest {
         assertTrue(
                 "El error de usuarioClank vacío no debe estar vacío.",
                 error.toString().trim().length() > 0
+        );
+    }
+
+    ///////////////////////// guardado real /////////////////////////
+
+    @Test
+    @Story("Guardado real de editar perfil")
+    @Description("Al guardar datos válidos, debe actualizarse el documento del usuario autenticado en Firestore Emulator y mostrarse popup de éxito.")
+    @Severity(SeverityLevel.CRITICAL)
+    public void guardarCambiosValidos_persisteEnFirestoreYMuestraPopup()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        navegarAEditarPerfil();
+        esperarHastaEditarPerfilCargado();
+
+        escribirTextoCampo(R.id.inputNombre, NOMBRE_EDITADO);
+        escribirTextoCampo(R.id.inputUsuarioClank, USUARIO_CLANK_EDITADO);
+        escribirTextoCampo(R.id.inputTelefono, TELEFONO_EDITADO);
+
+        pulsarGuardar();
+
+        esperarHastaPopupExitoVisible();
+
+        DocumentSnapshot doc = obtenerDocumentoUsuarioAutenticado();
+
+        assertTrue(
+                "El documento del usuario autenticado debe existir.",
+                doc.exists()
+        );
+
+        assertEquals(
+                NOMBRE_EDITADO,
+                doc.getString("nombre")
+        );
+
+        assertEquals(
+                USUARIO_CLANK_EDITADO,
+                doc.getString("usuarioClank")
+        );
+
+        assertEquals(
+                TELEFONO_EDITADO,
+                doc.getString("telefono")
         );
     }
 
