@@ -101,9 +101,17 @@ public class ResultadosUITest {
     }
 
     private void navegarAResultados() {
+        navegarAResultadosConCategoria(
+                TestDataSeeder.TEST_CATEGORIA_ID,
+                TestDataSeeder.TEST_CATEGORIA_NOMBRE
+        );
+    }
+
+    private void navegarAResultadosConCategoria(String categoriaId,
+                                                String nombreCategoria) {
         Bundle args = new Bundle();
-        args.putString("categoria", TestDataSeeder.TEST_CATEGORIA_ID);
-        args.putString("nombreCategoria", TestDataSeeder.TEST_CATEGORIA_NOMBRE);
+        args.putString("categoria", categoriaId);
+        args.putString("nombreCategoria", nombreCategoria);
 
         escenario.onActivity(activity -> {
             NavController navController =
@@ -183,6 +191,50 @@ public class ResultadosUITest {
 
         throw new AssertionError(
                 "No apareció la tarjeta del clank sembrado en Resultados dentro del tiempo esperado."
+        );
+    }
+
+    private void esperarHastaEstadoVacioVisible() {
+        long inicio = SystemClock.elapsedRealtime();
+        final boolean[] visible = new boolean[1];
+
+        while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
+            visible[0] = false;
+
+            escenario.onActivity(activity -> {
+                View textoVacio = activity.findViewById(R.id.tvResultadosVacio);
+                View recycler = activity.findViewById(R.id.rvResultados);
+                View overlay = activity.findViewById(R.id.overlayCargandoResultados);
+
+                assertNotNull(
+                        "No se encontró tvResultadosVacio.",
+                        textoVacio
+                );
+
+                assertNotNull(
+                        "No se encontró rvResultados.",
+                        recycler
+                );
+
+                assertNotNull(
+                        "No se encontró overlayCargandoResultados.",
+                        overlay
+                );
+
+                visible[0] = textoVacio.isShown()
+                        && recycler.getVisibility() == View.GONE
+                        && overlay.getVisibility() == View.GONE;
+            });
+
+            if (visible[0]) {
+                return;
+            }
+
+            esperar(INTERVALO_MS);
+        }
+
+        throw new AssertionError(
+                "No apareció el estado vacío de resultados dentro del tiempo esperado."
         );
     }
 
@@ -315,7 +367,7 @@ public class ResultadosUITest {
 
     @Test
     @Story("Estructura de resultados")
-    @Description("El texto de resultados vacíos debe existir para futuros estados sin resultados.")
+    @Description("El texto de resultados vacíos debe existir.")
     @Severity(SeverityLevel.NORMAL)
     public void textoResultadosVacio_existe() {
         navegarAResultados();
@@ -326,6 +378,42 @@ public class ResultadosUITest {
             assertNotNull(
                     "No se encontró tvResultadosVacio.",
                     textoVacio
+            );
+        });
+    }
+
+    ///////////////////////// estado vacío /////////////////////////
+
+    @Test
+    @Story("Estado vacío de resultados")
+    @Description("Si no hay clanks para la categoría indicada, debe mostrarse el estado vacío.")
+    @Severity(SeverityLevel.CRITICAL)
+    public void resultadosSinClanks_muestraEstadoVacio() {
+        navegarAResultadosConCategoria(
+                "categoria-sin-clanks-test",
+                "Categoría sin clanks"
+        );
+
+        esperarHastaEstadoVacioVisible();
+
+        escenario.onActivity(activity -> {
+            View textoVacio = activity.findViewById(R.id.tvResultadosVacio);
+            View recycler = activity.findViewById(R.id.rvResultados);
+            View overlay = activity.findViewById(R.id.overlayCargandoResultados);
+
+            assertTrue(
+                    "tvResultadosVacio debe estar visible cuando no hay resultados.",
+                    textoVacio.isShown()
+            );
+
+            assertEquals(
+                    View.GONE,
+                    recycler.getVisibility()
+            );
+
+            assertEquals(
+                    View.GONE,
+                    overlay.getVisibility()
             );
         });
     }
