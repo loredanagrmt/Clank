@@ -51,7 +51,7 @@
                     android:contentDescription="@string/imagen_foto_perfil"
                     android:padding="@dimen/completar_perfil_padding_foto"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_usuario_inactivo" />
+                    android:src="@drawable/img_usuario_defecto" />
 
                 <ImageButton
                     android:id="@+id/btnEditarFotoPerfil"

@@ -199,11 +199,11 @@ public class DetalleClankFragment extends Fragment {
       Glide.with(this)
               .load(datos.fotoPerfil)
               .circleCrop()
-              .placeholder(R.drawable.ic_usuario_inactivo)
+              .placeholder(R.drawable.img_usuario_defecto)
               .into(binding.cabeceraUsuario.civAvatarUsuario);
     } else {
       binding.cabeceraUsuario.civAvatarUsuario
-              .setImageResource(R.drawable.ic_usuario_inactivo);
+              .setImageResource(R.drawable.img_usuario_defecto);
     }
 
     binding.cabeceraUsuario.civAvatarUsuario

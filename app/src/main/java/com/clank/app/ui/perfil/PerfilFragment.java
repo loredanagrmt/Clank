@@ -359,7 +359,7 @@ public class PerfilFragment extends Fragment {
                 Glide.with(this)
                         .load(perfil.fotoPerfil)
                         .circleCrop()
-                        .placeholder(R.drawable.ic_usuario_inactivo)
+                        .placeholder(R.drawable.img_usuario_defecto)
                         .into(binding.civFotoPerfil);
             }
         });
