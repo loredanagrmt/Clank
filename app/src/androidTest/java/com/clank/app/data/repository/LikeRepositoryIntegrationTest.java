@@ -74,7 +74,6 @@ public class LikeRepositoryIntegrationTest {
         seeder.insertarCategoriaTest();
         seeder.insertarClankTest(0, false);
 
-        // Estado base: clank creado, usuario creado, sin like previo.
         seeder.eliminarLikeTest();
     }
 

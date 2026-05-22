@@ -46,7 +46,6 @@ public class AllureScreenshotWatcher extends TestWatcher {
             adjuntarCaptura(nombre, salida.toByteArray());
 
         } catch (Exception ignored) {
-            // La captura nunca debe romper el test.
         }
     }
 
