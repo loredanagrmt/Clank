@@ -148,7 +148,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     });
     holder.binding.cabeceraUsuario.tvUsernameItem.setText("");
     holder.binding.cabeceraUsuario.civAvatarUsuario
-      .setImageResource(R.drawable.ic_usuario_inactivo);
+      .setImageResource(R.drawable.img_usuario_defecto);
     Glide.with(context).clear(holder.binding.cabeceraUsuario.civAvatarUsuario);
 
     String usuarioId = clank.getUsuarioId();
@@ -172,11 +172,11 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
         if (foto != null && !foto.isEmpty()) {
           Glide.with(context).load(foto).circleCrop()
-            .placeholder(R.drawable.ic_usuario_inactivo)
+            .placeholder(R.drawable.img_usuario_defecto)
             .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
         } else {
           holder.binding.cabeceraUsuario.civAvatarUsuario
-            .setImageResource(R.drawable.ic_usuario_inactivo);
+            .setImageResource(R.drawable.img_usuario_defecto);
         }
       });
 

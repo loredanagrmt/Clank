@@ -82,7 +82,7 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
 
     /////////////////////////cabecera usuario/////////////////////////
     holder.binding.cabeceraUsuario.tvUsernameItem.setText("");
-    holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+    holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.img_usuario_defecto);
     Glide.with(context).clear(holder.binding.cabeceraUsuario.civAvatarUsuario);
 
     String usuarioId = clank.getUsuarioId();
@@ -99,7 +99,7 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
           holder.binding.cabeceraUsuario.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
           if (foto != null && !foto.isEmpty()) {
             Glide.with(context).load(foto).circleCrop()
-              .placeholder(R.drawable.ic_usuario_inactivo)
+              .placeholder(R.drawable.img_usuario_defecto)
               .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
           }
         });
@@ -133,10 +133,10 @@ public class BusquedaAdapter extends RecyclerView.Adapter<BusquedaAdapter.ViewHo
     holder.binding.cabeceraUsuario.tvUsernameItem.setText(!handle.isEmpty() ? "@" + handle : "");
     String foto = usuario.getFotoPerfil();
     if (foto != null && !foto.isEmpty()) {
-      Glide.with(context).load(foto).circleCrop().placeholder(R.drawable.ic_usuario_inactivo)
+      Glide.with(context).load(foto).circleCrop().placeholder(R.drawable.img_usuario_defecto)
               .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
     } else {
-      holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.ic_usuario_inactivo);
+      holder.binding.cabeceraUsuario.civAvatarUsuario.setImageResource(R.drawable.img_usuario_defecto);
     }
   }
 

@@ -15,7 +15,7 @@
         android:layout_width="@dimen/feed_avatar_size"
         android:layout_height="@dimen/feed_avatar_size"
         android:layout_marginEnd="@dimen/feed_avatar_margin_end"
-        android:src="@drawable/ic_usuario_inactivo" />
+        android:src="@drawable/img_usuario_defecto" />
 
     <LinearLayout
         android:layout_width="0dp"
