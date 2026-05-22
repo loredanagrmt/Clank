@@ -69,7 +69,9 @@ public class FiltrosUITest {
         seeder = new TestDataSeeder();
 
         limpiarDatos();
+        seeder.insertarUsuarioTest();
         seeder.insertarCategoriaTest();
+        seeder.insertarClankTest(0, false);
 
         escenario = ActivityScenario.launch(MainActivity.class);
         esperar(600);
@@ -90,7 +92,10 @@ public class FiltrosUITest {
             return;
         }
 
+        seeder.eliminarLikeTest();
+        seeder.eliminarClankTest();
         seeder.eliminarCategoriaTest();
+        seeder.eliminarUsuarioFirestore();
     }
 
     private void navegarAFiltros() {
@@ -163,6 +168,68 @@ public class FiltrosUITest {
         );
 
         return (TextView) chip;
+    }
+
+    private View buscarVistaPorId(View vista, int idBuscado) {
+        if (vista == null) {
+            return null;
+        }
+
+        if (vista.getId() == idBuscado) {
+            return vista;
+        }
+
+        if (!(vista instanceof ViewGroup)) {
+            return null;
+        }
+
+        ViewGroup grupo = (ViewGroup) vista;
+
+        for (int i = 0; i < grupo.getChildCount(); i++) {
+            View encontrada = buscarVistaPorId(grupo.getChildAt(i), idBuscado);
+
+            if (encontrada != null) {
+                return encontrada;
+            }
+        }
+
+        return null;
+    }
+
+    private View obtenerVistaPorId(MainActivity activity, int viewId) {
+        View raiz = activity.findViewById(android.R.id.content);
+        return buscarVistaPorId(raiz, viewId);
+    }
+
+    private void esperarHastaTituloResultadoVisible() {
+        long inicio = SystemClock.elapsedRealtime();
+        final boolean[] visible = new boolean[1];
+
+        while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
+            visible[0] = false;
+
+            escenario.onActivity(activity -> {
+                View titulo = obtenerVistaPorId(activity, R.id.tvTituloClank);
+
+                if (titulo instanceof TextView
+                        && titulo.isShown()
+                        && TestDataSeeder.TEST_CLANK_TITULO.equals(
+                        ((TextView) titulo).getText().toString()
+                )) {
+                    visible[0] = true;
+                }
+            });
+
+            if (visible[0]) {
+                return;
+            }
+
+            esperar(INTERVALO_MS);
+        }
+
+        throw new AssertionError(
+                "No apareció el clank filtrado en resultados tras pulsar el chip de categoría."
+        );
     }
 
     ///////////////////////// navegación /////////////////////////
@@ -285,5 +352,49 @@ public class FiltrosUITest {
                     chip.isClickable()
             );
         });
+    }
+
+    @Test
+    @Story("Interacción de filtros")
+    @Description("Al pulsar una categoría, debe navegar a resultados y mostrar el clank filtrado.")
+    @Severity(SeverityLevel.CRITICAL)
+    public void clickCategoria_navegaAResultadosYMuestraClankFiltrado() {
+        navegarAFiltros();
+        esperarHastaCategoriasCargadas();
+
+        escenario.onActivity(activity -> {
+            TextView chip = obtenerPrimerChip(activity);
+
+            assertTrue(
+                    "El chip debe estar visible antes de pulsarlo.",
+                    chip.isShown()
+            );
+
+            assertTrue(
+                    "El chip debe ser clicable antes de pulsarlo.",
+                    chip.isClickable()
+            );
+
+            chip.performClick();
+        });
+
+        esperar(1000);
+
+        escenario.onActivity(activity -> {
+            NavController navController =
+                    Navigation.findNavController(activity, R.id.nav_host_fragment);
+
+            assertNotNull(
+                    "El NavController debe tener destino actual.",
+                    navController.getCurrentDestination()
+            );
+
+            assertEquals(
+                    R.id.resultadosFragment,
+                    navController.getCurrentDestination().getId()
+            );
+        });
+
+        esperarHastaTituloResultadoVisible();
     }
 }
