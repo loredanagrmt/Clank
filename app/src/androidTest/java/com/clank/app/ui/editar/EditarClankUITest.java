@@ -1,4 +1,4 @@
-package com.clank.app.ui.editarClank;
+package com.clank.app.ui.editar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
