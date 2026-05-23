@@ -1,6 +1,10 @@
 package com.clank.app.test;
 
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -14,17 +18,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
 public class TestDataSeeder {
-    public static final String TEST_BOCETO_ID = "test-boceto-fase4";
-    public static final String TEST_BOCETO_TITULO = "Boceto de prueba Fase4";
-    private String uidAutenticadoTest;
-    public static final String TEST_PASSWORD = "Password123!";
+
     public static final String TEST_UID = "test-uid-fase4";
     public static final String TEST_EMAIL = "test-fase4@clank.test";
+    public static final String TEST_PASSWORD = "Password123!";
     public static final String TEST_NOMBRE = "Usuario Test Fase4";
     public static final String TEST_USUARIO_CLANK = "usuario_test_fase4";
 
@@ -32,6 +30,9 @@ public class TestDataSeeder {
     public static final String TEST_CLANK_SIN_HERR_ID = "test-clank-sin-herr-fase4";
     public static final String TEST_CLANK_TITULO = "Clank de prueba Fase4";
     public static final int TEST_CLANK_NUM_LIKES_INICIAL = 0;
+
+    public static final String TEST_BOCETO_ID = "test-boceto-fase4";
+    public static final String TEST_BOCETO_TITULO = "Boceto de prueba Fase4";
 
     public static final String TEST_CATEGORIA_ID = "test-cat";
     public static final String TEST_CATEGORIA_NOMBRE = "Categoría de prueba";
@@ -48,6 +49,7 @@ public class TestDataSeeder {
     private static final long TIMEOUT_S = 10;
 
     private final FirebaseFirestore db;
+    private String uidAutenticadoTest;
 
     public TestDataSeeder() {
         this.db = FirebaseFirestore.getInstance();
@@ -56,6 +58,72 @@ public class TestDataSeeder {
     public String getTestUid() {
         return TEST_UID;
     }
+
+    ///////////////////////// Auth Emulator /////////////////////////
+
+    public String crearOIniciarSesionUsuarioAuthTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signOut();
+
+        AuthResult resultado;
+
+        try {
+            resultado = Tasks.await(
+                    auth.createUserWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
+                    TIMEOUT_S,
+                    TimeUnit.SECONDS
+            );
+        } catch (ExecutionException errorCreacion) {
+            Throwable causa = errorCreacion.getCause();
+
+            if (causa instanceof FirebaseAuthUserCollisionException) {
+                resultado = Tasks.await(
+                        auth.signInWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
+                        TIMEOUT_S,
+                        TimeUnit.SECONDS
+                );
+            } else {
+                throw errorCreacion;
+            }
+        }
+
+        FirebaseUser usuario = resultado.getUser();
+
+        if (usuario == null || usuario.getUid() == null || usuario.getUid().isEmpty()) {
+            throw new IllegalStateException(
+                    "No se pudo obtener UID del usuario autenticado de test."
+            );
+        }
+
+        uidAutenticadoTest = usuario.getUid();
+        return uidAutenticadoTest;
+    }
+
+    public String getUidAutenticadoTest() {
+        if (uidAutenticadoTest != null && !uidAutenticadoTest.isEmpty()) {
+            return uidAutenticadoTest;
+        }
+
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (usuario == null || usuario.getUid() == null || usuario.getUid().isEmpty()) {
+            throw new IllegalStateException(
+                    "No hay usuario autenticado de test. Llama antes a crearOIniciarSesionUsuarioAuthTest()."
+            );
+        }
+
+        uidAutenticadoTest = usuario.getUid();
+        return uidAutenticadoTest;
+    }
+
+    public void cerrarSesionAuthTest() {
+        FirebaseAuth.getInstance().signOut();
+        uidAutenticadoTest = null;
+    }
+
+    ///////////////////////// usuarios /////////////////////////
 
     public void insertarUsuarioTest()
             throws ExecutionException, InterruptedException, TimeoutException {
@@ -68,13 +136,39 @@ public class TestDataSeeder {
         usuario.put("usuarioClank", TEST_USUARIO_CLANK);
         usuario.put("fotoPerfil", "");
         usuario.put("fotoPortada", "");
-        usuario.put("fechaCreacion", "2026-05-22");
+        usuario.put("fechaCreacion", new Date());
         usuario.put("fechaNacimiento", "2000-01-01");
         usuario.put("enLinea", false);
 
         Tasks.await(
                 db.collection(COL_USUARIOS)
                         .document(TEST_UID)
+                        .set(usuario),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void insertarUsuarioAutenticadoTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = getUidAutenticadoTest();
+
+        Map<String, Object> usuario = new HashMap<>();
+        usuario.put("uid", uid);
+        usuario.put("nombre", TEST_NOMBRE);
+        usuario.put("correo", TEST_EMAIL);
+        usuario.put("telefono", "600000000");
+        usuario.put("usuarioClank", TEST_USUARIO_CLANK);
+        usuario.put("fotoPerfil", "");
+        usuario.put("fotoPortada", "");
+        usuario.put("fechaCreacion", "2026-05-22");
+        usuario.put("fechaNacimiento", "2000-01-01");
+        usuario.put("enLinea", false);
+
+        Tasks.await(
+                db.collection(COL_USUARIOS)
+                        .document(uid)
                         .set(usuario),
                 TIMEOUT_S,
                 TimeUnit.SECONDS
@@ -92,6 +186,28 @@ public class TestDataSeeder {
                 TimeUnit.SECONDS
         );
     }
+
+    public void eliminarUsuarioAutenticadoFirestore()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid;
+
+        try {
+            uid = getUidAutenticadoTest();
+        } catch (IllegalStateException error) {
+            return;
+        }
+
+        Tasks.await(
+                db.collection(COL_USUARIOS)
+                        .document(uid)
+                        .delete(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    ///////////////////////// categorías /////////////////////////
 
     public void insertarCategoriaTest()
             throws ExecutionException, InterruptedException, TimeoutException {
@@ -120,12 +236,44 @@ public class TestDataSeeder {
         );
     }
 
+    ///////////////////////// clanks acabados /////////////////////////
+
     public void insertarClankTest(int numLikes, boolean conSubcol)
             throws ExecutionException, InterruptedException, TimeoutException {
 
         Map<String, Object> clank = new HashMap<>();
         clank.put("clankId", TEST_CLANK_ID);
         clank.put("usuarioId", TEST_UID);
+        clank.put("titulo", TEST_CLANK_TITULO);
+        clank.put("descripcion", "Descripción de prueba para tests de integración");
+        clank.put("portada", "");
+        clank.put("tiempo", 1);
+        clank.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
+        clank.put("estadoAcabado", true);
+        clank.put("numLikes", numLikes);
+        clank.put("fechaPublicacion", new Date());
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_CLANK_ID)
+                        .set(clank),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+
+        if (conSubcol) {
+            insertarSubcoleccionesTest(TEST_CLANK_ID);
+        }
+    }
+
+    public void insertarClankAutenticadoTest(int numLikes, boolean conSubcol)
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = getUidAutenticadoTest();
+
+        Map<String, Object> clank = new HashMap<>();
+        clank.put("clankId", TEST_CLANK_ID);
+        clank.put("usuarioId", uid);
         clank.put("titulo", TEST_CLANK_TITULO);
         clank.put("descripcion", "Descripción de prueba para tests de integración");
         clank.put("portada", "");
@@ -241,6 +389,126 @@ public class TestDataSeeder {
         );
     }
 
+    ///////////////////////// bocetos /////////////////////////
+
+    public void insertarBocetoAutenticadoTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = getUidAutenticadoTest();
+
+        Map<String, Object> boceto = new HashMap<>();
+        boceto.put("clankId", TEST_BOCETO_ID);
+        boceto.put("usuarioId", uid);
+        boceto.put("titulo", TEST_BOCETO_TITULO);
+        boceto.put("descripcion", "Descripción de boceto para tests de perfil");
+        boceto.put("portada", "");
+        boceto.put("tiempo", 1);
+        boceto.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
+        boceto.put("estadoAcabado", false);
+        boceto.put("numLikes", 0);
+        boceto.put("fechaPublicacion", new Date());
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .set(boceto),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void insertarBocetoAutenticadoCompletoTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        String uid = getUidAutenticadoTest();
+
+        Map<String, Object> boceto = new HashMap<>();
+        boceto.put("clankId", TEST_BOCETO_ID);
+        boceto.put("usuarioId", uid);
+        boceto.put("titulo", TEST_BOCETO_TITULO);
+        boceto.put("descripcion", "Descripción de boceto para tests de edición");
+        boceto.put("portada", "");
+        boceto.put("tiempo", 1);
+        boceto.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
+        boceto.put("estadoAcabado", false);
+        boceto.put("numLikes", 0);
+        boceto.put("fechaPublicacion", new Date());
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .set(boceto),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+
+        WriteBatch batch = db.batch();
+
+        Map<String, Object> material = new HashMap<>();
+        material.put("matId", "test-boceto-mat-01");
+        material.put("material", "Papel de boceto");
+        material.put("cantidad", 3);
+
+        batch.set(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .collection(SUB_MATERIALES)
+                        .document("test-boceto-mat-01"),
+                material
+        );
+
+        Map<String, Object> herramienta = new HashMap<>();
+        herramienta.put("herrId", "test-boceto-herr-01");
+        herramienta.put("herramienta", "Tijeras de boceto");
+
+        batch.set(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .collection(SUB_HERRAMIENTAS)
+                        .document("test-boceto-herr-01"),
+                herramienta
+        );
+
+        Map<String, Object> instruccion = new HashMap<>();
+        instruccion.put("instId", "test-boceto-inst-01");
+        instruccion.put("orden", 1);
+        instruccion.put("instruccion", "Primer paso del boceto");
+        instruccion.put("imagen", "");
+
+        batch.set(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .collection(SUB_INSTRUCCIONES)
+                        .document("test-boceto-inst-01"),
+                instruccion
+        );
+
+        Tasks.await(
+                batch.commit(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void eliminarBocetoAutenticadoTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_MATERIALES);
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_HERRAMIENTAS);
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_INSTRUCCIONES);
+        borrarSubcoleccion(TEST_BOCETO_ID, SUB_LIKES);
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BOCETO_ID)
+                        .delete(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    ///////////////////////// subcolecciones /////////////////////////
+
     public void insertarSubcoleccionesTest(String clankId)
             throws ExecutionException, InterruptedException, TimeoutException {
 
@@ -306,6 +574,8 @@ public class TestDataSeeder {
         );
     }
 
+    ///////////////////////// likes /////////////////////////
+
     public void insertarLikeTest()
             throws ExecutionException, InterruptedException, TimeoutException {
 
@@ -337,143 +607,7 @@ public class TestDataSeeder {
         );
     }
 
-    public String crearOIniciarSesionUsuarioAuthTest()
-            throws ExecutionException, InterruptedException, TimeoutException {
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signOut();
-
-        AuthResult resultado;
-
-        try {
-            resultado = Tasks.await(
-                    auth.createUserWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
-                    TIMEOUT_S,
-                    TimeUnit.SECONDS
-            );
-        } catch (ExecutionException errorCreacion) {
-            Throwable causa = errorCreacion.getCause();
-
-            if (causa instanceof FirebaseAuthUserCollisionException) {
-                resultado = Tasks.await(
-                        auth.signInWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
-                        TIMEOUT_S,
-                        TimeUnit.SECONDS
-                );
-            } else {
-                throw errorCreacion;
-            }
-        }
-
-        FirebaseUser usuario = resultado.getUser();
-
-        if (usuario == null || usuario.getUid() == null || usuario.getUid().isEmpty()) {
-            throw new IllegalStateException(
-                    "No se pudo obtener UID del usuario autenticado de test."
-            );
-        }
-
-        uidAutenticadoTest = usuario.getUid();
-        return uidAutenticadoTest;
-    }
-
-    public String getUidAutenticadoTest() {
-        if (uidAutenticadoTest != null && !uidAutenticadoTest.isEmpty()) {
-            return uidAutenticadoTest;
-        }
-
-        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (usuario == null || usuario.getUid() == null || usuario.getUid().isEmpty()) {
-            throw new IllegalStateException(
-                    "No hay usuario autenticado de test. Llama antes a crearOIniciarSesionUsuarioAuthTest()."
-            );
-        }
-
-        uidAutenticadoTest = usuario.getUid();
-        return uidAutenticadoTest;
-    }
-
-    public void cerrarSesionAuthTest() {
-        FirebaseAuth.getInstance().signOut();
-        uidAutenticadoTest = null;
-    }
-
-    public void insertarUsuarioAutenticadoTest()
-            throws ExecutionException, InterruptedException, TimeoutException {
-
-        String uid = getUidAutenticadoTest();
-
-        Map<String, Object> usuario = new HashMap<>();
-        usuario.put("uid", uid);
-        usuario.put("nombre", TEST_NOMBRE);
-        usuario.put("correo", TEST_EMAIL);
-        usuario.put("telefono", "600000000");
-        usuario.put("usuarioClank", TEST_USUARIO_CLANK);
-        usuario.put("fotoPerfil", "");
-        usuario.put("fotoPortada", "");
-        usuario.put("fechaCreacion", "2026-05-22");
-        usuario.put("fechaNacimiento", "2000-01-01");
-        usuario.put("enLinea", false);
-
-        Tasks.await(
-                db.collection(COL_USUARIOS)
-                        .document(uid)
-                        .set(usuario),
-                TIMEOUT_S,
-                TimeUnit.SECONDS
-        );
-    }
-
-    public void eliminarUsuarioAutenticadoFirestore()
-            throws ExecutionException, InterruptedException, TimeoutException {
-
-        String uid;
-
-        try {
-            uid = getUidAutenticadoTest();
-        } catch (IllegalStateException error) {
-            return;
-        }
-
-        Tasks.await(
-                db.collection(COL_USUARIOS)
-                        .document(uid)
-                        .delete(),
-                TIMEOUT_S,
-                TimeUnit.SECONDS
-        );
-    }
-
-    public void insertarClankAutenticadoTest(int numLikes, boolean conSubcol)
-            throws ExecutionException, InterruptedException, TimeoutException {
-
-        String uid = getUidAutenticadoTest();
-
-        Map<String, Object> clank = new HashMap<>();
-        clank.put("clankId", TEST_CLANK_ID);
-        clank.put("usuarioId", uid);
-        clank.put("titulo", TEST_CLANK_TITULO);
-        clank.put("descripcion", "Descripción de prueba para tests de integración");
-        clank.put("portada", "");
-        clank.put("tiempo", 1);
-        clank.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
-        clank.put("estadoAcabado", true);
-        clank.put("numLikes", numLikes);
-        clank.put("fechaPublicacion", new Date());
-
-        Tasks.await(
-                db.collection(COL_CLANKS)
-                        .document(TEST_CLANK_ID)
-                        .set(clank),
-                TIMEOUT_S,
-                TimeUnit.SECONDS
-        );
-
-        if (conSubcol) {
-            insertarSubcoleccionesTest(TEST_CLANK_ID);
-        }
-    }
+    ///////////////////////// utilidades privadas /////////////////////////
 
     private void borrarSubcoleccion(String clankId, String subcoleccion)
             throws ExecutionException, InterruptedException, TimeoutException {
@@ -499,49 +633,6 @@ public class TestDataSeeder {
 
         Tasks.await(
                 batch.commit(),
-                TIMEOUT_S,
-                TimeUnit.SECONDS
-        );
-    }
-
-    public void insertarBocetoAutenticadoTest()
-            throws ExecutionException, InterruptedException, TimeoutException {
-
-        String uid = getUidAutenticadoTest();
-
-        Map<String, Object> boceto = new HashMap<>();
-        boceto.put("clankId", TEST_BOCETO_ID);
-        boceto.put("usuarioId", uid);
-        boceto.put("titulo", TEST_BOCETO_TITULO);
-        boceto.put("descripcion", "Descripción de boceto para tests de perfil");
-        boceto.put("portada", "");
-        boceto.put("tiempo", 1);
-        boceto.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
-        boceto.put("estadoAcabado", false);
-        boceto.put("numLikes", 0);
-        boceto.put("fechaPublicacion", new Date());
-
-        Tasks.await(
-                db.collection(COL_CLANKS)
-                        .document(TEST_BOCETO_ID)
-                        .set(boceto),
-                TIMEOUT_S,
-                TimeUnit.SECONDS
-        );
-    }
-
-    public void eliminarBocetoAutenticadoTest()
-            throws ExecutionException, InterruptedException, TimeoutException {
-
-        borrarSubcoleccion(TEST_BOCETO_ID, SUB_MATERIALES);
-        borrarSubcoleccion(TEST_BOCETO_ID, SUB_HERRAMIENTAS);
-        borrarSubcoleccion(TEST_BOCETO_ID, SUB_INSTRUCCIONES);
-        borrarSubcoleccion(TEST_BOCETO_ID, SUB_LIKES);
-
-        Tasks.await(
-                db.collection(COL_CLANKS)
-                        .document(TEST_BOCETO_ID)
-                        .delete(),
                 TIMEOUT_S,
                 TimeUnit.SECONDS
         );
