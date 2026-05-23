@@ -593,6 +593,7 @@ exports.eliminarCuentaCompleta = onCall(
       clanks: 0,
       comentarios: 0,
       likes: 0,
+      materiales: 0,
       herramientas: 0,
       instrucciones: 0,
       archivosStorageBorrados: 0,
@@ -633,6 +634,14 @@ exports.eliminarCuentaCompleta = onCall(
         const datosInstruccion = documentoInstruccion.data();
         agregarUrlSiExiste(urlsStorage, datosInstruccion.imagen);
       });
+
+    resumen.materiales += await borrarConsultaEnLotes(
+      documentoClank.ref.collection("materiales")
+    );
+
+    resumen.likes += await borrarConsultaEnLotes(
+      documentoClank.ref.collection("likes")
+    );
 
       resumen.instrucciones += await borrarConsultaEnLotes(
         documentoClank.ref.collection("instrucciones")
