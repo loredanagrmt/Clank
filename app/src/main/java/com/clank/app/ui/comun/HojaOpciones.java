@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.Collections;
 import java.util.List;
 
 public class HojaOpciones extends BottomSheetDialogFragment {
@@ -88,7 +89,9 @@ public class HojaOpciones extends BottomSheetDialogFragment {
     ) {
         binding = HojaOpcionesBinding.inflate(inflater, container, false);
 
-        binding.tituloPanelOpciones.setText(titulo);
+        binding.tituloPanelOpciones.setText(
+                titulo != null ? titulo : ""
+        );
 
         if (modoHoja == ModoHoja.CONFIRMACION) {
             configurarModoConfirmacion();
@@ -123,13 +126,16 @@ public class HojaOpciones extends BottomSheetDialogFragment {
                 new LinearLayoutManager(requireContext())
         );
 
+        List<ItemOpcion> opcionesSeguras =
+                opciones != null ? opciones : Collections.emptyList();
+
         binding.listaOpciones.setAdapter(
-                new AdaptadorOpciones(opciones, item -> {
+                new AdaptadorOpciones(opcionesSeguras, item -> {
+                    dismissAllowingStateLoss();
+
                     if (callback != null) {
                         callback.alSeleccionar(item.id);
                     }
-
-                    dismiss();
                 })
         );
     }
@@ -139,17 +145,24 @@ public class HojaOpciones extends BottomSheetDialogFragment {
         binding.textoConfirmacion.setVisibility(View.VISIBLE);
         binding.contenedorBotonesConfirmacion.setVisibility(View.VISIBLE);
 
-        binding.textoConfirmacion.setText(mensajeConfirmacion);
+        binding.textoConfirmacion.setText(
+                mensajeConfirmacion != null ? mensajeConfirmacion : ""
+        );
 
-        binding.includeBotonCancelar.btnSecundario.setText(textoCancelar);
-        binding.includeBotonConfirmar.btnPrincipal.setText(textoConfirmar);
+        binding.includeBotonCancelar.btnSecundario.setText(
+                textoCancelar != null ? textoCancelar : ""
+        );
+
+        binding.includeBotonConfirmar.btnPrincipal.setText(
+                textoConfirmar != null ? textoConfirmar : ""
+        );
 
         binding.includeBotonCancelar.btnSecundario.setOnClickListener(v -> {
             if (accionCancelar != null) {
                 accionCancelar.ejecutar();
             }
 
-            dismiss();
+            dismissAllowingStateLoss();
         });
 
         binding.includeBotonConfirmar.btnPrincipal.setOnClickListener(v -> {
@@ -157,7 +170,7 @@ public class HojaOpciones extends BottomSheetDialogFragment {
                 accionConfirmar.ejecutar();
             }
 
-            dismiss();
+            dismissAllowingStateLoss();
         });
     }
 
