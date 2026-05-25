@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="96" alt="Clank logo"/>
+  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" width="96" alt="Clank logo"/>
 </p>
 
 <h1 align="center">Clank — Comunidad Creativa</h1>
