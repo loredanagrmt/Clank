@@ -37,7 +37,7 @@
         android:layout_height="@dimen/perfil_foto_size"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/ic_usuario_inactivo"/>
+        android:src="@drawable/img_usuario_defecto"/>
 
       <LinearLayout
         android:layout_width="wrap_content"

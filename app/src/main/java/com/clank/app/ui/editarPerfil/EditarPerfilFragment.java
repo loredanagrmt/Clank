@@ -380,7 +380,7 @@ public class EditarPerfilFragment extends Fragment {
     Glide.with(this)
             .load(uri)
             .circleCrop()
-            .placeholder(R.drawable.ic_usuario_inactivo)
+            .placeholder(R.drawable.img_usuario_defecto)
             .error(R.drawable.ic_usuario_inactivo)
             .into(binding.imgFotoPerfil);
   }
@@ -459,8 +459,8 @@ public class EditarPerfilFragment extends Fragment {
         Glide.with(this)
                 .load(usuario.getFotoPerfil())
                 .circleCrop()
-                .placeholder(R.drawable.ic_usuario_inactivo)
-                .error(R.drawable.ic_usuario_inactivo)
+                .placeholder(R.drawable.img_usuario_defecto)
+                .error(R.drawable.img_usuario_defecto)
                 .into(binding.imgFotoPerfil);
       }
     });

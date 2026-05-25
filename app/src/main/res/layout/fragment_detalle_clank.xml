@@ -107,7 +107,9 @@
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_primera_seccion_margin_top"
-                android:text="@string/crear_campo_tiempo" />
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/crear_campo_tiempo"
+                android:textColor="@color/color_clank_activo" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -182,7 +184,9 @@
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
-                android:text="@string/crear_campo_materiales" />
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/crear_campo_materiales"
+                android:textColor="@color/color_clank_activo" />
 
             <LinearLayout
                 android:id="@+id/llContenedorMateriales"
@@ -196,7 +200,9 @@
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
-                android:text="@string/crear_campo_herramientas" />
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/crear_campo_herramientas"
+                android:textColor="@color/color_clank_activo" />
 
             <LinearLayout
                 android:id="@+id/llContenedorHerramientas"
@@ -210,7 +216,9 @@
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
-                android:text="@string/crear_campo_instrucciones" />
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/crear_campo_instrucciones"
+                android:textColor="@color/color_clank_activo" />
 
             <LinearLayout
                 android:id="@+id/llContenedorInstrucciones"
@@ -224,7 +232,9 @@
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
-                android:text="@string/crear_campo_categorias" />
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/crear_campo_categorias"
+                android:textColor="@color/color_clank_activo" />
 
             <com.google.android.flexbox.FlexboxLayout
                 android:id="@+id/flexboxCategorias"

@@ -21,7 +21,9 @@ import com.clank.app.databinding.FragmentResultadosBinding;
 import com.clank.app.ui.comun.NavbarHost;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,8 +37,7 @@ public class ResultadosFragment extends Fragment {
   private String categoria;
   private String nombreCategoria;
 
-  private final java.util.Set<String> observadosLikes =
-          new java.util.HashSet<>();
+    private final Set<String> observadosLikes = new HashSet<>();
 
   ///////////////////////// ciclo de vida /////////////////////////
 
@@ -100,7 +101,7 @@ public class ResultadosFragment extends Fragment {
             );
   }
 
-  ///////////////////////// recyclerView /////////////////////////
+    ///////////////////////// recyclerView /////////////////////////
 
   private void configurarRecyclerView() {
       binding.rvResultados.setLayoutManager(
@@ -109,184 +110,223 @@ public class ResultadosFragment extends Fragment {
 
       binding.rvResultados.setHasFixedSize(false);
 
-      int spacing = (int) getResources().getDimension(
-              R.dimen.feed_item_spacing
-      );
+        int spacing = (int) getResources().getDimension(
+                R.dimen.feed_item_spacing
+        );
 
-      binding.rvResultados.addItemDecoration(new RecyclerView.ItemDecoration() {
-          @Override
-          public void getItemOffsets(@NonNull Rect outRect,
-                                     @NonNull View view,
-                                     @NonNull RecyclerView parent,
-                                     @NonNull RecyclerView.State state) {
-              if (parent.getChildAdapterPosition(view) > 0) {
-                  outRect.top = spacing;
-              }
-          }
-      });
+        binding.rvResultados.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect,
+                                       @NonNull View view,
+                                       @NonNull RecyclerView parent,
+                                       @NonNull RecyclerView.State state) {
+                if (parent.getChildAdapterPosition(view) > 0) {
+                    outRect.top = spacing;
+                }
+            }
+        });
 
-      binding.rvResultados.setVisibility(View.INVISIBLE);
-      binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
-  }
-
-  ///////////////////////// adapter /////////////////////////
-
-  private void cargarAdapter() {
-    FirestoreRecyclerOptions<Clank> options =
-            new FirestoreRecyclerOptions.Builder<Clank>()
-                    .setQuery(
-                            viewModel.getQueryPorCategoria(categoria),
-                            Clank.class
-                    )
-                    .setLifecycleOwner(getViewLifecycleOwner())
-                    .build();
-
-      adapter = new FeedAdapter(
-              options,
-              requireContext(),
-              viewModel.getUsuarioRepository(),
-              viewModel.getCurrentUserId(),
-
-              new FeedAdapter.OnClankClickListener() {
-                  @Override
-                  public void onClankClick(String clankId) {
-                      Bundle args = new Bundle();
-                      args.putString("clankId", clankId);
-
-                      Navigation.findNavController(requireView())
-                              .navigate(
-                                      R.id.action_resultadosFragment_to_detalleClankFragment,
-                                      args
-                              );
-                  }
-
-                  @Override
-                  public void onUsuarioClick(String usuarioId) {
-                      Bundle args = new Bundle();
-                      args.putString("usuarioId", usuarioId);
-
-                      Navigation.findNavController(requireView())
-                              .navigate(
-                                      R.id.action_resultadosFragment_to_perfilFragment,
-                                      args
-                              );
-                  }
-              },
-
-              clankId -> viewModel.toggleLike(clankId),
-
-              (clankIds, numLikesIniciales) ->
-                      arrancarObservadoresLikes(
-                              clankIds,
-                              numLikesIniciales
-                      ),
-
-              new FeedAdapter.OnPreparacionTarjetasListener() {
-                  @Override
-                  public void alIniciarPreparacion() {
-                      if (binding != null) {
-                          binding.rvResultados.setVisibility(View.INVISIBLE);
-                          binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
-                      }
-                  }
-
-                  @Override
-                  public void alFinalizarPreparacion() {
-                      if (binding != null) {
-                          binding.overlayCargandoResultados.setVisibility(View.GONE);
-                          binding.rvResultados.setVisibility(View.VISIBLE);
-                      }
-                  }
-              }
-      );
-
-    binding.rvResultados.setAdapter(adapter);
-  }
-
-  private void arrancarObservadoresLikes(List<String> clankIds,
-                                         List<Integer> numLikesIniciales) {
-    for (int i = 0; i < clankIds.size(); i++) {
-      String clankId = clankIds.get(i);
-      int likesInicial = numLikesIniciales.get(i);
-
-      viewModel.iniciarListenerLike(clankId, likesInicial);
-
-      if (observadosLikes.contains(clankId)) {
-        continue;
-      }
-
-      observadosLikes.add(clankId);
-
-      observarEstadoLike(clankId);
-      observarContadorLike(clankId);
-    }
-  }
-
-  private void observarEstadoLike(String clankId) {
-    viewModel.getEstadoLike(clankId)
-            .observe(getViewLifecycleOwner(), isLiked -> {
-              if (isLiked == null || adapter == null) {
-                return;
-              }
-
-              Integer contador =
-                      viewModel.getContadorLikes(clankId).getValue();
-
-              adapter.actualizarLike(
-                      clankId,
-                      isLiked,
-                      contador != null ? contador : 0
-              );
-
-              int pos = encontrarPosicion(clankId);
-
-              if (pos >= 0) {
-                adapter.notifyItemChanged(
-                        pos,
-                        FeedAdapter.PAYLOAD_LIKE
-                );
-              }
-            });
-  }
-
-  private void observarContadorLike(String clankId) {
-    viewModel.getContadorLikes(clankId)
-            .observe(getViewLifecycleOwner(), contador -> {
-              if (contador == null || adapter == null) {
-                return;
-              }
-
-              Boolean isLiked =
-                      viewModel.getEstadoLike(clankId).getValue();
-
-              adapter.actualizarLike(
-                      clankId,
-                      Boolean.TRUE.equals(isLiked),
-                      contador
-              );
-
-              int pos = encontrarPosicion(clankId);
-
-              if (pos >= 0) {
-                adapter.notifyItemChanged(
-                        pos,
-                        FeedAdapter.PAYLOAD_LIKE
-                );
-              }
-            });
-  }
-
-  private int encontrarPosicion(String clankId) {
-    if (adapter == null) {
-      return -1;
+        mostrarCargandoResultados();
     }
 
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      if (clankId.equals(adapter.getSnapshots().getSnapshot(i).getId())) {
-        return i;
-      }
+    ///////////////////////// adapter /////////////////////////
+
+    private void cargarAdapter() {
+        FirestoreRecyclerOptions<Clank> options =
+                new FirestoreRecyclerOptions.Builder<Clank>()
+                        .setQuery(
+                                viewModel.getQueryPorCategoria(categoria),
+                                Clank.class
+                        )
+                        .setLifecycleOwner(getViewLifecycleOwner())
+                        .build();
+
+        adapter = new FeedAdapter(
+                options,
+                requireContext(),
+                viewModel.getUsuarioRepository(),
+                viewModel.getCurrentUserId(),
+
+                new FeedAdapter.OnClankClickListener() {
+                    @Override
+                    public void onClankClick(String clankId) {
+                        Bundle args = new Bundle();
+                        args.putString("clankId", clankId);
+
+                        Navigation.findNavController(requireView())
+                                .navigate(
+                                        R.id.action_resultadosFragment_to_detalleClankFragment,
+                                        args
+                                );
+                    }
+
+                    @Override
+                    public void onUsuarioClick(String usuarioId) {
+                        Bundle args = new Bundle();
+                        args.putString("usuarioId", usuarioId);
+
+                        Navigation.findNavController(requireView())
+                                .navigate(
+                                        R.id.action_resultadosFragment_to_perfilFragment,
+                                        args
+                                );
+                    }
+                },
+
+                clankId -> viewModel.toggleLike(clankId),
+
+                (clankIds, numLikesIniciales) ->
+                        arrancarObservadoresLikes(
+                                clankIds,
+                                numLikesIniciales
+                        ),
+
+                new FeedAdapter.OnPreparacionTarjetasListener() {
+                    @Override
+                    public void alIniciarPreparacion() {
+                        mostrarCargandoResultados();
+                    }
+
+                    @Override
+                    public void alFinalizarPreparacion() {
+                        actualizarEstadoFinalResultados();
+                    }
+                }
+        );
+
+        binding.rvResultados.setAdapter(adapter);
     }
 
-    return -1;
-  }
+    ///////////////////////// estados visuales /////////////////////////
+
+    private void mostrarCargandoResultados() {
+        if (binding == null) {
+            return;
+        }
+
+        binding.rvResultados.setVisibility(View.INVISIBLE);
+        binding.tvResultadosVacio.setVisibility(View.GONE);
+        binding.overlayCargandoResultados.setVisibility(View.VISIBLE);
+    }
+
+    private void mostrarListaResultados() {
+        if (binding == null) {
+            return;
+        }
+
+        binding.overlayCargandoResultados.setVisibility(View.GONE);
+        binding.tvResultadosVacio.setVisibility(View.GONE);
+        binding.rvResultados.setVisibility(View.VISIBLE);
+    }
+
+    private void mostrarResultadosVacios() {
+        if (binding == null) {
+            return;
+        }
+
+        binding.overlayCargandoResultados.setVisibility(View.GONE);
+        binding.rvResultados.setVisibility(View.GONE);
+        binding.tvResultadosVacio.setVisibility(View.VISIBLE);
+    }
+
+    private void actualizarEstadoFinalResultados() {
+        if (binding == null || adapter == null) {
+            return;
+        }
+
+        if (adapter.getItemCount() > 0) {
+            mostrarListaResultados();
+        } else {
+            mostrarResultadosVacios();
+        }
+    }
+
+    ///////////////////////// likes /////////////////////////
+
+    private void arrancarObservadoresLikes(List<String> clankIds,
+                                           List<Integer> numLikesIniciales) {
+        for (int i = 0; i < clankIds.size(); i++) {
+            String clankId = clankIds.get(i);
+            int likesInicial = numLikesIniciales.get(i);
+
+            viewModel.iniciarListenerLike(clankId, likesInicial);
+
+            if (observadosLikes.contains(clankId)) {
+                continue;
+            }
+
+            observadosLikes.add(clankId);
+
+            observarEstadoLike(clankId);
+            observarContadorLike(clankId);
+        }
+    }
+
+    private void observarEstadoLike(String clankId) {
+        viewModel.getEstadoLike(clankId)
+                .observe(getViewLifecycleOwner(), isLiked -> {
+                    if (isLiked == null || adapter == null) {
+                        return;
+                    }
+
+                    Integer contador =
+                            viewModel.getContadorLikes(clankId).getValue();
+
+                    adapter.actualizarLike(
+                            clankId,
+                            isLiked,
+                            contador != null ? contador : 0
+                    );
+
+                    int pos = encontrarPosicion(clankId);
+
+                    if (pos >= 0) {
+                        adapter.notifyItemChanged(
+                                pos,
+                                FeedAdapter.PAYLOAD_LIKE
+                        );
+                    }
+                });
+    }
+
+    private void observarContadorLike(String clankId) {
+        viewModel.getContadorLikes(clankId)
+                .observe(getViewLifecycleOwner(), contador -> {
+                    if (contador == null || adapter == null) {
+                        return;
+                    }
+
+                    Boolean isLiked =
+                            viewModel.getEstadoLike(clankId).getValue();
+
+                    adapter.actualizarLike(
+                            clankId,
+                            Boolean.TRUE.equals(isLiked),
+                            contador
+                    );
+
+                    int pos = encontrarPosicion(clankId);
+
+                    if (pos >= 0) {
+                        adapter.notifyItemChanged(
+                                pos,
+                                FeedAdapter.PAYLOAD_LIKE
+                        );
+                    }
+                });
+    }
+
+    private int encontrarPosicion(String clankId) {
+        if (adapter == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            if (clankId.equals(adapter.getSnapshots().getSnapshot(i).getId())) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }
