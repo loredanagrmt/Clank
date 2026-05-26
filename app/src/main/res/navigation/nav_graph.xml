@@ -207,7 +207,13 @@
         android:id="@+id/cambiarContrasenyaFragment"
         android:name="com.clank.app.ui.cambiarContrasenya.CambiarContrasenyaFragment"
         android:label="@string/cambiar_contrasenya_titulo_navbar"
-        tools:layout="@layout/fragment_cambiar_contrasenya" />
+        tools:layout="@layout/fragment_cambiar_contrasenya">
+
+        <action
+            android:id="@+id/action_cambiarContrasenyaFragment_to_olvideContrasenyaFragment"
+            app:destination="@id/olvideContrasenyaFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/editarClankFragment"

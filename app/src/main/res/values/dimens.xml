@@ -297,8 +297,7 @@
   <dimen name="bottombar_alto_indicador">2dp</dimen>
   <dimen name="bottombar_margen_superior_indicador">3dp</dimen>
 
-
-  <!-- MODO OSCURO -->
+  <!-- ── Crear Clank / modo oscuro ────────────────────────────── -->
   <dimen name="layout_weight_zero">0dp</dimen>
   <dimen name="space_tecnico_minimo">1dp</dimen>
   <dimen name="elevation_none">0dp</dimen>
@@ -309,6 +308,7 @@
   <dimen name="crear_error_margin_top">4dp</dimen>
   <dimen name="crear_descripcion_padding_vertical">14dp</dimen>
 
+  <!-- ── Input reutilizable ────────────────────────────── -->
   <dimen name="input_reutilizable_margin_bottom">16dp</dimen>
   <dimen name="input_reutilizable_titulo_margin_bottom">8dp</dimen>
   <dimen name="input_reutilizable_altura">48dp</dimen>
@@ -318,6 +318,7 @@
   <dimen name="input_reutilizable_icono_margin_end">18dp</dimen>
   <dimen name="input_reutilizable_text_size">14sp</dimen>
 
+  <!-- ── Detalle instrucciones ────────────────────────────── -->
   <dimen name="detalle_instruccion_card_radius">22dp</dimen>
   <dimen name="detalle_instruccion_min_height">64dp</dimen>
   <dimen name="detalle_instruccion_padding_horizontal">14dp</dimen>
@@ -326,6 +327,7 @@
   <dimen name="detalle_instruccion_imagen_height">180dp</dimen>
   <dimen name="detalle_instruccion_imagen_margin_top">10dp</dimen>
 
+  <!-- ── Item instrucción ────────────────────────────── -->
   <dimen name="item_instruccion_margin_bottom">12dp</dimen>
   <dimen name="item_instruccion_numero_width">20dp</dimen>
   <dimen name="item_instruccion_numero_margin_top">12dp</dimen>
@@ -347,6 +349,7 @@
   <dimen name="item_instruccion_preview_width">100dp</dimen>
   <dimen name="item_instruccion_preview_height">70dp</dimen>
 
+  <!-- ── Item material ────────────────────────────── -->
   <dimen name="item_material_margin_bottom">8dp</dimen>
   <dimen name="item_material_cantidad_width">54dp</dimen>
   <dimen name="item_material_input_height">44dp</dimen>

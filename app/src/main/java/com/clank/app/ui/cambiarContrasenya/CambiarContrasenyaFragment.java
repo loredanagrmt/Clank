@@ -38,6 +38,7 @@ public class CambiarContrasenyaFragment extends Fragment {
 
         configurarInputs();
         configurarBoton();
+        configurarTextoOlvideContrasenya();
         observarViewModel();
     }
 
@@ -135,6 +136,14 @@ public class CambiarContrasenyaFragment extends Fragment {
 
         binding.btContinuarCambiarContrasenya.btnPrincipal.setOnClickListener(vista ->
                 validarFormulario()
+        );
+    }
+
+    private void configurarTextoOlvideContrasenya() {
+        binding.tvOlvideContrasenya.setOnClickListener(v ->
+                NavHostFragment.findNavController(this).navigate(
+                        R.id.action_cambiarContrasenyaFragment_to_olvideContrasenyaFragment
+                )
         );
     }
 
