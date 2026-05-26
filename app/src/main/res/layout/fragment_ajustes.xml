@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/clank_background_light"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ajustes_dimension_cero"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/ajustes_padding_horizontal"
+            android:paddingTop="@dimen/ajustes_padding_superior"
+            android:paddingEnd="@dimen/ajustes_padding_horizontal"
+            android:paddingBottom="@dimen/ajustes_padding_inferior">
+
+            <LinearLayout
+                android:id="@+id/row_tema_oscuro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/ajustes_padding_vertical_fila"
+                android:paddingBottom="@dimen/ajustes_padding_vertical_fila">
+
+                <ImageView
+                    android:id="@+id/icon_tema_oscuro"
+                    android:layout_width="@dimen/ajustes_icono_principal"
+                    android:layout_height="@dimen/ajustes_icono_principal"
+                    android:src="@drawable/ic_tema_oscuro" />
+
+                <TextView
+                    android:id="@+id/label_tema_oscuro"
+                    android:layout_width="@dimen/ajustes_dimension_cero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/ajustes_margen_inicio_texto"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/ajustes_tema_oscuro"
+                    android:textColor="@color/color_negrita"
+                    android:textSize="@dimen/ajustes_texto_opcion" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_tema_oscuro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/selector_switch"
+                    app:thumbTint="@null"
+                    app:track="@null"
+                    app:trackTint="@null" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_lenguaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/ajustes_padding_vertical_fila"
+                android:paddingBottom="@dimen/ajustes_padding_vertical_fila">
+
+                <ImageView
+                    android:id="@+id/icon_lenguaje"
+                    android:layout_width="@dimen/ajustes_icono_principal"
+                    android:layout_height="@dimen/ajustes_icono_principal"
+                    android:src="@drawable/ic_idioma" />
+
+                <TextView
+                    android:id="@+id/label_lenguaje"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/ajustes_margen_inicio_texto"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/ajustes_lenguaje"
+                    android:textColor="@color/color_negrita"
+                    android:textSize="@dimen/ajustes_texto_opcion" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_cambiar_contrasenya"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/ajustes_padding_vertical_fila"
+                android:paddingBottom="@dimen/ajustes_padding_vertical_fila">
+
+                <ImageView
+                    android:id="@+id/icon_cambiar_contrasenya"
+                    android:layout_width="@dimen/ajustes_icono_principal"
+                    android:layout_height="@dimen/ajustes_icono_principal"
+                    android:src="@drawable/ic_cambiar_contrasenya" />
+
+                <TextView
+                    android:id="@+id/label_cambiar_contrasenya"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/ajustes_margen_inicio_texto"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/ajustes_cambiar_contrasenya"
+                    android:textColor="@color/color_negrita"
+                    android:textSize="@dimen/ajustes_texto_opcion" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_cerrar_sesion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/ajustes_padding_vertical_fila"
+                android:paddingBottom="@dimen/ajustes_padding_vertical_fila">
+
+                <ImageView
+                    android:id="@+id/icon_cerrar_sesion"
+                    android:layout_width="@dimen/ajustes_icono_principal"
+                    android:layout_height="@dimen/ajustes_icono_principal"
+                    android:src="@drawable/ic_cerrar_sesion" />
+
+                <TextView
+                    android:id="@+id/label_cerrar_sesion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/ajustes_margen_inicio_texto"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/ajustes_cerrar_sesion"
+                    android:textColor="@color/color_negrita"
+                    android:textSize="@dimen/ajustes_texto_opcion" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_borrar_cuenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/ajustes_padding_vertical_borrar_cuenta"
+                android:paddingBottom="@dimen/ajustes_padding_vertical_borrar_cuenta">
+
+                <TextView
+                    android:id="@+id/label_borrar_cuenta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/ajustes_borrar_cuenta"
+                    android:textColor="@color/color_clank_activo"
+                    android:textSize="@dimen/ajustes_texto_borrar_cuenta" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

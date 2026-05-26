@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:color="@color/color_texto_inactivo">
+        <shape>
+            <corners android:radius="100dp" />
+        </shape>
+    </item>
+    <item android:state_pressed="true" android:color="@color/clank_background_light">
+        <shape>
+            <corners android:radius="100dp" />
+        </shape>
+    </item>
+    <item android:color="@color/color_clank_activo">
+        <shape>
+            <corners android:radius="100dp" />
+        </shape>
+    </item>
+
+</selector>

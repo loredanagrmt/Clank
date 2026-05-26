@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/logoFragment">
+
+    <fragment
+        android:id="@+id/logoFragment"
+        android:name="com.clank.app.ui.logo.LogoFragment"
+        android:label=""
+        tools:layout="@layout/fragment_logo">
+        <action
+            android:id="@+id/action_logo_a_idioma"
+            app:destination="@id/elegirIdiomaFragment"
+            app:popUpTo="@id/logoFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_logo_a_feed"
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/logoFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/elegirIdiomaFragment"
+        android:name="com.clank.app.ui.idioma.ElegirIdiomaFragment"
+        android:label=""
+        tools:layout="@layout/fragment_elegir_idioma">
+        <action
+            android:id="@+id/action_idioma_a_inicio"
+            app:destination="@id/inspirarFragment"
+            app:popUpTo="@id/elegirIdiomaFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/inspirarFragment"
+        android:name="com.clank.app.ui.inspirar.InspirarFragment"
+        android:label=""
+        tools:layout="@layout/fragment_inspirar">
+        <action
+            android:id="@+id/action_inspirar_a_bienvenida"
+            app:destination="@id/bienvenidaFragment"
+            app:popUpTo="@id/inspirarFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_inspirar_a_idioma"
+            app:destination="@id/elegirIdiomaFragment"
+            app:popUpTo="@id/inspirarFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bienvenidaFragment"
+        android:name="com.clank.app.ui.bienvenida.BienvenidaFragment"
+        android:label=""
+        tools:layout="@layout/fragment_bienvenida">
+        <action
+            android:id="@+id/action_bienvenida_a_inicio_sesion"
+            app:destination="@id/inicioSesionFragment"
+            app:popUpTo="@id/bienvenidaFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_bienvenida_a_registro"
+            app:destination="@id/registroFragment"
+            app:popUpTo="@id/bienvenidaFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_bienvenida_a_inspirar"
+            app:destination="@id/inspirarFragment"
+            app:popUpTo="@id/bienvenidaFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/inicioSesionFragment"
+        android:name="com.clank.app.ui.inicioSesion.InicioSesionFragment"
+        android:label=""
+        tools:layout="@layout/fragment_inicio_sesion">
+        <action
+            android:id="@+id/action_inicio_sesion_a_feed"
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/inicioSesionFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_inicio_sesion_a_crear_clank"
+            app:destination="@id/crearFragment"
+            app:popUpTo="@id/inicioSesionFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_inicio_sesion_a_registro"
+            app:destination="@id/registroFragment"
+            app:popUpTo="@id/inicioSesionFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_inicio_sesion_a_bienvenida"
+            app:destination="@id/bienvenidaFragment"
+            app:popUpTo="@id/inicioSesionFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_inicio_sesion_a_olvide_contrasenya"
+            app:destination="@id/olvideContrasenyaFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registroFragment"
+        android:name="com.clank.app.ui.auth.RegistroFragment"
+        android:label=""
+        tools:layout="@layout/fragment_registro">
+        <action
+            android:id="@+id/action_registro_a_inicio_sesion"
+            app:destination="@id/inicioSesionFragment"
+            app:popUpTo="@id/registroFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registro_a_completar_perfil"
+            app:destination="@id/completarPerfilFragment" />
+        <action
+            android:id="@+id/action_registro_a_bienvenida"
+            app:destination="@id/bienvenidaFragment"
+            app:popUpTo="@id/registroFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/completarPerfilFragment"
+        android:name="com.clank.app.ui.completarPerfil.CompletarPerfilFragment"
+        android:label=""
+        tools:layout="@layout/fragment_completar_perfil">
+        <action
+            android:id="@+id/action_completar_perfil_a_registro"
+            app:destination="@id/registroFragment"
+            app:popUpTo="@id/completarPerfilFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_completar_perfil_a_feed"
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/registroFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/perfilFragment"
+        android:name="com.clank.app.ui.perfil.PerfilFragment"
+        android:label=""
+        tools:layout="@layout/fragment_perfil">
+        <argument
+            android:name="tabInicial"
+            android:defaultValue="clanks"
+            app:argType="string" />
+        <argument
+            android:name="usuarioId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_perfil_a_ajustes"
+            app:destination="@id/ajustesFragment" />
+        <action
+            android:id="@+id/action_perfil_a_crear"
+            app:destination="@id/crearFragment" />
+        <action
+            android:id="@+id/action_perfil_a_editar_clank"
+            app:destination="@id/editarClankFragment" />
+        <action
+            android:id="@+id/action_perfil_a_detalle_clank"
+            app:destination="@id/detalleClankFragment" />
+
+        <action
+            android:id="@+id/action_perfil_a_editar_perfil"
+            app:destination="@id/editarPerfilFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crearFragment"
+        android:name="com.clank.app.ui.crear.CrearFragment"
+        android:label=""
+        tools:layout="@layout/fragment_crear">
+        <action
+            android:id="@+id/action_crear_a_perfil"
+            app:destination="@id/perfilFragment"
+            app:popUpTo="@id/crearFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ajustesFragment"
+        android:name="com.clank.app.ui.ajustes.AjustesFragment"
+        android:label=""
+        tools:layout="@layout/fragment_ajustes">
+
+        <action
+            android:id="@+id/action_ajustes_a_inicio_sesion"
+            app:destination="@id/inicioSesionFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_ajustes_a_cambiar_contrasenya"
+            app:destination="@id/cambiarContrasenyaFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/cambiarContrasenyaFragment"
+        android:name="com.clank.app.ui.cambiarContrasenya.CambiarContrasenyaFragment"
+        android:label="@string/cambiar_contrasenya_titulo_navbar"
+        tools:layout="@layout/fragment_cambiar_contrasenya" />
+
+    <fragment
+        android:id="@+id/editarClankFragment"
+        android:name="com.clank.app.ui.editar.EditarClankFragment"
+        android:label=""
+        tools:layout="@layout/fragment_crear">
+        <argument
+            android:name="clankId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_editar_a_perfil"
+            app:destination="@id/perfilFragment"
+            app:popUpTo="@id/perfilFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detalleClankFragment"
+        android:name="com.clank.app.ui.detalle.DetalleClankFragment"
+        android:label=""
+        tools:layout="@layout/fragment_detalle_clank">
+        <argument
+            android:name="clankId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_detalle_a_editar_clank"
+            app:destination="@id/editarClankFragment" />
+        <action
+            android:id="@+id/action_detalle_a_perfil"
+            app:destination="@id/perfilFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editarPerfilFragment"
+        android:name="com.clank.app.ui.editarPerfil.EditarPerfilFragment"
+        android:label=""
+        tools:layout="@layout/fragment_editar_perfil">
+        <action
+            android:id="@+id/action_editar_perfil_a_cambiar_contrasenya"
+            app:destination="@id/cambiarContrasenyaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.clank.app.ui.feed.FeedFragment"
+        android:label=""
+        tools:layout="@layout/fragment_feed">
+        <action
+            android:id="@+id/action_feed_a_detalle_clank"
+            app:destination="@id/detalleClankFragment" />
+        <action
+            android:id="@+id/action_feed_a_busqueda"
+            app:destination="@id/busquedaFragment" />
+        <action
+            android:id="@+id/action_feed_a_perfil"
+            app:destination="@id/perfilFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_filtrosFragment"
+            app:destination="@id/filtrosFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/busquedaFragment"
+        android:name="com.clank.app.ui.busqueda.BusquedaFragment"
+        android:label=""
+        tools:layout="@layout/fragment_busqueda">
+        <action
+            android:id="@+id/action_busqueda_a_detalle_clank"
+            app:destination="@id/detalleClankFragment" />
+        <action
+            android:id="@+id/action_busqueda_a_perfil"
+            app:destination="@id/perfilFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/filtrosFragment"
+        android:name="com.clank.app.ui.filtros.FiltrosFragment"
+        android:label=""
+        tools:layout="@layout/fragment_filtros">
+        <action
+            android:id="@+id/action_filtrosFragment_to_resultadosFragment"
+            app:destination="@id/resultadosFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resultadosFragment"
+        android:name="com.clank.app.ui.resultados.ResultadosFragment"
+        android:label=""
+        tools:layout="@layout/fragment_resultados">
+        <argument
+            android:name="categoriaNombre"
+            android:defaultValue=""
+            app:argType="string" />
+        <action
+            android:id="@+id/action_resultadosFragment_to_detalleClankFragment"
+            app:destination="@id/detalleClankFragment" />
+        <action
+            android:id="@+id/action_resultadosFragment_to_perfilFragment"
+            app:destination="@id/perfilFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/olvideContrasenyaFragment"
+        android:name="com.clank.app.ui.olvideContrasenya.OlvideContrasenyaFragment"
+        android:label="OlvideContrasenyaFragment">
+
+        <action
+            android:id="@+id/action_olvideContrasenyaFragment_to_codigoRecuperacionContrasenyaFragment"
+            app:destination="@id/codigoRecuperacionContrasenyaFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/codigoRecuperacionContrasenyaFragment"
+        android:name="com.clank.app.ui.codigoRecuperacionContrasenya.CodigoRecuperacionContrasenyaFragment"
+        android:label="CodigoRecuperacionContrasenyaFragment">
+
+        <action
+            android:id="@+id/action_codigoRecuperacionContrasenyaFragment_to_nuevaContrasenyaFragment"
+            app:destination="@id/nuevaContrasenyaFragment" />
+
+        <argument
+            android:name="correoRecuperacion"
+            android:defaultValue=""
+            app:argType="string" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nuevaContrasenyaFragment"
+        android:name="com.clank.app.ui.nuevaContrasenya.NuevaContrasenyaFragment"
+        android:label="NuevaContrasenyaFragment"
+        tools:layout="@layout/fragment_nueva_contrasenya">
+
+        <argument
+            android:name="correoRecuperacion"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="tokenRecuperacion"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_nuevaContrasenyaFragment_to_inicioSesionFragment"
+            app:destination="@id/inicioSesionFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+</navigation>

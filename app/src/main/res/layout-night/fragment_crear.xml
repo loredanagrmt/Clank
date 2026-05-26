@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/clank_background_light"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/crear_padding_bottom">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/screen_margin_horizontal"
+                android:paddingTop="@dimen/crear_acciones_padding_top"
+                android:paddingBottom="@dimen/crear_acciones_padding_bottom">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPublicar"
+                    style="@style/Widget.Clank.BotonPrincipal"
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/crear_btn_publicar_height"
+                    android:layout_marginEnd="@dimen/crear_btn_publicar_gap"
+                    android:layout_weight="1"
+                    android:text="@string/crear_publicar" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnGuardarBoceto"
+                    style="@style/Widget.Clank.BotonPrincipal"
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/crear_btn_publicar_height"
+                    android:layout_marginStart="@dimen/crear_btn_publicar_gap"
+                    android:layout_weight="1"
+                    android:text="@string/crear_guardar_boceto" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/framePortada"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/crear_portada_height"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:background="@drawable/bg_input"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/ivPortadaPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/llAnyadirPortada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/crear_icono_anyadir_portada_size"
+                        android:layout_height="@dimen/crear_icono_anyadir_portada_size"
+                        android:src="@drawable/ic_mas" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/crear_campo_margin_top"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="@string/crear_anyadir_portada"
+                        android:textColor="@color/color_circulo_opciones"
+                        android:textSize="@dimen/text_body_small" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvErrorPortada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_error_margin_top"
+                android:fontFamily="@font/poppins_family"
+                android:text="@string/crear_error_portada_vacia"
+                android:textColor="?attr/colorError"
+                android:textSize="@dimen/text_body_small"
+                android:visibility="gone" />
+
+            <TextView
+                style="@style/Crear.LabelSeccion"
+                android:layout_marginTop="@dimen/crear_primera_seccion_margin_top"
+                android:text="@string/crear_campo_titulo" />
+
+            <EditText
+                android:id="@+id/etTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_reutilizable_altura"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:background="@drawable/bg_input"
+                android:fontFamily="@font/poppins_family"
+                android:hint="@string/crear_hint_titulo"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/space_l"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_circulo_opciones"
+                android:textSize="@dimen/text_body" />
+
+            <TextView
+                style="@style/Crear.LabelSeccion"
+                android:layout_marginTop="@dimen/crear_segunda_seccion_margin_top"
+                android:text="@string/crear_campo_descripcion" />
+
+            <EditText
+                android:id="@+id/etDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:background="@drawable/bg_input"
+                android:fontFamily="@font/poppins_family"
+                android:gravity="top|start"
+                android:hint="@string/crear_hint_descripcion"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="4"
+                android:paddingHorizontal="@dimen/space_l"
+                android:paddingVertical="@dimen/crear_descripcion_padding_vertical"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_circulo_opciones"
+                android:textSize="@dimen/text_body" />
+
+            <TextView
+                style="@style/Crear.LabelSeccion"
+                android:layout_marginTop="@dimen/crear_primera_seccion_margin_top"
+                android:text="@string/crear_campo_tiempo" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
+                    android:layout_weight="2" />
+
+                <ImageButton
+                    android:id="@+id/btnTiempoCohete"
+                    android:layout_width="@dimen/crear_btn_tiempo_size"
+                    android:layout_height="@dimen/crear_btn_tiempo_size"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bg_boton_tiempo"
+                    android:padding="@dimen/crear_btn_tiempo_padding"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_cohete"
+                    app:tint="@color/color_texto_inactivo" />
+
+                <Space
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
+                    android:layout_weight="1.5" />
+
+                <ImageButton
+                    android:id="@+id/btnTiempoLiebre"
+                    android:layout_width="@dimen/crear_btn_tiempo_size"
+                    android:layout_height="@dimen/crear_btn_tiempo_size"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bg_boton_tiempo"
+                    android:padding="@dimen/crear_btn_tiempo_padding"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_liebre"
+                    app:tint="@color/color_texto_inactivo" />
+
+                <Space
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
+                    android:layout_weight="1.5" />
+
+                <ImageButton
+                    android:id="@+id/btnTiempoTortuga"
+                    android:layout_width="@dimen/crear_btn_tiempo_size"
+                    android:layout_height="@dimen/crear_btn_tiempo_size"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bg_boton_tiempo"
+                    android:padding="@dimen/crear_btn_tiempo_padding"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_tortuga"
+                    app:tint="@color/color_texto_inactivo" />
+
+                <Space
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvErrorTiempo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_error_margin_top"
+                android:fontFamily="@font/poppins_family"
+                android:text="@string/crear_error_tiempo"
+                android:textColor="?attr/colorError"
+                android:textSize="@dimen/text_body_small"
+                android:visibility="gone" />
+
+            <TextView
+                style="@style/Crear.LabelSeccion"
+                android:layout_marginTop="@dimen/crear_seccion_margin_top"
+                android:text="@string/crear_campo_materiales" />
+
+            <LinearLayout
+                android:id="@+id/llContenedorMateriales"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:gravity="center_horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAnyadirMaterial"
+                    style="@style/Widget.Clank.BotonSecundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/crear_btn_publicar_height"
+                    android:paddingHorizontal="@dimen/bt_secundario_padding_horizontal"
+                    android:text="@string/crear_anyadir_material" />
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/Crear.LabelSeccion"
+                android:layout_marginTop="@dimen/crear_seccion_margin_top"
+                android:text="@string/crear_campo_herramientas" />
+
+            <LinearLayout
+                android:id="@+id/llContenedorHerramientas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:gravity="center_horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAnyadirHerramienta"
+                    style="@style/Widget.Clank.BotonSecundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/crear_btn_publicar_height"
+                    android:paddingHorizontal="@dimen/bt_secundario_padding_horizontal"
+                    android:text="@string/crear_anyadir_herramienta" />
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/Crear.LabelSeccion"
+                android:layout_marginTop="@dimen/crear_seccion_margin_top"
+                android:text="@string/crear_campo_instrucciones" />
+
+            <LinearLayout
+                android:id="@+id/llContenedorInstrucciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:gravity="center_horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAnyadirInstruccion"
+                    style="@style/Widget.Clank.BotonSecundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/crear_btn_publicar_height"
+                    android:paddingHorizontal="@dimen/bt_secundario_padding_horizontal"
+                    android:text="@string/crear_anyadir_instruccion" />
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/Crear.LabelSeccion"
+                android:layout_marginTop="@dimen/crear_seccion_margin_top"
+                android:text="@string/crear_campo_categorias" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/flexboxCategorias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="flex_start" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/overlayCargando"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/clank_background_light"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/vista_cargando"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</FrameLayout>

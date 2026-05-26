@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <!-- degradado de fondo para que se vea sobre el fragment -->
+  <View
+      android:id="@+id/viewDegradadoBottomBar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@drawable/bg_degradado_bottombar" />
+
+  <!-- bottombar -->
+  <LinearLayout
+      android:id="@+id/llBottomBar"
+      android:layout_width="@dimen/bottombar_ancho"
+      android:layout_height="@dimen/bottombar_alto_barra"
+      android:layout_gravity="center_horizontal|bottom"
+      android:layout_marginBottom="@dimen/bottombar_margen_inferior"
+      android:background="@drawable/bg_boton_principal"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:paddingStart="@dimen/bottombar_padding_horizontal"
+      android:paddingEnd="@dimen/bottombar_padding_horizontal">
+
+    <!-- feed -->
+    <LinearLayout
+        android:id="@+id/btnNavFeed"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/bottombar_item_padding_horizontal">
+
+      <ImageView
+          android:id="@+id/ivNavFeed"
+          android:layout_width="@dimen/bottombar_tamanyo_icono"
+          android:layout_height="@dimen/bottombar_tamanyo_icono"
+          android:src="@drawable/ic_feed"
+          app:tint="@color/clank_background_light" />
+
+      <View
+          android:id="@+id/indicadorFeed"
+          android:layout_width="@dimen/bottombar_ancho_indicador"
+          android:layout_height="@dimen/bottombar_alto_indicador"
+          android:layout_marginTop="@dimen/bottombar_margen_superior_indicador"
+          android:background="@color/clank_background_light"
+          android:visibility="invisible" />
+
+    </LinearLayout>
+
+    <!-- crear -->
+    <LinearLayout
+        android:id="@+id/btnNavCrear"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/bottombar_item_padding_horizontal">
+
+      <ImageView
+          android:id="@+id/ivNavCrear"
+          android:layout_width="@dimen/bottombar_tamanyo_icono"
+          android:layout_height="@dimen/bottombar_tamanyo_icono"
+          android:src="@drawable/ic_crear"
+          app:tint="@color/clank_background_light" />
+
+      <View
+          android:id="@+id/indicadorCrear"
+          android:layout_width="@dimen/bottombar_ancho_indicador"
+          android:layout_height="@dimen/bottombar_alto_indicador"
+          android:layout_marginTop="@dimen/bottombar_margen_superior_indicador"
+          android:background="@color/clank_background_light"
+          android:visibility="invisible" />
+
+    </LinearLayout>
+
+    <!-- perfil -->
+    <LinearLayout
+        android:id="@+id/btnNavPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/bottombar_item_padding_horizontal">
+
+      <ImageView
+          android:id="@+id/ivNavPerfil"
+          android:layout_width="@dimen/bottombar_tamanyo_icono"
+          android:layout_height="@dimen/bottombar_tamanyo_icono"
+          android:src="@drawable/ic_perfil"
+          app:tint="@color/clank_background_light" />
+
+      <View
+          android:id="@+id/indicadorPerfil"
+          android:layout_width="@dimen/bottombar_ancho_indicador"
+          android:layout_height="@dimen/bottombar_alto_indicador"
+          android:layout_marginTop="@dimen/bottombar_margen_superior_indicador"
+          android:background="@color/clank_background_light"
+          android:visibility="invisible" />
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+</FrameLayout>

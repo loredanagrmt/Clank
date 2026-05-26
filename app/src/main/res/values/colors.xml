@@ -2,4 +2,25 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Verdes principales -->
+    <color name="color_negrita">#3E2823</color>      <!-- Textos emn negrita -->
+    <color name="color_circulo_opciones">#2C3E2F
+    </color>      <!-- Verde oscuro para botón oscuro -->
+    <color name="color_clank_activo">#6BA587</color>    <!-- Verde medio, color Clank -->
+    <color name="color_texto_inactivo">#9DC9B5
+    </color>     <!-- Verde medio-bajo, texto en botones claros -->
+    <color name="color_boton_inactivo">#D4E8DC</color>      <!-- Verde pálido, botones claros -->
+
+    <!-- Fondo modo claro -->
+    <color name="clank_background_light">#FFFCF8</color>  <!-- Blanco cálido -->
+
+    <!-- Fondo modo oscuro -->
+    <color name="clank_background_dark">#1A2F23</color>   <!-- Verde muy oscuro -->
+
+    <!--Capa oscura-->
+    <color name="color_sombra_popup">#66000000</color>
+
+    <color name="color_error">#ffb3261e</color>
+
 </resources>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/item_instruccion_margin_bottom"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvNumeroInstruccion"
+            android:layout_width="@dimen/item_instruccion_numero_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_instruccion_numero_margin_top"
+            android:fontFamily="@font/poppins_family"
+            android:gravity="center"
+            android:text="1."
+            android:textColor="@color/color_negrita"
+            android:textSize="@dimen/item_instruccion_text_size"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etTextoInstruccion"
+            android:layout_width="@dimen/layout_weight_zero"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_instruccion_input_margin_start"
+            android:layout_weight="1"
+            android:background="@drawable/bg_input"
+            android:fontFamily="@font/poppins_family"
+            android:gravity="top|start"
+            android:hint="@string/crear_hint_instruccion"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="2"
+            android:paddingHorizontal="@dimen/item_instruccion_input_padding_horizontal"
+            android:paddingVertical="@dimen/item_instruccion_input_padding_vertical"
+            android:textColor="@color/black"
+            android:textColorHint="@color/color_circulo_opciones"
+            android:textSize="@dimen/item_instruccion_text_size" />
+
+        <ImageButton
+            android:id="@+id/btnEliminarInstruccion"
+            android:layout_width="@dimen/item_instruccion_boton_size"
+            android:layout_height="@dimen/item_instruccion_boton_size"
+            android:layout_marginStart="@dimen/item_instruccion_boton_margin_start"
+            android:layout_marginTop="@dimen/item_instruccion_boton_margin_top"
+            android:background="@drawable/bg_input"
+            android:padding="@dimen/item_instruccion_boton_padding"
+            android:src="@drawable/ic_delete_inactivo"
+            app:tint="@color/color_clank_activo" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/item_instruccion_imagen_contenedor_margin_start"
+        android:layout_marginTop="@dimen/item_instruccion_imagen_contenedor_margin_top">
+
+        <LinearLayout
+            android:id="@+id/llBotonImagenInstruccion"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/item_instruccion_add_foto_height"
+            android:background="@drawable/bg_input"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/item_instruccion_add_foto_padding_horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/item_instruccion_add_foto_icon_size"
+                android:layout_height="@dimen/item_instruccion_add_foto_icon_size"
+                android:src="@drawable/ic_imagen"
+                app:tint="@color/color_circulo_opciones" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/item_instruccion_add_foto_text_margin_start"
+                android:fontFamily="@font/poppins_family"
+                android:text="@string/crear_anyadir_foto_paso"
+                android:textColor="@color/color_circulo_opciones"
+                android:textSize="@dimen/item_instruccion_add_foto_text_size" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivPreviewInstruccion"
+            android:layout_width="@dimen/item_instruccion_preview_width"
+            android:layout_height="@dimen/item_instruccion_preview_height"
+            android:background="@drawable/bg_input"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/clank_background_light"
+  android:orientation="vertical">
+
+  <!-- cabecera de usuario -->
+  <include
+      android:id="@+id/cabeceraUsuario"
+      layout="@layout/item_cabecera_usuario" />
+
+  <!-- tarjeta clank -->
+  <include
+    android:id="@+id/tarjeta"
+    layout="@layout/tarjeta_clank"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+</LinearLayout>

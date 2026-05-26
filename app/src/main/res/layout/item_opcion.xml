@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/etiquetaOpcion"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hoja_opcion_altura"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/hoja_opcion_padding_horizontal"
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/hoja_opcion_text_size"
+        android:fontFamily="@font/poppins_semibold" />
+
+    <View
+        android:id="@+id/separador"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hoja_opcion_separador_altura"
+        android:background="@color/clank_background_light" />
+
+</LinearLayout>

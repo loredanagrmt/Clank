@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_fondo_popup"
+    android:paddingStart="@dimen/popup_padding_horizontal"
+    android:paddingTop="@dimen/popup_padding_superior"
+    android:paddingEnd="@dimen/popup_padding_horizontal"
+    android:paddingBottom="@dimen/popup_padding_inferior">
+
+    <TextView
+        android:id="@+id/tvTituloPopup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_semibold"
+        android:gravity="center"
+        android:lineSpacingExtra="0dp"
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/popup_tamanyo_titulo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgIconoPopup"
+        android:layout_width="@dimen/popup_tamanyo_fondo_icono"
+        android:layout_height="@dimen/popup_tamanyo_fondo_icono"
+        android:layout_marginTop="@dimen/popup_espacio_titulo_icono"
+        android:background="@drawable/bg_circulo_opciones_inactivo"
+        android:contentDescription="@string/popup_icono_desc"
+        android:padding="@dimen/popup_padding_icono"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_usuario_inactivo"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloPopup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvMensajePopup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/popup_espacio_icono_mensaje"
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center"
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/popup_tamanyo_mensaje"
+        app:layout_constraintTop_toBottomOf="@id/imgIconoPopup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/contenedorBotonPopup"
+        android:layout_width="@dimen/popup_ancho_boton"
+        android:layout_height="@dimen/popup_alto_boton"
+        android:layout_marginTop="@dimen/popup_espacio_mensaje_boton"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvMensajePopup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/btnPopupAccion"
+            layout="@layout/bt_secundario"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,3 +33,22 @@ google-services.json
 
 # Compiled class file
 *.class
+
+# Node
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+
+# Credenciales locales / Firebase Admin
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# Backups locales
+clank_backup/
+
+# Archivos Node locales no usados por la app Android
+package.json
+package-lock.json

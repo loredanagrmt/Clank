@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/clank_background_light">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollCambiarContrasenya"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/contenedorBotonCambiarContrasenya"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contenedorCambiarContrasenya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/cambiar_contrasenya_padding_horizontal"
+            android:paddingTop="@dimen/cambiar_contrasenya_padding_superior"
+            android:paddingEnd="@dimen/cambiar_contrasenya_padding_horizontal"
+            android:paddingBottom="@dimen/cambiar_contrasenya_padding_inferior">
+
+            <TextView
+                android:id="@+id/tvTituloCambiarContrasenya"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/cambiar_contrasenya_titulo_contenido"
+                android:textColor="@color/color_negrita"
+                android:textSize="@dimen/cambiar_contrasenya_texto_titulo" />
+
+            <TextView
+                android:id="@+id/tvDescripcionCambiarContrasenya"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/cambiar_contrasenya_margen_descripcion"
+                android:fontFamily="@font/poppins_regular"
+                android:lineSpacingExtra="@dimen/cambiar_contrasenya_interlineado_descripcion"
+                android:text="@string/cambiar_contrasenya_descripcion"
+                android:textColor="@color/color_negrita"
+                android:textSize="@dimen/cambiar_contrasenya_texto_descripcion" />
+
+            <include
+                android:id="@+id/inputContrasenyaActual"
+                layout="@layout/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/cambiar_contrasenya_margen_primer_input" />
+
+            <include
+                android:id="@+id/inputNuevaContrasenya"
+                layout="@layout/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/inputRepetirContrasenya"
+                layout="@layout/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/contenedorBotonCambiarContrasenya"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/cambiar_contrasenya_footer_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/btContinuarCambiarContrasenya"
+            layout="@layout/bt_principal"
+            android:layout_width="@dimen/cambiar_contrasenya_boton_width"
+            android:layout_height="@dimen/cambiar_contrasenya_boton_height"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/capaPopup"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/color_sombra_popup"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/popup"
+                layout="@layout/pop_up"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/popup_margen_horizontal"
+                android:layout_marginEnd="@dimen/popup_margen_horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
