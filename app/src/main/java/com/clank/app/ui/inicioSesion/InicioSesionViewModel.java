@@ -68,7 +68,7 @@ public class InicioSesionViewModel extends ViewModel {
                         );
                     } else {
                         resultadoInicioSesion.postValue(
-                                Recurso.error("El correo o la contrasenya son incorrectos")
+                                Recurso.error("El correo o la contraseña son incorrectos")
                         );
                     }
                 });

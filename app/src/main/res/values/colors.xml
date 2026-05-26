@@ -21,4 +21,6 @@
     <!--Capa oscura-->
     <color name="color_sombra_popup">#66000000</color>
 
+    <color name="color_error">#ffb3261e</color>
+
 </resources>

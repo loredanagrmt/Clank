@@ -15,6 +15,7 @@
     <string name="crear_descartar_clank_titulo">Clank verwerfen</string>
     <string name="crear_descartar_clank_mensaje">Möchtest du diesen Clank wirklich verwerfen? Alle eingegebenen Daten gehen verloren.</string>
     <string name="crear_descartar_clank_confirmar">Verwerfen</string>
+    <string name="reintentar">Erneut versuchen</string>
     <!--  Crear - hoja publicar Clank  -->
     <string name="crear_publicar_clank_titulo">Clank veröffentlichen</string>
     <string name="crear_publicar_clank_mensaje">Glückwunsch! Bist du bereit, deinen Clank zu veröffentlichen?</string>
@@ -55,6 +56,7 @@
     <string name="confirmar_contrasenya">Bestätige dein Passwort</string>
     <string name="registrarme">Konto erstellen</string>
     <string name="ya_tienes_cuenta">Schon ein Konto? Hier klicken</string>
+    <string name="error_inicio_sesion_google">Anmeldung mit Google fehlgeschlagen</string>
     <!--  Errores de registro  -->
     <string name="registro_error_campos_vacios">Fülle alle Felder aus, um fortzufahren</string>
     <string name="registro_error_nombre_vacio">Gib deinen Namen ein</string>
@@ -144,6 +146,7 @@
     <!--  Detalle Clank  -->
     <string name="detalle_titulo">Deine Clanks</string>
     <string name="detalle_campo_detalles">Details</string>
+    <string name="detalle_error_eliminar_clank">Der Clank konnte nicht gelöscht werden. Bitte erneut versuchen.</string>
     <!--  Tarjeta Clank  -->
     <string name="tarjeta_portada_desc">Cover des Clanks</string>
     <string name="tarjeta_opciones_desc">Clank-Optionen</string>

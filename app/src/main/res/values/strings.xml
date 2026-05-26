@@ -19,6 +19,7 @@
     <string name="crear_descartar_clank_titulo">Descartar Clank</string>
     <string name="crear_descartar_clank_mensaje">¿Seguro que quieres descartar este Clank? Se perderán todos los datos introducidos.</string>
     <string name="crear_descartar_clank_confirmar">Descartar</string>
+    <string name="reintentar">Reintentar</string>
 
     <!-- Crear - hoja publicar Clank -->
     <string name="crear_publicar_clank_titulo">Publicar Clank</string>
@@ -54,6 +55,7 @@
     <string name="olvido_contrasenya">¿Olvidaste tu contraseña? Click aquí</string>
     <string name="o_inicia_con">O inicia sesión con:</string>
     <string name="aun_sin_cuenta">¿Aún sin cuenta? Click aquí</string>
+    <string name="error_inicio_sesion_google">No se pudo iniciar sesión con Google</string>
 
     <!-- Registro -->
     <string name="registro_titulo">Registro</string>
@@ -163,6 +165,7 @@
     <!-- Detalle Clank -->
     <string name="detalle_titulo">Tus Clanks</string>
     <string name="detalle_campo_detalles">Detalles</string>
+    <string name="detalle_error_eliminar_clank">No se pudo eliminar el clank. Inténtalo de nuevo.</string>
 
     <!-- Tarjeta Clank -->
     <string name="tarjeta_portada_desc">Portada del Clank</string>
@@ -201,7 +204,7 @@
     <string name="perfil_eliminar_clank_confirmar">Eliminar</string>
 
     <string name="perfil_clank_eliminado">Clank eliminado</string>
-    <string name="perfil_error_eliminar_clank">No se ha podido eliminar el Clank</string>
+    <string name="perfil_error_eliminar_clank">No se ha podido eliminar el Clank Inténtalo de nuevo.</string>
 
     <!-- Feed -->
     <string name="feed_vacio">Aún no hay publicaciones</string>
@@ -240,8 +243,8 @@
 
   <!-- Likes -->
 <string name="tarjeta_likes_desc">Likes</string>
- 
- 
+
+
 <!-- Olvide Contrasenya -->
 <string name="olvide_contrasenya_titulo_navbar">He olvidado mi contraseña</string>
 <string name="olvide_contrasenya_saludo">¡Hola!</string>
@@ -250,25 +253,25 @@
 <string name="olvide_contrasenya_hint_correo">ejemplo@ejemplo.com</string>
 <string name="olvide_contrasenya_boton_continuar">Continuar</string>
 <string name="olvide_contrasenya_error_correo_no_registrado">No existe ninguna cuenta registrada con este correo.</string>
- 
+
 <string name="olvide_contrasenya_error_correo_vacio">Introduce tu correo electrónico.</string>
 <string name="olvide_contrasenya_error_correo_invalido">Introduce un correo electrónico válido.</string>
 <string name="olvide_contrasenya_error_envio_codigo">No se ha podido enviar el código. Inténtalo de nuevo.</string>
- 
- 
+
+
 <!-- Codigo recuperar contrasenya -->
 <string name="codigo_recuperacion_contrasenya_titulo_navbar">He olvidado mi contraseña</string>
 <string name="codigo_recuperacion_contrasenya_titulo_contenido">¡Tienes un correo!</string>
 <string name="codigo_recuperacion_contrasenya_descripcion">Te hemos enviado un código de verificación a tu correo electrónico. Revisa tu bandeja de entrada e introdúcelo justo debajo.</string>
 <string name="codigo_recuperacion_contrasenya_boton_continuar">Continuar</string>
- 
+
 <string name="codigo_recuperacion_contrasenya_error_codigo_incompleto">Introduce los 6 dígitos del código.</string>
 <string name="codigo_recuperacion_contrasenya_error_codigo_invalido">El código introducido no es correcto.</string>
 <string name="codigo_recuperacion_contrasenya_error_codigo_caducado">El código ha caducado. Solicita uno nuevo.</string>
 <string name="codigo_recuperacion_contrasenya_error_demasiados_intentos">Has superado el número máximo de intentos.</string>
 <string name="codigo_recuperacion_contrasenya_error_general">No se ha podido verificar el código. Inténtalo de nuevo.</string>
- 
- 
+
+
 <!-- Nueva contrasenya -->
 <string name="nueva_contrasenya_titulo_navbar">Crear nueva contraseña</string>
 <string name="nueva_contrasenya_titulo_contenido">Crea una nueva contraseña</string>
@@ -276,12 +279,12 @@
 <string name="nueva_contrasenya_label_nueva">Nueva contraseña</string>
 <string name="nueva_contrasenya_label_repetir">Repite tu nueva contraseña</string>
 <string name="nueva_contrasenya_boton_continuar">Continuar</string>
- 
+
 <string name="popup_nueva_contrasenya_titulo">¡Contraseña actualizada!</string>
 <string name="popup_nueva_contrasenya_mensaje">Tu contraseña se ha cambiado correctamente. Ya puedes iniciar sesión con la nueva contraseña.</string>
 <string name="popup_nueva_contrasenya_boton">Ir a inicio de sesión</string>
 <string name="popup_nueva_contrasenya_icono_desc">Icono de confirmación de cambio de contraseña</string>
- 
+
 <string name="nueva_contrasenya_error_vacia">Introduce una nueva contraseña.</string>
 <string name="nueva_contrasenya_error_minimo_caracteres">La contraseña debe tener al menos 6 caracteres.</string>
 <string name="nueva_contrasenya_error_repetir_vacia">Repite la nueva contraseña.</string>
@@ -290,27 +293,27 @@
 <string name="nueva_contrasenya_error_token_caducado">La recuperación ha caducado. Solicita un nuevo código.</string>
 <string name="nueva_contrasenya_error_datos_recuperacion">No se han podido recuperar los datos del proceso. Vuelve a empezar.</string>
 <string name="nueva_contrasenya_error_general">No se ha podido actualizar la contraseña. Inténtalo de nuevo.</string>
- 
- 
+
+
 <!-- Cambiar contraseña -->
 <string name="cambiar_contrasenya_titulo_navbar">Cambiar Contraseña</string>
- 
+
 <string name="cambiar_contrasenya_titulo_contenido">Introduce Tu Nueva Contraseña</string>
- 
+
 <string name="cambiar_contrasenya_descripcion">
 
     Introduce una contraseña de al menos 6 caracteres.\nSi no recuerdas tu contraseña actual, haz clic en “He olvidado mi contraseña”.
 </string>
- 
+
 <string name="cambiar_contrasenya_label_actual">Contraseña Actual</string>
 <string name="cambiar_contrasenya_label_nueva">Nueva Contraseña</string>
 <string name="cambiar_contrasenya_label_repetir">Repite Tu Nueva Contraseña</string>
- 
+
 <string name="cambiar_contrasenya_recordar_dispositivo">Recuérdame en este dispositivo</string>
 <string name="cambiar_contrasenya_he_olvidado">He olvidado mi contraseña</string>
- 
+
 <string name="cambiar_contrasenya_boton_continuar">Continuar</string>
- 
+
 <string name="cambiar_contrasenya_error_actual_vacia">Introduce tu contraseña actual</string>
 <string name="cambiar_contrasenya_error_nueva_vacia">Introduce una nueva contraseña</string>
 <string name="cambiar_contrasenya_error_repetir_vacia">Repite la nueva contraseña</string>
@@ -318,26 +321,26 @@
 <string name="cambiar_contrasenya_error_no_coinciden">Las contraseñas no coinciden</string>
 <string name="cambiar_contrasenya_error_actual_incorrecta">La contraseña actual no es correcta</string>
 <string name="cambiar_contrasenya_error_general">No se ha podido cambiar la contraseña</string>
- 
+
 <string name="cambiar_contrasenya_exito">Contraseña actualizada correctamente</string>
- 
+
 <string name="descripcion_mostrar_contrasenya">Mostrar contraseña</string>
 <string name="descripcion_ocultar_contrasenya">Ocultar contraseña</string>
- 
- 
+
+
 <!-- Popup cambiar contraseña -->
 <string name="popup_cambiar_contrasenya_titulo">¡Listo!</string>
- 
+
 <string name="popup_cambiar_contrasenya_mensaje">
 
     La contraseña se ha actualizado con éxito.\nHemos iniciado sesión con tu nueva contraseña.
 </string>
- 
+
 <string name="popup_cambiar_contrasenya_boton">Volver a Ajustes</string>
- 
+
 <string name="popup_cambiar_contrasenya_icono_desc">
 
     Confirmación de contraseña actualizada
 </string>
- 
+
 </resources>

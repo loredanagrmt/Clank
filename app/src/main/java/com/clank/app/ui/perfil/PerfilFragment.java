@@ -437,19 +437,32 @@ public class PerfilFragment extends Fragment {
         );
     }
 
-    private void eliminarClankDesdePerfil(String clankId) {
-        viewModel.eliminarClank(clankId)
-                .addOnSuccessListener(unused -> {
-                    if (!isAdded()) {
-                        return;
-                    }
-                })
-                .addOnFailureListener(error -> {
-                    if (!isAdded()) {
-                        return;
-                    }
-                });
-    }
+  private void eliminarClankDesdePerfil(String clankId) {
+    viewModel.eliminarClank(clankId)
+      .addOnSuccessListener(unused -> {
+        if (!isAdded()) return;
+      })
+      .addOnFailureListener(error -> {
+        if (!isAdded()) return;
+        mostrarErrorEliminarClank(clankId);
+      });
+  }
+
+  private void mostrarErrorEliminarClank(String clankId) {
+    HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
+      getString(R.string.perfil_eliminar_clank_titulo),
+      getString(R.string.perfil_error_eliminar_clank),
+      getString(R.string.cancelar),
+      getString(R.string.reintentar),
+      null,
+      () -> eliminarClankDesdePerfil(clankId)
+    );
+
+    hoja.show(
+      getParentFragmentManager(),
+      "hoja_error_eliminar_clank_perfil"
+    );
+  }
 
     private void mostrarCargandoPerfil() {
         if (binding == null) {
