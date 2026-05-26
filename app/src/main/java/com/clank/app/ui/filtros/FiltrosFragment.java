@@ -70,6 +70,7 @@ public class FiltrosFragment extends Fragment {
     private void observarCategorias() {
         viewModel.categorias.observe(getViewLifecycleOwner(), categorias -> {
             binding.chipGroupCategorias.removeAllViews();
+            binding.tvErrorFiltros.setVisibility(View.GONE);
 
             for (Categoria cat : categorias) {
                 Button chip = (Button) LayoutInflater.from(requireContext())
@@ -101,6 +102,12 @@ public class FiltrosFragment extends Fragment {
                 binding.chipGroupCategorias.addView(chip);
             }
         });
+
+          viewModel.getErrorCargando().observe(getViewLifecycleOwner(), hayError -> {
+            if (Boolean.TRUE.equals(hayError)) {
+              binding.tvErrorFiltros.setVisibility(View.VISIBLE);
+            }
+          });
     }
 
     ///////////////////////// navegación /////////////////////////
