@@ -6,14 +6,13 @@ import androidx.lifecycle.ViewModel;
 
 import com.clank.app.data.model.Categoria;
 import com.clank.app.data.repository.CategoriaRepository;
+import com.clank.app.util.TraductorCategorias;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import com.clank.app.util.TraductorCategorias;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -22,6 +21,8 @@ public class FiltrosViewModel extends ViewModel {
 
     private final MutableLiveData<List<Categoria>> _categorias = new MutableLiveData<>();
     public LiveData<List<Categoria>> categorias = _categorias;
+
+    private final MutableLiveData<Boolean> errorCargando = new MutableLiveData<>(false);
 
     private final CategoriaRepository categoriaRepository;
     private final TraductorCategorias traductorCategorias;
@@ -34,20 +35,37 @@ public class FiltrosViewModel extends ViewModel {
         cargarCategorias();
     }
 
+    public LiveData<Boolean> getErrorCargando() {
+        return errorCargando;
+    }
+
     private void cargarCategorias() {
+        errorCargando.setValue(false);
+
         categoriaRepository.getTodas()
                 .addOnSuccessListener(snapshot -> {
                     List<Categoria> lista = new ArrayList<>();
-                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
 
-                        Categoria cat = doc.toObject(Categoria.class);
-                        if (cat != null) lista.add(cat);
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        Categoria categoria = doc.toObject(Categoria.class);
+
+                        if (categoria != null) {
+                            lista.add(categoria);
+                        }
                     }
+
                     traducirCategorias(lista);
                 })
-                .addOnFailureListener(e ->
-                        android.util.Log.e("FILTROS_DEBUG", "Error cargando categorías", e)
-                );
+                .addOnFailureListener(error -> {
+                    android.util.Log.e(
+                            "FILTROS_DEBUG",
+                            "Error cargando categorías",
+                            error
+                    );
+
+                    _categorias.setValue(new ArrayList<>());
+                    errorCargando.setValue(true);
+                });
     }
 
     private void traducirCategorias(List<Categoria> categoriasOriginales) {
@@ -55,11 +73,13 @@ public class FiltrosViewModel extends ViewModel {
                 convertirATuplas(categoriasOriginales);
 
         traductorCategorias.traducirSiProcede(categoriasParaTraducir)
-                .addOnSuccessListener(categoriasTraducidas ->
-                        _categorias.setValue(
-                                convertirACategorias(categoriasTraducidas)
-                        )
-                )
+                .addOnSuccessListener(categoriasTraducidas -> {
+                    errorCargando.setValue(false);
+
+                    _categorias.setValue(
+                            convertirACategorias(categoriasTraducidas)
+                    );
+                })
                 .addOnFailureListener(error -> {
                     android.util.Log.e(
                             "FILTROS_DEBUG",
@@ -67,7 +87,13 @@ public class FiltrosViewModel extends ViewModel {
                             error
                     );
 
-                    _categorias.setValue(categoriasOriginales);
+                    errorCargando.setValue(false);
+
+                    _categorias.setValue(
+                            categoriasOriginales != null
+                                    ? categoriasOriginales
+                                    : new ArrayList<>()
+                    );
                 });
     }
 
@@ -138,5 +164,4 @@ public class FiltrosViewModel extends ViewModel {
         super.onCleared();
         traductorCategorias.cerrar();
     }
-
 }

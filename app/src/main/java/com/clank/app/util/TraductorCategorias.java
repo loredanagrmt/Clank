@@ -24,21 +24,20 @@ public class TraductorCategorias {
 
     private static final String TAG = "TraductorCategorias";
     private static final String IDIOMA_BASE_CATEGORIAS = TranslateLanguage.SPANISH;
+
     private final Context contextoAplicacion;
-  private final LanguageIdentifier identificador;
+    private final LanguageIdentifier identificador;
 
-
-  @Inject
+    @Inject
     public TraductorCategorias(@ApplicationContext Context contextoAplicacion) {
         this.contextoAplicacion = contextoAplicacion;
-    this.identificador = LanguageIdentification.getClient();
+        this.identificador = LanguageIdentification.getClient();
     }
 
     public Task<List<String[]>> traducirSiProcede(List<String[]> categoriasOriginales) {
         List<String[]> categoriasSeguras = copiarCategorias(categoriasOriginales);
 
         if (categoriasSeguras.isEmpty()) {
-            Log.d(TAG, "No hay categorías para traducir.");
             return Tasks.forResult(categoriasSeguras);
         }
 
@@ -49,10 +48,8 @@ public class TraductorCategorias {
         String idiomaDestino =
                 TranslateLanguage.fromLanguageTag(etiquetaIdiomaDestino);
 
-        Log.d(TAG, "Idioma destino de categorías: " + etiquetaIdiomaDestino);
-
         if (idiomaDestino == null) {
-            Log.d(TAG, "Idioma destino no compatible con ML Kit.");
+            Log.d(TAG, "Idioma destino no compatible. No se traducen categorías.");
             return Tasks.forResult(categoriasSeguras);
         }
 
@@ -64,13 +61,8 @@ public class TraductorCategorias {
         String textoParaDetectar = construirTextoDeteccion(categoriasSeguras);
 
         if (textoParaDetectar.trim().isEmpty()) {
-            Log.d(TAG, "No hay texto útil en categorías. Se usa español como origen.");
-
-            return traducirCategorias(
-                    categoriasSeguras,
-                    IDIOMA_BASE_CATEGORIAS,
-                    idiomaDestino
-            );
+            Log.d(TAG, "No hay texto útil en categorías. No se traducen.");
+            return Tasks.forResult(categoriasSeguras);
         }
 
         return identificador.identifyLanguage(textoParaDetectar)
@@ -128,6 +120,7 @@ public class TraductorCategorias {
 
         return idiomaOrigen;
     }
+
     private Task<List<String[]>> traducirCategorias(
             List<String[]> categorias,
             String idiomaOrigen,
@@ -146,13 +139,15 @@ public class TraductorCategorias {
                 new DownloadConditions.Builder()
                         .build();
 
-        Log.d(TAG, "Descargando modelo para traducir categorías...");
-
         return traductor.downloadModelIfNeeded(condiciones)
                 .continueWithTask(tareaDescarga -> {
                     if (!tareaDescarga.isSuccessful()) {
-                        Log.e(TAG, "Error preparando modelo de categorías",
-                                tareaDescarga.getException());
+                        Log.e(
+                                TAG,
+                                "Error descargando modelo de traducción.",
+                                tareaDescarga.getException()
+                        );
+
                         traductor.close();
                         return Tasks.forResult(categorias);
                     }
@@ -204,7 +199,6 @@ public class TraductorCategorias {
                                 }
 
                                 traductor.close();
-                                Log.d(TAG, "Traducción de categorías finalizada.");
 
                                 return categoriasTraducidas;
                             });
@@ -228,6 +222,12 @@ public class TraductorCategorias {
                             && tarea.getResult() != null) {
                         return tarea.getResult();
                     }
+
+                    Log.e(
+                            TAG,
+                            "Error traduciendo texto de categoría. Se mantiene el texto original.",
+                            tarea.getException()
+                    );
 
                     return textoSeguro;
                 });
@@ -284,7 +284,8 @@ public class TraductorCategorias {
 
         return texto.toString();
     }
-  public void cerrar() {
-    identificador.close();
-  }
+
+    public void cerrar() {
+        identificador.close();
+    }
 }

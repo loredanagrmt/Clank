@@ -15,6 +15,7 @@
     <string name="crear_descartar_clank_titulo">Scarta Clank</string>
     <string name="crear_descartar_clank_mensaje">Sei sicuro di voler scartare questo Clank? Tutti i dati inseriti andranno persi.</string>
     <string name="crear_descartar_clank_confirmar">Scarta</string>
+    <string name="reintentar">Riprova</string>
     <!--  Crear - hoja publicar Clank  -->
     <string name="crear_publicar_clank_titulo">Pubblica Clank</string>
     <string name="crear_publicar_clank_mensaje">Congratulazioni! Sei pronto a pubblicare il tuo Clank?</string>
@@ -44,6 +45,7 @@
     <string name="olvido_contrasenya">Hai dimenticato la password? Clicca qui</string>
     <string name="o_inicia_con">Oppure accedi con:</string>
     <string name="aun_sin_cuenta">Non hai ancora un account? Clicca qui</string>
+    <string name="error_inicio_sesion_google">Impossibile accedere con Google</string>
     <!--  Registro  -->
     <string name="registro_titulo">Registrazione</string>
     <string name="nombre_completo">Nome</string>
@@ -144,6 +146,7 @@
     <!--  Detalle Clank  -->
     <string name="detalle_titulo">I tuoi Clanks</string>
     <string name="detalle_campo_detalles">Dettagli</string>
+    <string name="detalle_error_eliminar_clank">Impossibile eliminare il clank. Riprova.</string>
     <!--  Tarjeta Clank  -->
     <string name="tarjeta_portada_desc">Copertina del Clank</string>
     <string name="tarjeta_opciones_desc">Opzioni del Clank</string>

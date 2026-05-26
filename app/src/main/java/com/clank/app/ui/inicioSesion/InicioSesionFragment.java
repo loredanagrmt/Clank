@@ -56,7 +56,7 @@ public class InicioSesionFragment extends Fragment {
                             GoogleSignInAccount cuenta = tarea.getResult(ApiException.class);
                             vistaModelo.iniciarSesionGoogle(cuenta);
                         } catch (ApiException error) {
-                            mostrarMensaje("No se pudo iniciar sesión con Google");
+                          mostrarMensaje(getString(R.string.error_inicio_sesion_google));
                         }
                     }
             );
