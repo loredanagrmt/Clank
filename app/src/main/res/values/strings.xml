@@ -184,6 +184,7 @@
     <string name="editar_perfil_titulo">Editar Tu Perfil</string>
     <string name="editar_perfil_guardar">Guardar Cambios</string>
     <string name="editar_perfil_cambiar_contrasenya">Cambiar Contraseña</string>
+    <string name="cambiar_contrasenya_olvide_contrasenya">He olvidado mi contraseña</string>
 
     <!-- Popup editar perfil -->
     <string name="popup_editar_perfil_titulo">¡Perfil actualizado!</string>

@@ -296,4 +296,20 @@
   <dimen name="bottombar_ancho_indicador">16dp</dimen>
   <dimen name="bottombar_alto_indicador">2dp</dimen>
   <dimen name="bottombar_margen_superior_indicador">3dp</dimen>
+
+  <!-- Crear Clank -->
+  <dimen name="crear_acciones_padding_top">16dp</dimen>
+  <dimen name="crear_acciones_padding_bottom">16dp</dimen>
+  <dimen name="crear_icono_anyadir_portada_size">32dp</dimen>
+  <dimen name="crear_error_margin_top">4dp</dimen>
+  <dimen name="crear_descripcion_padding_vertical">12dp</dimen>
+
+  <!-- Input reutilizable -->
+  <dimen name="input_reutilizable_altura">56dp</dimen>
+  <dimen name="input_reutilizable_margin_bottom">12dp</dimen>
+  <dimen name="input_reutilizable_titulo_margin_bottom">6dp</dimen>
+
+  <!-- Espaciados técnicos -->
+  <dimen name="layout_weight_zero">0dp</dimen>
+  <dimen name="space_tecnico_minimo">8dp</dimen>
 </resources>

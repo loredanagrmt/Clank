@@ -55,6 +55,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/cambiar_contrasenya_margen_primer_input" />
 
+            <TextView
+                android:id="@+id/tvOlvideContrasenya"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/cambiar_contrasenya_olvide_contrasenya"
+                android:textColor="@color/color_clank_activo"
+                android:textSize="14sp" />
+
             <include
                 android:id="@+id/inputNuevaContrasenya"
                 layout="@layout/input"
