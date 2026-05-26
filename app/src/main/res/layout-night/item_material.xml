@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/etCantidad"
+        android:layout_width="54dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_input"
+        android:fontFamily="@font/poppins_family"
+        android:gravity="center"
+        android:hint="1"
+        android:inputType="numberDecimal"
+        android:paddingHorizontal="8dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/color_circulo_opciones"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/etNombreElemento"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_input"
+        android:fontFamily="@font/poppins_family"
+        android:hint="@string/crear_hint_material"
+        android:inputType="textCapSentences"
+        android:paddingHorizontal="14dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/color_circulo_opciones"
+        android:textSize="13sp" />
+
+    <ImageButton
+        android:id="@+id/btnEliminarElemento"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_input"
+        android:padding="9dp"
+        android:src="@drawable/ic_delete_inactivo"
+        app:tint="@color/color_clank_activo" />
+
+</LinearLayout>
