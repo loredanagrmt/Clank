@@ -18,8 +18,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import android.util.Log;
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -36,7 +34,6 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
     private final AuthRepository repositorioAutenticacion;
     private final UsuarioRepository repositorioUsuario;
     private final ImagenRepository repositorioImagen;
-    private static final String TAG = "CompletarPerfilVM";
     private final MutableLiveData<Recurso<Void>> estado = new MutableLiveData<>();
 
     @Inject
@@ -112,12 +109,6 @@ public class CompletarPerfilViewModel extends AndroidViewModel {
                     }
                 })
                 .addOnFailureListener(error -> {
-                    Log.e(
-                            TAG,
-                            "Error comprobando usuarioClank en Firestore: " + usuarioClankNormalizado,
-                            error
-                    );
-
                     estado.setValue(Recurso.error(ERROR_GENERICO));
                 });
     }
