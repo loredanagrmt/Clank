@@ -16,19 +16,18 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/crear_padding_bottom">
 
-            <!-- Botones publicar y boceto-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/screen_margin_horizontal"
-                android:paddingTop="4dp"
-                android:paddingBottom="20dp">
+                android:paddingTop="@dimen/crear_acciones_padding_top"
+                android:paddingBottom="@dimen/crear_acciones_padding_bottom">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPublicar"
                     style="@style/Widget.Clank.BotonPrincipal"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/layout_weight_zero"
                     android:layout_height="@dimen/crear_btn_publicar_height"
                     android:layout_marginEnd="@dimen/crear_btn_publicar_gap"
                     android:layout_weight="1"
@@ -37,7 +36,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnGuardarBoceto"
                     style="@style/Widget.Clank.BotonPrincipal"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/layout_weight_zero"
                     android:layout_height="@dimen/crear_btn_publicar_height"
                     android:layout_marginStart="@dimen/crear_btn_publicar_gap"
                     android:layout_weight="1"
@@ -45,7 +44,6 @@
 
             </LinearLayout>
 
-            <!--  Portada  -->
             <FrameLayout
                 android:id="@+id/framePortada"
                 android:layout_width="match_parent"
@@ -71,8 +69,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:layout_width="@dimen/crear_icono_anyadir_portada_size"
+                        android:layout_height="@dimen/crear_icono_anyadir_portada_size"
                         android:src="@drawable/ic_mas" />
 
                     <TextView
@@ -93,14 +91,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/crear_error_margin_top"
                 android:fontFamily="@font/poppins_family"
                 android:text="@string/crear_error_portada_vacia"
                 android:textColor="?attr/colorError"
                 android:textSize="@dimen/text_body_small"
                 android:visibility="gone" />
 
-            <!--  Título  -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_primera_seccion_margin_top"
@@ -109,7 +106,7 @@
             <EditText
                 android:id="@+id/etTitulo"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/input_reutilizable_altura"
                 android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
                 android:layout_marginTop="@dimen/crear_campo_margin_top"
                 android:background="@drawable/bg_input"
@@ -123,7 +120,6 @@
                 android:textColorHint="@color/color_circulo_opciones"
                 android:textSize="@dimen/text_body" />
 
-            <!--  Descripción del clank  -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_segunda_seccion_margin_top"
@@ -142,12 +138,11 @@
                 android:inputType="textMultiLine|textCapSentences"
                 android:minLines="4"
                 android:paddingHorizontal="@dimen/space_l"
-                android:paddingVertical="14dp"
+                android:paddingVertical="@dimen/crear_descripcion_padding_vertical"
                 android:textColor="@color/black"
                 android:textColorHint="@color/color_circulo_opciones"
                 android:textSize="@dimen/text_body" />
 
-            <!--  Tiempo  -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_primera_seccion_margin_top"
@@ -162,8 +157,8 @@
                 android:orientation="horizontal">
 
                 <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
                     android:layout_weight="2" />
 
                 <ImageButton
@@ -178,8 +173,8 @@
                     app:tint="@color/color_texto_inactivo" />
 
                 <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
                     android:layout_weight="1.5" />
 
                 <ImageButton
@@ -194,8 +189,8 @@
                     app:tint="@color/color_texto_inactivo" />
 
                 <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
                     android:layout_weight="1.5" />
 
                 <ImageButton
@@ -210,8 +205,8 @@
                     app:tint="@color/color_texto_inactivo" />
 
                 <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
+                    android:layout_width="@dimen/layout_weight_zero"
+                    android:layout_height="@dimen/space_tecnico_minimo"
                     android:layout_weight="2" />
 
             </LinearLayout>
@@ -221,14 +216,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/crear_error_margin_top"
                 android:fontFamily="@font/poppins_family"
                 android:text="@string/crear_error_tiempo"
                 android:textColor="?attr/colorError"
                 android:textSize="@dimen/text_body_small"
                 android:visibility="gone" />
 
-            <!--  materiales  -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
@@ -258,7 +252,6 @@
 
             </LinearLayout>
 
-            <!--  Herramientas  -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
@@ -288,7 +281,6 @@
 
             </LinearLayout>
 
-            <!--  Instrucciones  -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
@@ -318,7 +310,6 @@
 
             </LinearLayout>
 
-            <!--  Categorias  -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
@@ -338,7 +329,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!--overlay de carga -->
     <FrameLayout
         android:id="@+id/overlayCargando"
         android:layout_width="match_parent"

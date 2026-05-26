@@ -114,7 +114,6 @@
                 android:layout_height="@dimen/tarjeta_icono_size"
                 android:src="@drawable/ic_like_inactivo"
                 android:contentDescription="@string/tarjeta_likes_desc" />
-
         </LinearLayout>
 
     </LinearLayout>
