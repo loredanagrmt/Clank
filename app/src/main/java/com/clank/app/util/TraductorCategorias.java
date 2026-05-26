@@ -1,6 +1,8 @@
 package com.clank.app.util;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.mlkit.common.model.DownloadConditions;
@@ -21,26 +23,21 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 public class TraductorCategorias {
 
     private static final String TAG = "TraductorCategorias";
+    private static final String IDIOMA_BASE_CATEGORIAS = TranslateLanguage.SPANISH;
+
     private final Context contextoAplicacion;
-  private final LanguageIdentifier identificador;
+    private final LanguageIdentifier identificador;
 
-
-  @Inject
+    @Inject
     public TraductorCategorias(@ApplicationContext Context contextoAplicacion) {
         this.contextoAplicacion = contextoAplicacion;
-    this.identificador = LanguageIdentification.getClient();
+        this.identificador = LanguageIdentification.getClient();
     }
 
     public Task<List<String[]>> traducirSiProcede(List<String[]> categoriasOriginales) {
         List<String[]> categoriasSeguras = copiarCategorias(categoriasOriginales);
 
         if (categoriasSeguras.isEmpty()) {
-            return Tasks.forResult(categoriasSeguras);
-        }
-
-        String textoParaDetectar = construirTextoDeteccion(categoriasSeguras);
-
-        if (textoParaDetectar.trim().isEmpty()) {
             return Tasks.forResult(categoriasSeguras);
         }
 
@@ -52,32 +49,47 @@ public class TraductorCategorias {
                 TranslateLanguage.fromLanguageTag(etiquetaIdiomaDestino);
 
         if (idiomaDestino == null) {
+            Log.d(TAG, "Idioma destino no compatible. No se traducen categorías.");
+            return Tasks.forResult(categoriasSeguras);
+        }
+
+        if (IDIOMA_BASE_CATEGORIAS.equals(idiomaDestino)) {
+            Log.d(TAG, "Las categorías ya están en español. No se traducen.");
+            return Tasks.forResult(categoriasSeguras);
+        }
+
+        String textoParaDetectar = construirTextoDeteccion(categoriasSeguras);
+
+        if (textoParaDetectar.trim().isEmpty()) {
+            Log.d(TAG, "No hay texto útil en categorías. No se traducen.");
             return Tasks.forResult(categoriasSeguras);
         }
 
         return identificador.identifyLanguage(textoParaDetectar)
                 .continueWithTask(tareaDeteccion -> {
-                    if (!tareaDeteccion.isSuccessful()) {
-                                tareaDeteccion.getException();
-                        return Tasks.forResult(categoriasSeguras);
-                    }
+                    String idiomaOrigen = IDIOMA_BASE_CATEGORIAS;
 
-                    String etiquetaIdiomaOrigen =
-                            tareaDeteccion.getResult();
+                    if (tareaDeteccion.isSuccessful()) {
+                        String etiquetaIdiomaOrigen = tareaDeteccion.getResult();
 
-                    if (etiquetaIdiomaOrigen == null
-                            || "und".equalsIgnoreCase(etiquetaIdiomaOrigen)) {
-                        return Tasks.forResult(categoriasSeguras);
-                    }
+                        Log.d(TAG, "Idioma detectado en categorías: " + etiquetaIdiomaOrigen);
 
-                    String idiomaOrigen =
-                            TranslateLanguage.fromLanguageTag(etiquetaIdiomaOrigen);
+                        String idiomaDetectado =
+                                resolverIdiomaOrigen(etiquetaIdiomaOrigen);
 
-                    if (idiomaOrigen == null) {
-                        return Tasks.forResult(categoriasSeguras);
+                        if (idiomaDetectado != null) {
+                            idiomaOrigen = idiomaDetectado;
+                        }
+                    } else {
+                        Log.e(
+                                TAG,
+                                "Error detectando idioma de categorías. Se usa español como origen.",
+                                tareaDeteccion.getException()
+                        );
                     }
 
                     if (idiomaOrigen.equals(idiomaDestino)) {
+                        Log.d(TAG, "Idioma origen y destino coinciden. No se traducen categorías.");
                         return Tasks.forResult(categoriasSeguras);
                     }
 
@@ -87,6 +99,26 @@ public class TraductorCategorias {
                             idiomaDestino
                     );
                 });
+    }
+
+    private String resolverIdiomaOrigen(String etiquetaIdiomaOrigen) {
+        if (etiquetaIdiomaOrigen == null
+                || etiquetaIdiomaOrigen.trim().isEmpty()
+                || "und".equalsIgnoreCase(etiquetaIdiomaOrigen)) {
+
+            Log.d(TAG, "Idioma de categorías indeterminado. Se usa español como origen.");
+            return IDIOMA_BASE_CATEGORIAS;
+        }
+
+        String idiomaOrigen =
+                TranslateLanguage.fromLanguageTag(etiquetaIdiomaOrigen);
+
+        if (idiomaOrigen == null) {
+            Log.d(TAG, "Idioma origen no compatible. Se usa español como origen.");
+            return IDIOMA_BASE_CATEGORIAS;
+        }
+
+        return idiomaOrigen;
     }
 
     private Task<List<String[]>> traducirCategorias(
@@ -110,7 +142,12 @@ public class TraductorCategorias {
         return traductor.downloadModelIfNeeded(condiciones)
                 .continueWithTask(tareaDescarga -> {
                     if (!tareaDescarga.isSuccessful()) {
-                                tareaDescarga.getException();
+                        Log.e(
+                                TAG,
+                                "Error descargando modelo de traducción.",
+                                tareaDescarga.getException()
+                        );
+
                         traductor.close();
                         return Tasks.forResult(categorias);
                     }
@@ -186,6 +223,12 @@ public class TraductorCategorias {
                         return tarea.getResult();
                     }
 
+                    Log.e(
+                            TAG,
+                            "Error traduciendo texto de categoría. Se mantiene el texto original.",
+                            tarea.getException()
+                    );
+
                     return textoSeguro;
                 });
     }
@@ -233,7 +276,7 @@ public class TraductorCategorias {
             }
 
             if (texto.length() > 0) {
-                texto.append("\n");
+                texto.append(". ");
             }
 
             texto.append(nombre.trim());
@@ -241,7 +284,8 @@ public class TraductorCategorias {
 
         return texto.toString();
     }
-  public void cerrar() {
-    identificador.close();
-  }
+
+    public void cerrar() {
+        identificador.close();
+    }
 }
