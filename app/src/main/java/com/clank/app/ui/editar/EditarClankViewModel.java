@@ -139,23 +139,12 @@ public class EditarClankViewModel extends ViewModel {
                     com.google.firebase.firestore.QuerySnapshot snapInstrucciones =
                             (com.google.firebase.firestore.QuerySnapshot) resultados.get(2);
 
-                    android.util.Log.d("EDITAR_CLANK",
-                            "Materiales encontrados: " + snapMateriales.size());
-                    android.util.Log.d("EDITAR_CLANK",
-                            "Herramientas encontradas: " + snapHerramientas.size());
-                    android.util.Log.d("EDITAR_CLANK",
-                            "Instrucciones encontradas: " + snapInstrucciones.size());
-
                     datos.materiales.clear();
                     datos.herramientas.clear();
                     datos.instrucciones.clear();
 
                     for (QueryDocumentSnapshot doc : snapMateriales) {
                         Long cantidad = doc.getLong("cantidad");
-
-                        android.util.Log.d("EDITAR_CLANK",
-                                "Material -> cantidad: " + cantidad
-                                        + ", nombre: " + doc.getString("nombre"));
 
                         datos.materiales.add(new String[]{
                                 cantidad != null ? String.valueOf(cantidad.intValue()) : "1",
@@ -164,9 +153,6 @@ public class EditarClankViewModel extends ViewModel {
                     }
 
                     for (QueryDocumentSnapshot doc : snapHerramientas) {
-                        android.util.Log.d("EDITAR_CLANK",
-                                "Herramienta -> nombre: " + doc.getString("nombre"));
-
                         datos.herramientas.add(
                                 strOrEmpty(doc.getString("herramienta"))
                         );
@@ -178,10 +164,6 @@ public class EditarClankViewModel extends ViewModel {
                                 ? strOrEmpty(doc.getString("imagen"))
                                 : null;
 
-                        android.util.Log.d("EDITAR_CLANK",
-                                "Instruccion -> texto: " + texto
-                                        + ", imagen: " + imagen);
-
                         datos.instrucciones.add(new String[]{
                                 texto,
                                 imagen
@@ -190,10 +172,9 @@ public class EditarClankViewModel extends ViewModel {
 
                     datosClank.setValue(datos);
                 })
-                .addOnFailureListener(e ->
-                        android.util.Log.e("EDITAR_CLANK",
-                                "Error cargando subcolecciones", e)
-                );
+          .addOnFailureListener(e ->
+            estadoGuardar.postValue(Recurso.error(e.getMessage()))
+          );
     }
 
     /// //////////////////////publicar/////////////////////////

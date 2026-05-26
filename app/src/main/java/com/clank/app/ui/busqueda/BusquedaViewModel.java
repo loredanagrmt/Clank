@@ -1,6 +1,5 @@
 package com.clank.app.ui.busqueda;
 
-import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -21,7 +20,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class BusquedaViewModel extends ViewModel {
-  private static final String TAG = "BusquedaViewModel";
   private static final int LIMITE_CLANKS = 200;
   private final ClankRepository clankRepository;
   private final UsuarioRepository usuarioRepository;
@@ -81,13 +79,8 @@ public class BusquedaViewModel extends ViewModel {
               if (handle.contains(queryHandle) || nombre.contains(query)) {
                 uidUsuariosCoincidentes.add(uid);
               }
-            } catch (Exception e) {
-              Log.w(TAG, "Error procesando usuario: " + e.getMessage());
-            }
+            } catch (Exception e) {}
           }
-        } else {
-          Log.w(TAG, "Query usuarios falló: " +
-            (tareaUsuarios.getException() != null ? tareaUsuarios.getException().getMessage() : "null"));
         }
 
         //procesar clanks
@@ -111,19 +104,14 @@ public class BusquedaViewModel extends ViewModel {
               if (coincideContenido || coincideUsuario) {
                 filtrados.add(clank);
               }
-            } catch (Exception e) {
-              Log.w(TAG, "Error procesando clank: " + e.getMessage());
-            }
+            } catch (Exception e) {}
           }
-        } else {
-          Log.e(TAG, "Query clanks falló: " + (tareaClanks.getException() != null ? tareaClanks.getException().getMessage() : "null"));
         }
 
         cargando.setValue(false);
         resultados.setValue(filtrados);
       })
       .addOnFailureListener(e -> {
-        Log.e(TAG, "Error en búsqueda: " + e.getMessage(), e);
         cargando.setValue(false);
         error.setValue(e.getMessage());
       });

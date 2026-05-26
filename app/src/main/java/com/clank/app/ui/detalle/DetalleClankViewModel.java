@@ -14,8 +14,6 @@ import com.clank.app.data.repository.ClankRepository;
 import com.clank.app.data.repository.UsuarioRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import android.util.Log;
-
 import com.clank.app.util.TraductorCategorias;
 
 import java.util.ArrayList;
@@ -29,8 +27,6 @@ import com.clank.app.data.repository.LikeRepository;
 
 @HiltViewModel
 public class DetalleClankViewModel extends ViewModel {
-
-  private static final String TAG = "DetalleClankVM";
 
   public static class DetalleData {
     public String clankId        = "";
@@ -95,7 +91,6 @@ public class DetalleClankViewModel extends ViewModel {
   }
 
   public void cargarClank(String clankId) {
-    Log.d(TAG, "Inicio carga del clank: " + clankId);
     cargando.setValue(true);
 
     datosEnConstruccion         = new DetalleData();
@@ -106,7 +101,6 @@ public class DetalleClankViewModel extends ViewModel {
     cargaCancelada = false;
 
     clankRepository.getPorId(clankId).addOnSuccessListener(doc -> {
-      Log.d(TAG, "Documento principal cargado");
       if (!doc.exists()) {
         cancelarCarga("Clank no encontrado");
         return;
@@ -129,7 +123,6 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.usuarioId = uid != null ? uid : "";
       if (uid != null && !uid.isEmpty()) {
         usuarioRepository.getUsuario(uid).addOnSuccessListener(userDoc -> {
-          Log.d(TAG, "Usuario cargado");
           if (userDoc.exists()) {
             String nombre = userDoc.getString("nombre");
             datosEnConstruccion.nombreUsuario = nombre != null ? nombre : "";
@@ -140,7 +133,6 @@ public class DetalleClankViewModel extends ViewModel {
           }
           reducirPendientes();
         }).addOnFailureListener(e -> {
-          Log.e(TAG, "Error cargando usuario", e);
           reducirPendientes();
         });
       } else {
@@ -150,7 +142,6 @@ public class DetalleClankViewModel extends ViewModel {
       List<String> catIds = clank.getCategorias();
       if (catIds != null && !catIds.isEmpty()) {
         categoriaRepository.getTodas().addOnSuccessListener(catSnap -> {
-          Log.d(TAG, "Categorías cargadas");
           List<String[]> catNombres = new ArrayList<>();
           catSnap.getDocuments().forEach(catDoc -> {
             if (catIds.contains(catDoc.getId())) {
@@ -164,7 +155,6 @@ public class DetalleClankViewModel extends ViewModel {
           datosEnConstruccion.categorias = catNombres;
           reducirPendientes();
         }).addOnFailureListener(e -> {
-          Log.e(TAG, "Error cargando categorías", e);
           reducirPendientes();
         });
       } else {
@@ -180,7 +170,6 @@ public class DetalleClankViewModel extends ViewModel {
     });
 
     clankRepository.getMateriales(clankId).addOnSuccessListener(snap -> {
-      Log.d(TAG, "Materiales cargados");
       List<Material> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
         Material m = d.toObject(Material.class);
@@ -189,12 +178,10 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.materiales = lista;
       reducirPendientes();
     }).addOnFailureListener(e -> {
-      Log.e(TAG, "Error cargando materiales", e);
       reducirPendientes();
     });
 
     clankRepository.getHerramientas(clankId).addOnSuccessListener(snap -> {
-      Log.d(TAG, "Herramientas cargadas");
       List<Herramienta> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
         Herramienta h = d.toObject(Herramienta.class);
@@ -203,11 +190,9 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.herramientas = lista;
       reducirPendientes();
     }).addOnFailureListener(e -> {
-      Log.e(TAG, "Error cargando herramientas", e);
       reducirPendientes();
     });
     clankRepository.getInstrucciones(clankId).addOnSuccessListener(snap -> {
-      Log.d(TAG, "Instrucciones cargadas");
       List<Instruccion> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
         Instruccion ins = d.toObject(Instruccion.class);
@@ -216,22 +201,18 @@ public class DetalleClankViewModel extends ViewModel {
       datosEnConstruccion.instrucciones = lista;
       reducirPendientes();
     }).addOnFailureListener(e -> {
-      Log.e(TAG, "Error cargando instrucciones", e);
       reducirPendientes();
     });
   }
 
   private synchronized void reducirPendientes() {
     if (cargaCancelada) {
-      Log.d(TAG, "Carga cancelada. No se reducen pendientes.");
       return;
     }
 
     pendientes--;
-    Log.d(TAG, "Pendientes restantes: " + pendientes);
 
     if (pendientes <= 0 && !procesoFinalLanzado) {
-      Log.d(TAG, "Todas las cargas completadas. Se inicia traducción.");
       procesoFinalLanzado = true;
       traducirYPublicarDetalle();
     }

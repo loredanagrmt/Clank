@@ -20,6 +20,8 @@ public class FiltrosViewModel extends ViewModel {
 
     private final MutableLiveData<List<Categoria>> _categorias = new MutableLiveData<>();
     public LiveData<List<Categoria>> categorias = _categorias;
+  private final MutableLiveData<Boolean> errorCargando = new MutableLiveData<>();
+  public LiveData<Boolean> getErrorCargando() { return errorCargando; }
 
     private final CategoriaRepository categoriaRepository;
 
@@ -39,10 +41,10 @@ public class FiltrosViewModel extends ViewModel {
                         if (cat != null) lista.add(cat);
                     }
                     _categorias.setValue(lista);
-                })
-                .addOnFailureListener(e ->
-                        android.util.Log.e("FILTROS_DEBUG", "Error cargando categorías", e)
-                );
+                }).addOnFailureListener(e -> {
+            _categorias.setValue(new ArrayList<>());
+            errorCargando.setValue(true);
+          });
     }
 
 }
