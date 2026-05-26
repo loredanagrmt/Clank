@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/input_reutilizable_margin_bottom"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvInputTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/input_reutilizable_titulo_margin_bottom"
+        android:fontFamily="@font/poppins_regular"
+        android:text=""
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/input_reutilizable_text_size" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/input_reutilizable_altura"
+        android:background="@drawable/bg_input">
+
+        <EditText
+            android:id="@+id/customEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppins_regular"
+            android:gravity="center_vertical"
+            android:hint=""
+            android:maxLines="1"
+            android:paddingStart="@dimen/input_reutilizable_padding_start"
+            android:paddingEnd="@dimen/input_reutilizable_padding_end"
+            android:textColor="@color/black"
+            android:textColorHint="@color/color_circulo_opciones"
+            android:textSize="@dimen/input_reutilizable_text_size" />
+
+        <ImageView
+            android:id="@+id/inputTrailingIcon"
+            android:layout_width="@dimen/input_reutilizable_icono_size"
+            android:layout_height="@dimen/input_reutilizable_icono_size"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/input_reutilizable_icono_margin_end"
+            android:contentDescription="@null"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>
