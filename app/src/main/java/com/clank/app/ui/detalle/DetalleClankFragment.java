@@ -477,18 +477,30 @@ public class DetalleClankFragment extends Fragment {
 
   private void eliminarClankDesdeDetalle() {
     viewModel.eliminarClank(clankId)
-            .addOnSuccessListener(unused -> {
-              if (!isAdded()) {
-                return;
-              }
+      .addOnSuccessListener(unused -> {
+        if (!isAdded()) return;
+        Navigation.findNavController(requireView()).navigateUp();
+      })
+      .addOnFailureListener(error -> {
+        if (!isAdded()) return;
+        mostrarErrorEliminar();
+      });
+  }
 
-              Navigation.findNavController(requireView()).navigateUp();
-            })
-            .addOnFailureListener(error -> {
-              if (!isAdded()) {
-                return;
-              }
-            });
+  private void mostrarErrorEliminar() {
+    HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
+      getString(R.string.perfil_eliminar_clank_titulo),
+      getString(R.string.detalle_error_eliminar_clank),
+      getString(R.string.cancelar),
+      getString(R.string.reintentar),
+      null,
+      () -> eliminarClankDesdeDetalle()
+    );
+
+    hoja.show(
+      getParentFragmentManager(),
+      "hoja_error_eliminar_clank_detalle"
+    );
   }
 
   ///////////////////////// navegar a perfil del autor /////////////////////////
