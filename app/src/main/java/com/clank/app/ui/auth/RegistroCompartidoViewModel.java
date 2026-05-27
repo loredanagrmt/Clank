@@ -16,6 +16,7 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
     private static final String CLAVE_TELEFONO = "telefono";
     private static final String CLAVE_FECHA_NACIMIENTO = "fechaNacimiento";
     private static final String CLAVE_CONTRASENYA = "contrasenya";
+    private static final String CLAVE_CONFIRMAR_CONTRASENYA = "confirmarContrasenya";
     private static final String CLAVE_REGISTRO_CON_GOOGLE = "registroConGoogle";
     private static final String CLAVE_FOTO_PERFIL_GOOGLE = "fotoPerfilGoogle";
 
@@ -26,6 +27,7 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
     private String telefono = "";
     private String fechaNacimiento = "";
     private String contrasenya = "";
+    private String confirmarContrasenya = "";
     private boolean registroConGoogle = false;
     private String fotoPerfilGoogle = "";
 
@@ -61,12 +63,14 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
                                      String correo,
                                      String telefono,
                                      String fechaNacimiento,
-                                     String contrasenya) {
+                                     String contrasenya,
+                                     String confirmarContrasenya) {
         this.nombre = limpiarTexto(nombre);
         this.correo = limpiarTexto(correo);
         this.telefono = limpiarTexto(telefono);
         this.fechaNacimiento = limpiarTexto(fechaNacimiento);
         this.contrasenya = limpiarContrasenya(contrasenya);
+        this.confirmarContrasenya = limpiarContrasenya(confirmarContrasenya);
 
         preferencias.edit()
                 .putString(CLAVE_NOMBRE, this.nombre)
@@ -74,6 +78,7 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
                 .putString(CLAVE_TELEFONO, this.telefono)
                 .putString(CLAVE_FECHA_NACIMIENTO, this.fechaNacimiento)
                 .putString(CLAVE_CONTRASENYA, this.contrasenya)
+                .putString(CLAVE_CONFIRMAR_CONTRASENYA, this.confirmarContrasenya)
                 .putBoolean(CLAVE_REGISTRO_CON_GOOGLE, this.registroConGoogle)
                 .putString(CLAVE_FOTO_PERFIL_GOOGLE, this.fotoPerfilGoogle)
                 .commit();
@@ -85,6 +90,7 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
         telefono = preferencias.getString(CLAVE_TELEFONO, "");
         fechaNacimiento = preferencias.getString(CLAVE_FECHA_NACIMIENTO, "");
         contrasenya = preferencias.getString(CLAVE_CONTRASENYA, "");
+        confirmarContrasenya = preferencias.getString(CLAVE_CONFIRMAR_CONTRASENYA, "");
         registroConGoogle = preferencias.getBoolean(CLAVE_REGISTRO_CON_GOOGLE, false);
         fotoPerfilGoogle = preferencias.getString(CLAVE_FOTO_PERFIL_GOOGLE, "");
     }
@@ -129,6 +135,11 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
         return contrasenya;
     }
 
+    public String getConfirmarContrasenya() {
+        recargarDatosGuardados();
+        return confirmarContrasenya;
+    }
+
     public boolean isRegistroConGoogle() {
         recargarDatosGuardados();
         return registroConGoogle;
@@ -145,6 +156,7 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
         telefono = "";
         fechaNacimiento = "";
         contrasenya = "";
+        confirmarContrasenya = "";
         registroConGoogle = false;
         fotoPerfilGoogle = "";
 
@@ -154,6 +166,7 @@ public class RegistroCompartidoViewModel extends AndroidViewModel {
                 .remove(CLAVE_TELEFONO)
                 .remove(CLAVE_FECHA_NACIMIENTO)
                 .remove(CLAVE_CONTRASENYA)
+                .remove(CLAVE_CONFIRMAR_CONTRASENYA)
                 .remove(CLAVE_REGISTRO_CON_GOOGLE)
                 .remove(CLAVE_FOTO_PERFIL_GOOGLE)
                 .commit();

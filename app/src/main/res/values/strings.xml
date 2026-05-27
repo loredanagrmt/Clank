@@ -83,6 +83,8 @@
     <string name="registro_error_uid_no_obtenido">No se pudo obtener el usuario autenticado</string>
     <string name="registro_error_guardar_usuario">No se pudo guardar el usuario en la base de datos</string>
     <string name="registro_error_registro">No se pudo registrar el usuario. Inténtalo de nuevo</string>
+    <string name="registro_error_fecha_nacimiento_invalida">Introduce una fecha de nacimiento válida</string>
+    <string name="registro_error_edad_minima">Debes tener 16 años para registrarte en Clank</string>
 
     <!-- Popup registro -->
     <string name="popup_boton_continuar">Continuar</string>

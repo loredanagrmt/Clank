@@ -21,13 +21,20 @@ import com.clank.app.R;
 import com.clank.app.databinding.FragmentRegistroBinding;
 import com.clank.app.ui.comun.NavbarHost;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class RegistroFragment extends Fragment {
 
     private static final long DURACION_POPUP_MILISEGUNDOS = 3000;
-
+    private static final int EDAD_MINIMA_REGISTRO = 16;
+    private static final String FORMATO_FECHA_NACIMIENTO = "dd/MM/yyyy";
     private FragmentRegistroBinding binding;
     private RegistroCompartidoViewModel vistaModeloCompartida;
 
@@ -68,8 +75,18 @@ public class RegistroFragment extends Fragment {
     }
 
     private void configurarVista() {
+        desactivarGuardadoAutomaticoInputs();
         configurarFormulario();
         configurarPopup();
+    }
+
+    private void desactivarGuardadoAutomaticoInputs() {
+        binding.inputNombreCompleto.customEditText.setSaveEnabled(false);
+        binding.inputCorreo.customEditText.setSaveEnabled(false);
+        binding.inputTelefono.customEditText.setSaveEnabled(false);
+        binding.inputFechaNacimiento.customEditText.setSaveEnabled(false);
+        binding.inputContrasenya.customEditText.setSaveEnabled(false);
+        binding.inputConfirmarContrasenya.customEditText.setSaveEnabled(false);
     }
 
     private void configurarNavbar() {
@@ -239,7 +256,7 @@ public class RegistroFragment extends Fragment {
     }
 
     private void precargarDatosRegistro() {
-        if (vistaModeloCompartida == null) {
+        if (vistaModeloCompartida == null || binding == null) {
             return;
         }
 
@@ -270,7 +287,7 @@ public class RegistroFragment extends Fragment {
             );
 
             binding.inputConfirmarContrasenya.customEditText.setText(
-                    vistaModeloCompartida.getContrasenya()
+                    vistaModeloCompartida.getConfirmarContrasenya()
             );
         }
     }
@@ -319,7 +336,8 @@ public class RegistroFragment extends Fragment {
                 correo,
                 telefono,
                 fechaNacimiento,
-                contrasenya
+                contrasenya,
+                confirmarContrasenya
         );
 
         mostrarPopupRegistro();
@@ -364,6 +382,24 @@ public class RegistroFragment extends Fragment {
             return false;
         }
 
+        Date fechaNacimientoValida = obtenerFechaNacimientoValida(fechaNacimiento);
+
+        if (fechaNacimientoValida == null) {
+            mostrarError(
+                    binding.inputFechaNacimiento.customEditText,
+                    R.string.registro_error_fecha_nacimiento_invalida
+            );
+            return false;
+        }
+
+        if (!tieneEdadMinima(fechaNacimientoValida, EDAD_MINIMA_REGISTRO)) {
+            mostrarError(
+                    binding.inputFechaNacimiento.customEditText,
+                    R.string.registro_error_edad_minima
+            );
+            return false;
+        }
+
         if (!registroConGoogle) {
             if (contrasenya.isEmpty()) {
                 mostrarError(
@@ -399,6 +435,37 @@ public class RegistroFragment extends Fragment {
         }
 
         return true;
+    }
+
+    @Nullable
+    private Date obtenerFechaNacimientoValida(String fechaNacimiento) {
+        if (fechaNacimiento == null
+                || !fechaNacimiento.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            return null;
+        }
+
+        SimpleDateFormat formatoFecha = new SimpleDateFormat(
+                FORMATO_FECHA_NACIMIENTO,
+                Locale.getDefault()
+        );
+
+        formatoFecha.setLenient(false);
+
+        try {
+            return formatoFecha.parse(fechaNacimiento);
+        } catch (ParseException error) {
+            return null;
+        }
+    }
+
+    private boolean tieneEdadMinima(Date fechaNacimiento, int edadMinima) {
+        Calendar fechaMinimaPermitida = Calendar.getInstance();
+        fechaMinimaPermitida.add(Calendar.YEAR, -edadMinima);
+
+        Calendar fechaUsuario = Calendar.getInstance();
+        fechaUsuario.setTime(fechaNacimiento);
+
+        return !fechaUsuario.after(fechaMinimaPermitida);
     }
 
     private void mostrarError(EditText editText, int mensajeError) {
@@ -601,5 +668,14 @@ public class RegistroFragment extends Fragment {
 
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle estadoGuardado) {
+        super.onViewStateRestored(estadoGuardado);
+
+        if (binding != null && vistaModeloCompartida != null) {
+            precargarDatosRegistro();
+        }
     }
 }
