@@ -193,7 +193,15 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     //fecha
     if (clank.getFechaPublicacion() != null) {
       holder.binding.cabeceraUsuario.tvFechaItem.setText(
-        FechaUtils.formatearFechaRelativa(context, clank.getFechaPublicacion()));
+              FechaUtils.formatearFechaRelativa(
+                      context,
+                      clank.getFechaPublicacion()
+              )
+      );
+      holder.binding.cabeceraUsuario.tvFechaItem.setVisibility(View.VISIBLE);
+    } else {
+      holder.binding.cabeceraUsuario.tvFechaItem.setText("");
+      holder.binding.cabeceraUsuario.tvFechaItem.setVisibility(View.GONE);
     }
 
     holder.itemView.setOnClickListener(v -> {

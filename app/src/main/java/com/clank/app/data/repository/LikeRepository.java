@@ -4,6 +4,7 @@ import com.clank.app.data.source.FirestoreDataSource;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.Collections;
@@ -24,10 +25,12 @@ public class LikeRepository {
     this.dataSource = dataSource;
   }
   public Task<Boolean> toggleLike(String clankId, String uid) {
-    DocumentReference likeRef = dataSource.collection(CLANKS)
-      .document(clankId)
-      .collection(LIKES)
-      .document(uid);
+    DocumentReference clankRef = dataSource.collection(CLANKS)
+            .document(clankId);
+
+    DocumentReference likeRef = clankRef
+            .collection(LIKES)
+            .document(uid);
 
     return dataSource.getFirestore().runTransaction(transaction -> {
       DocumentSnapshot likeSnap = transaction.get(likeRef);
@@ -35,8 +38,10 @@ public class LikeRepository {
 
       if (yaDioLike) {
         transaction.delete(likeRef);
+        transaction.update(clankRef, "numLikes", FieldValue.increment(-1));
       } else {
         transaction.set(likeRef, Collections.singletonMap("uid", uid));
+        transaction.update(clankRef, "numLikes", FieldValue.increment(1));
       }
 
       return !yaDioLike;
