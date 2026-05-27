@@ -32,6 +32,7 @@ import com.clank.app.databinding.ItemInstruccionBinding;
 import com.clank.app.ui.comun.ChipCategoriasHelper;
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.NavbarHost;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,6 +100,7 @@ public class CrearFragment extends Fragment {
 
     configurarNavbar();
     configurarListeners(view);
+    obtenerOCrearContenedorCategorias();
     observarViewModel();
     anyadirFilaMaterial(false);
     anyadirFilaInstruccion();
@@ -554,11 +556,125 @@ public class CrearFragment extends Fragment {
     binding.btnPublicar.setEnabled(true);
   }
 
-  private void limpiarCategoriasSeleccionadas() {
-    viewModel.limpiarCategoriasSeleccionadasVM();
-    ChipCategoriasHelper.limpiarSeleccion(requireContext(), binding.contenedorCategorias);
+  @Nullable
+  private LinearLayout obtenerContenedorCategorias() {
+    if (binding == null) {
+      return null;
+    }
+
+    return binding.getRoot().findViewById(R.id.contenedorCategorias);
   }
 
+  @Nullable
+  private LinearLayout obtenerOCrearContenedorCategorias() {
+    if (binding == null || !isAdded()) {
+      return null;
+    }
+
+    LinearLayout contenedorExistente =
+            binding.getRoot().findViewById(R.id.contenedorCategorias);
+
+    if (contenedorExistente != null) {
+      return contenedorExistente;
+    }
+
+    TextView etiquetaCategorias = buscarEtiquetaCategorias(binding.getRoot());
+
+    if (etiquetaCategorias == null) {
+      return null;
+    }
+
+    if (!(etiquetaCategorias.getParent() instanceof LinearLayout)) {
+      return null;
+    }
+
+    LinearLayout padre = (LinearLayout) etiquetaCategorias.getParent();
+
+    LinearLayout nuevoContenedor = new LinearLayout(requireContext());
+    nuevoContenedor.setId(R.id.contenedorCategorias);
+    nuevoContenedor.setOrientation(LinearLayout.VERTICAL);
+
+    int margenHorizontal = getResources().getDimensionPixelSize(
+            R.dimen.screen_margin_horizontal
+    );
+
+    int margenSuperior = getResources().getDimensionPixelSize(
+            R.dimen.crear_campo_margin_top
+    );
+
+    LinearLayout.LayoutParams parametros =
+            new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+
+    parametros.setMargins(
+            margenHorizontal,
+            margenSuperior,
+            margenHorizontal,
+            0
+    );
+
+    nuevoContenedor.setLayoutParams(parametros);
+
+    int indiceEtiqueta = padre.indexOfChild(etiquetaCategorias);
+
+    padre.addView(
+            nuevoContenedor,
+            indiceEtiqueta + 1
+    );
+
+    return nuevoContenedor;
+  }
+
+  @Nullable
+  private TextView buscarEtiquetaCategorias(View vista) {
+    if (vista instanceof TextView) {
+      TextView textView = (TextView) vista;
+
+      CharSequence texto = textView.getText();
+
+      if (texto != null
+              && texto.toString().equals(getString(R.string.crear_campo_categorias))) {
+        return textView;
+      }
+    }
+
+    if (!(vista instanceof ViewGroup)) {
+      return null;
+    }
+
+    ViewGroup grupo = (ViewGroup) vista;
+
+    for (int i = 0; i < grupo.getChildCount(); i++) {
+      TextView resultado = buscarEtiquetaCategorias(grupo.getChildAt(i));
+
+      if (resultado != null) {
+        return resultado;
+      }
+    }
+
+    return null;
+  }
+
+  private void limpiarCategoriasSeleccionadas() {
+    viewModel.limpiarCategoriasSeleccionadasVM();
+
+    if (binding == null || !isAdded()) {
+      return;
+    }
+
+    LinearLayout contenedorCategorias = obtenerOCrearContenedorCategorias();
+
+    if (contenedorCategorias == null) {
+      return;
+    }
+
+    ChipCategoriasHelper.limpiarSeleccion(
+            requireContext(),
+            contenedorCategorias
+    );
+  }
   ///////////////////////// recoger datos clank /////////////////////////
 
   private List<String[]> recogerMateriales() {
@@ -609,7 +725,13 @@ public class CrearFragment extends Fragment {
   }
 
   private List<String> recogerCategoriasSeleccionadas() {
-    return ChipCategoriasHelper.recogerSeleccionadas(binding.contenedorCategorias);
+    LinearLayout contenedorCategorias = obtenerOCrearContenedorCategorias();
+
+    if (contenedorCategorias == null) {
+      return new ArrayList<>();
+    }
+
+    return ChipCategoriasHelper.recogerSeleccionadas(contenedorCategorias);
   }
 
   ///////////////////////// observadores /////////////////////////
@@ -658,24 +780,39 @@ public class CrearFragment extends Fragment {
       }
     });
 
-    viewModel.getCategorias().observe(
-            getViewLifecycleOwner(),
-            this::cargarChipsCategorias
-    );
+    viewModel.getCategorias().observe(getViewLifecycleOwner(), categorias -> {
+      if (binding == null || !isAdded()) {
+        return;
+      }
+
+      cargarChipsCategorias(categorias);
+    });
   }
 
   private void cargarChipsCategorias(List<String[]> categorias) {
+    if (binding == null || !isAdded()) {
+      return;
+    }
+
+    LinearLayout contenedorCategorias = obtenerOCrearContenedorCategorias();
+
+    if (contenedorCategorias == null) {
+      return;
+    }
+
     Set<String> seleccionadas = new HashSet<>();
+
     if (viewModel.getCategoriasSeleccionadas().getValue() != null) {
       seleccionadas = viewModel.getCategoriasSeleccionadas().getValue();
     }
+
     ChipCategoriasHelper.cargarChipsInteractivos(
-      requireContext(),
-      binding.contenedorCategorias,
-      categorias,
-      seleccionadas,
-      (chip, categoriaId, seleccionado) ->
-        viewModel.toggleCategoriaSeleccionada(categoriaId)
+            requireContext(),
+            contenedorCategorias,
+            categorias,
+            seleccionadas,
+            (chip, categoriaId, seleccionado) ->
+                    viewModel.toggleCategoriaSeleccionada(categoriaId)
     );
   }
 

@@ -118,11 +118,7 @@ public class FeedFragment extends Fragment {
             new FeedAdapter.OnClankClickListener() {
               @Override
               public void onClankClick(String clankId) {
-                Bundle args = new Bundle();
-                args.putString("clankId", clankId);
-
-                Navigation.findNavController(requireView())
-                        .navigate(R.id.action_feed_a_detalle_clank, args);
+                comprobarYEntrarDetalle(clankId);
               }
 
               @Override
@@ -158,6 +154,19 @@ public class FeedFragment extends Fragment {
 
   private void arrancarObservadoresLikes(List<String> clankIds,
                                          List<Integer> numLikesIniciales) {
+    java.util.Set<String> idsActuales = new java.util.HashSet<>(clankIds);
+
+    java.util.Iterator<String> iterador = observadosLikes.iterator();
+
+    while (iterador.hasNext()) {
+      String clankIdObservado = iterador.next();
+
+      if (!idsActuales.contains(clankIdObservado)) {
+        viewModel.detenerListenerLike(clankIdObservado);
+        iterador.remove();
+      }
+    }
+
     for (int i = 0; i < clankIds.size(); i++) {
       String clankId = clankIds.get(i);
       int likesInicial = numLikesIniciales.get(i);
@@ -239,6 +248,7 @@ public class FeedFragment extends Fragment {
       return;
     }
 
+    binding.tvFeedVacio.setVisibility(View.GONE);
     binding.rvFeed.setVisibility(View.INVISIBLE);
     binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
   }
@@ -249,6 +259,61 @@ public class FeedFragment extends Fragment {
     }
 
     binding.overlayCargandoFeed.setVisibility(View.GONE);
-    binding.rvFeed.setVisibility(View.VISIBLE);
+    actualizarEstadoContenido();
+  }
+
+  private void actualizarEstadoContenido() {
+    if (binding == null || adapter == null) {
+      return;
+    }
+
+    if (!adapter.estaPreparado()) {
+      binding.tvFeedVacio.setVisibility(View.GONE);
+      binding.rvFeed.setVisibility(View.INVISIBLE);
+      binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+      return;
+    }
+
+    boolean hayClanks = adapter.getCantidadRealFirestore() > 0;
+
+    binding.overlayCargandoFeed.setVisibility(View.GONE);
+    binding.rvFeed.setVisibility(hayClanks ? View.VISIBLE : View.GONE);
+    binding.tvFeedVacio.setVisibility(hayClanks ? View.GONE : View.VISIBLE);
+  }
+
+  private void comprobarYEntrarDetalle(String clankId) {
+    if (clankId == null || clankId.trim().isEmpty()) {
+      return;
+    }
+
+    viewModel.getClankRepository()
+            .getPorIdServidor(clankId)
+            .addOnSuccessListener(documento -> {
+              if (binding == null) {
+                return;
+              }
+
+              if (documento == null || !documento.exists()) {
+                if (adapter != null) {
+                  adapter.notifyDataSetChanged();
+                }
+
+                actualizarEstadoContenido();
+                return;
+              }
+
+              Bundle args = new Bundle();
+              args.putString("clankId", clankId);
+
+              Navigation.findNavController(requireView())
+                      .navigate(R.id.action_feed_a_detalle_clank, args);
+            })
+            .addOnFailureListener(error -> {
+              if (binding == null) {
+                return;
+              }
+
+              actualizarEstadoContenido();
+            });
   }
 }

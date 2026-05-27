@@ -251,6 +251,20 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <TextView
+        android:id="@+id/tvErrorDetalle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+        android:fontFamily="@font/poppins_family"
+        android:gravity="center"
+        android:textColor="@color/color_negrita"
+        android:textSize="@dimen/text_body"
+        android:visibility="gone"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
     <FrameLayout
         android:id="@+id/overlayCargando"
         android:layout_width="match_parent"

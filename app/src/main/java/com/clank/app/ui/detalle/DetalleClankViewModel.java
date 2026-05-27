@@ -27,7 +27,8 @@ import com.clank.app.data.repository.LikeRepository;
 
 @HiltViewModel
 public class DetalleClankViewModel extends ViewModel {
-
+  public static final String ERROR_CLANK_NO_EXISTE = "ERROR_CLANK_NO_EXISTE";
+  public static final String ERROR_CARGAR_CLANK = "ERROR_CARGAR_CLANK";
   public static class DetalleData {
     public String clankId        = "";
     public String titulo         = "";
@@ -91,23 +92,31 @@ public class DetalleClankViewModel extends ViewModel {
   }
 
   public void cargarClank(String clankId) {
+    if (clankId == null || clankId.trim().isEmpty()) {
+      cancelarCarga(ERROR_CLANK_NO_EXISTE);
+      return;
+    }
+
+    String clankIdLimpio = clankId.trim();
+
     cargando.setValue(true);
 
-    datosEnConstruccion         = new DetalleData();
-    datosEnConstruccion.clankId = clankId;
+    datosEnConstruccion = new DetalleData();
+    datosEnConstruccion.clankId = clankIdLimpio;
     pendientes = 5;
 
     procesoFinalLanzado = false;
     cargaCancelada = false;
 
-    clankRepository.getPorId(clankId).addOnSuccessListener(doc -> {
+    clankRepository.getPorIdServidor(clankIdLimpio).addOnSuccessListener(doc -> {
       if (!doc.exists()) {
-        cancelarCarga("Clank no encontrado");
+        cancelarCarga(ERROR_CLANK_NO_EXISTE);
         return;
       }
       Clank clank = doc.toObject(Clank.class);
+
       if (clank == null) {
-        cancelarCarga("Error al leer el clank");
+        cancelarCarga(ERROR_CARGAR_CLANK);
         return;
       }
 
@@ -162,14 +171,10 @@ public class DetalleClankViewModel extends ViewModel {
       }
 
     }).addOnFailureListener(e -> {
-      cancelarCarga(
-              e.getMessage() != null
-                      ? e.getMessage()
-                      : "Error al cargar el clank"
-      );
+      cancelarCarga(ERROR_CARGAR_CLANK);
     });
 
-    clankRepository.getMateriales(clankId).addOnSuccessListener(snap -> {
+    clankRepository.getMateriales(clankIdLimpio).addOnSuccessListener(snap -> {
       List<Material> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
         Material m = d.toObject(Material.class);
@@ -181,7 +186,7 @@ public class DetalleClankViewModel extends ViewModel {
       reducirPendientes();
     });
 
-    clankRepository.getHerramientas(clankId).addOnSuccessListener(snap -> {
+    clankRepository.getHerramientas(clankIdLimpio).addOnSuccessListener(snap -> {
       List<Herramienta> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
         Herramienta h = d.toObject(Herramienta.class);
@@ -192,7 +197,7 @@ public class DetalleClankViewModel extends ViewModel {
     }).addOnFailureListener(e -> {
       reducirPendientes();
     });
-    clankRepository.getInstrucciones(clankId).addOnSuccessListener(snap -> {
+    clankRepository.getInstrucciones(clankIdLimpio).addOnSuccessListener(snap -> {
       List<Instruccion> lista = new ArrayList<>();
       snap.getDocuments().forEach(d -> {
         Instruccion ins = d.toObject(Instruccion.class);

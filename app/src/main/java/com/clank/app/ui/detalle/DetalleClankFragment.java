@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -76,6 +75,10 @@ public class DetalleClankFragment extends Fragment {
       clankId = getArguments().getString(ARG_CLANK_ID, "");
     }
 
+    binding.contenidoDetalle.setVisibility(View.GONE);
+    binding.tvErrorDetalle.setVisibility(View.GONE);
+    binding.overlayCargando.setVisibility(View.VISIBLE);
+
     configurarNavbarInicial();
     observarViewModel();
 
@@ -124,9 +127,9 @@ public class DetalleClankFragment extends Fragment {
     viewModel.getCargando().observe(getViewLifecycleOwner(), cargando -> {
       boolean estaCargando = Boolean.TRUE.equals(cargando);
 
-      binding.overlayCargando.setVisibility(
-              estaCargando ? View.VISIBLE : View.GONE
-      );
+      if (estaCargando) {
+        binding.overlayCargando.setVisibility(View.VISIBLE);
+      }
     });
 
     viewModel.getDetalle().observe(getViewLifecycleOwner(), datos -> {
@@ -134,14 +137,44 @@ public class DetalleClankFragment extends Fragment {
         return;
       }
 
+      binding.tvErrorDetalle.setError(null);
+      binding.tvErrorDetalle.setVisibility(View.GONE);
+      binding.overlayCargando.setVisibility(View.GONE);
+      binding.contenidoDetalle.setVisibility(View.VISIBLE);
+
       rellenarVista(datos);
     });
 
-    viewModel.getError().observe(getViewLifecycleOwner(), msg -> {
-      if (msg != null) {
-        binding.overlayCargando.setVisibility(View.GONE);
+    viewModel.getError().observe(getViewLifecycleOwner(), mensaje -> {
+      if (mensaje == null) {
+        return;
       }
+
+      if (DetalleClankViewModel.ERROR_CLANK_NO_EXISTE.equals(mensaje)) {
+        mostrarErrorDetalle(R.string.detalle_error_clank_no_existe);
+        return;
+      }
+
+      mostrarErrorDetalle(R.string.detalle_error_cargar_clank);
     });
+  }
+
+  private void mostrarErrorDetalle(int mensajeError) {
+    if (binding == null) {
+      return;
+    }
+
+    binding.overlayCargando.setVisibility(View.GONE);
+    binding.contenidoDetalle.setVisibility(View.GONE);
+
+    String textoError = getString(mensajeError);
+
+    binding.tvErrorDetalle.setText(textoError);
+    binding.tvErrorDetalle.setVisibility(View.VISIBLE);
+    binding.tvErrorDetalle.setError(textoError);
+    binding.tvErrorDetalle.requestFocus();
+
+    configurarNavbarInicial();
   }
 
   ///////////////////////// rellenar vista /////////////////////////
@@ -149,33 +182,34 @@ public class DetalleClankFragment extends Fragment {
   private void rellenarVista(DetalleClankViewModel.DetalleData datos) {
     tituloClankActual = datos.titulo != null ? datos.titulo : "";
 
-    // título en overlay de portada
     binding.tvTitulo.setText(datos.titulo);
 
     if (datos.numLikes >= 0) {
       binding.tvNumLikesDetalle.setText(String.valueOf(datos.numLikes));
     }
 
-    // portada
-    if (!datos.portadaUrl.isEmpty()) {
+    Glide.with(this).clear(binding.ivPortada);
+
+    if (datos.portadaUrl != null && !datos.portadaUrl.isEmpty()) {
       Glide.with(this)
               .load(datos.portadaUrl)
               .centerCrop()
+              .placeholder(R.drawable.img_usuario_defecto)
+              .error(R.drawable.img_usuario_defecto)
               .into(binding.ivPortada);
+    } else {
+      binding.ivPortada.setImageResource(R.drawable.img_usuario_defecto);
     }
 
-    // descripción
     binding.tvDescripcion.setText(datos.descripcion);
 
     mostrarTiempo(datos.tiempo);
 
-    // listas dinámicas
     rellenarMateriales(datos.materiales);
     rellenarHerramientas(datos.herramientas);
     rellenarInstrucciones(datos.instrucciones);
     rellenarCategorias(datos.categorias);
 
-    // cabecera de usuario
     String handle = datos.usuarioClank != null &&
             !datos.usuarioClank.trim().isEmpty()
             ? "@" + datos.usuarioClank.replace("@", "").trim()
@@ -193,14 +227,18 @@ public class DetalleClankFragment extends Fragment {
 
       binding.cabeceraUsuario.tvFechaItem.setVisibility(View.VISIBLE);
     } else {
+      binding.cabeceraUsuario.tvFechaItem.setText("");
       binding.cabeceraUsuario.tvFechaItem.setVisibility(View.GONE);
     }
+
+    Glide.with(this).clear(binding.cabeceraUsuario.civAvatarUsuario);
 
     if (datos.fotoPerfil != null && !datos.fotoPerfil.isEmpty()) {
       Glide.with(this)
               .load(datos.fotoPerfil)
               .circleCrop()
               .placeholder(R.drawable.img_usuario_defecto)
+              .error(R.drawable.img_usuario_defecto)
               .into(binding.cabeceraUsuario.civAvatarUsuario);
     } else {
       binding.cabeceraUsuario.civAvatarUsuario
@@ -239,13 +277,14 @@ public class DetalleClankFragment extends Fragment {
     } else {
       String titulo = tituloClankActual != null ? tituloClankActual : "";
       String tituloNavbar = titulo.length() > 25
-        ? titulo.substring(0, 25) + "…"
-        : titulo;
+              ? titulo.substring(0, 25) + "…"
+              : titulo;
+
       host.mostrarNavbarConVolver(tituloNavbar);
     }
   }
 
-  ///////////////////////// tiempo (solo visual, no clickable) /////////////////////////
+  ///////////////////////// tiempo /////////////////////////
 
   private void mostrarTiempo(int tiempo) {
     android.widget.ImageButton[] botones = {
@@ -317,11 +356,16 @@ public class DetalleClankFragment extends Fragment {
     boolean hayHerramientas = herramientas != null && !herramientas.isEmpty();
 
     binding.tvTituloHerramientas.setVisibility(
-      hayHerramientas ? View.VISIBLE : View.GONE);
-    binding.llContenedorHerramientas.setVisibility(
-      hayHerramientas ? View.VISIBLE : View.GONE);
+            hayHerramientas ? View.VISIBLE : View.GONE
+    );
 
-    if (!hayHerramientas) return;
+    binding.llContenedorHerramientas.setVisibility(
+            hayHerramientas ? View.VISIBLE : View.GONE
+    );
+
+    if (!hayHerramientas) {
+      return;
+    }
 
     for (Herramienta h : herramientas) {
       View fila = LayoutInflater.from(requireContext())
@@ -369,28 +413,34 @@ public class DetalleClankFragment extends Fragment {
 
       ImageView ivImg = fila.findViewById(R.id.ivImagenInstruccion);
 
+      Glide.with(this).clear(ivImg);
+
       if (ins.getImagen() != null && !ins.getImagen().isEmpty()) {
         ivImg.setVisibility(View.VISIBLE);
 
         Glide.with(this)
                 .load(ins.getImagen())
                 .centerCrop()
+                .placeholder(R.drawable.img_usuario_defecto)
+                .error(R.drawable.img_usuario_defecto)
                 .into(ivImg);
       } else {
         ivImg.setVisibility(View.GONE);
+        ivImg.setImageDrawable(null);
       }
 
       binding.llContenedorInstrucciones.addView(fila);
     }
   }
 
-  ///////////////////////// categorías (solo visual, no clickables) /////////////////////////
+  ///////////////////////// categorías /////////////////////////
 
   private void rellenarCategorias(List<String[]> categorias) {
     ChipCategoriasHelper.cargarChipsVisuales(
-      requireContext(),
-      binding.contenedorCategorias,
-      categorias);
+            requireContext(),
+            binding.contenedorCategorias,
+            categorias
+    );
   }
 
   ///////////////////////// hoja de opciones de clank /////////////////////////
@@ -451,29 +501,35 @@ public class DetalleClankFragment extends Fragment {
 
   private void eliminarClankDesdeDetalle() {
     viewModel.eliminarClank(clankId)
-      .addOnSuccessListener(unused -> {
-        if (!isAdded()) return;
-        Navigation.findNavController(requireView()).navigateUp();
-      })
-      .addOnFailureListener(error -> {
-        if (!isAdded()) return;
-        mostrarErrorEliminar();
-      });
+            .addOnSuccessListener(unused -> {
+              if (!isAdded()) {
+                return;
+              }
+
+              Navigation.findNavController(requireView()).navigateUp();
+            })
+            .addOnFailureListener(error -> {
+              if (!isAdded()) {
+                return;
+              }
+
+              mostrarErrorEliminar();
+            });
   }
 
   private void mostrarErrorEliminar() {
     HojaOpciones hoja = HojaOpciones.nuevaConfirmacion(
-      getString(R.string.perfil_eliminar_clank_titulo),
-      getString(R.string.detalle_error_eliminar_clank),
-      getString(R.string.cancelar),
-      getString(R.string.reintentar),
-      null,
-      () -> eliminarClankDesdeDetalle()
+            getString(R.string.perfil_eliminar_clank_titulo),
+            getString(R.string.detalle_error_eliminar_clank),
+            getString(R.string.cancelar),
+            getString(R.string.reintentar),
+            null,
+            () -> eliminarClankDesdeDetalle()
     );
 
     hoja.show(
-      getParentFragmentManager(),
-      "hoja_error_eliminar_clank_detalle"
+            getParentFragmentManager(),
+            "hoja_error_eliminar_clank_detalle"
     );
   }
 

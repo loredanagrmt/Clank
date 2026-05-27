@@ -169,6 +169,8 @@
     <string name="detalle_titulo">Tus Clanks</string>
     <string name="detalle_campo_detalles">Detalles</string>
     <string name="detalle_error_eliminar_clank">No se pudo eliminar el clank. Inténtalo de nuevo.</string>
+    <string name="detalle_error_clank_no_existe">Este Clank ya no está disponible</string>
+    <string name="detalle_error_cargar_clank">No se ha podido cargar el Clank</string>
 
     <!-- Tarjeta Clank -->
     <string name="tarjeta_portada_desc">Portada del Clank</string>
