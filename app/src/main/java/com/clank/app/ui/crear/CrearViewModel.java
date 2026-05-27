@@ -20,8 +20,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -63,6 +65,32 @@ public class CrearViewModel extends ViewModel {
 
   /// ////////////////////// categorias de bbdd /////////////////////////
 
+  private final MutableLiveData<Set<String>> categoriasSeleccionadas =
+    new MutableLiveData<>(new HashSet<>());
+
+  public LiveData<Set<String>> getCategoriasSeleccionadas() {
+    return categoriasSeleccionadas;
+  }
+
+  public void toggleCategoriaSeleccionada(String categoriaId) {
+    Set<String> actual = new HashSet<>(
+      categoriasSeleccionadas.getValue() != null
+        ? categoriasSeleccionadas.getValue()
+        : new HashSet<>()
+    );
+    if (actual.contains(categoriaId)) actual.remove(categoriaId);
+    else                               actual.add(categoriaId);
+    categoriasSeleccionadas.setValue(actual);
+  }
+
+  public void limpiarCategoriasSeleccionadasVM() {
+    categoriasSeleccionadas.setValue(new HashSet<>());
+  }
+
+  public List<String> getListaCategoriasSeleccionadas() {
+    Set<String> sel = categoriasSeleccionadas.getValue();
+    return sel != null ? new ArrayList<>(sel) : new ArrayList<>();
+  }
   private void cargarCategoriasEsperandoAuth() {
     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 

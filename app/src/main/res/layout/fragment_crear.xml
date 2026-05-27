@@ -118,6 +118,7 @@
           android:imeOptions="actionNext"
           android:inputType="textCapSentences"
           android:maxLines="1"
+          android:maxLength="40"
           android:paddingHorizontal="@dimen/space_l"
           android:textColor="@color/color_negrita"
           android:textColorHint="@color/color_texto_inactivo"
@@ -328,15 +329,13 @@
           android:layout_marginTop="@dimen/crear_seccion_margin_top"
           android:text="@string/crear_campo_categorias" />
 
-      <com.google.android.flexbox.FlexboxLayout
-          android:id="@+id/flexboxCategorias"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
-          android:layout_marginTop="@dimen/crear_campo_margin_top"
-          app:alignItems="center"
-          app:flexWrap="wrap"
-          app:justifyContent="flex_start" />
+      <LinearLayout
+        android:id="@+id/contenedorCategorias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+        android:layout_marginTop="@dimen/crear_campo_margin_top"
+        android:orientation="vertical" />
 
     </LinearLayout>
 
