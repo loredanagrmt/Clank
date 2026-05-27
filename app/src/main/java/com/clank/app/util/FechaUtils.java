@@ -11,7 +11,7 @@ public class FechaUtils {
 
   public static String formatearFechaRelativa(Context context, Date fecha) {
     if (fecha == null) return "";
-    long diferencia = System.currentTimeMillis() - fecha.getTime();
+    long diferencia = Math.max(0, System.currentTimeMillis() - fecha.getTime());
     long minutos = TimeUnit.MILLISECONDS.toMinutes(diferencia);
     long horas   = TimeUnit.MILLISECONDS.toHours(diferencia);
     long dias    = TimeUnit.MILLISECONDS.toDays(diferencia);
