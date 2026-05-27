@@ -47,8 +47,8 @@ import io.qameta.allure.kotlin.Story;
 @Feature("Búsqueda")
 public class BusquedaUITest {
 
-    private static final long TIMEOUT_MS = 7000;
-    private static final long INTERVALO_MS = 250;
+    private static final long TIMEOUT_MS = 30000;
+    private static final long INTERVALO_MS = 300;
 
     @Rule(order = 0)
     public FirebaseEmulatorRule emulatorRule = new FirebaseEmulatorRule();
@@ -69,12 +69,13 @@ public class BusquedaUITest {
         seeder = new TestDataSeeder();
 
         limpiarDatos();
+
         seeder.insertarUsuarioTest();
         seeder.insertarCategoriaTest();
         seeder.insertarClankTest(0, false);
 
         escenario = ActivityScenario.launch(MainActivity.class);
-        esperar(600);
+        esperar(800);
     }
 
     @After
@@ -95,7 +96,7 @@ public class BusquedaUITest {
         seeder.eliminarLikeTest();
         seeder.eliminarClankTest();
         seeder.eliminarCategoriaTest();
-        seeder.eliminarUsuarioFirestore();
+        seeder.eliminarUsuariosConUsuarioClankTest();
     }
 
     private void navegarABusqueda() {
@@ -111,7 +112,7 @@ public class BusquedaUITest {
             navController.navigate(R.id.busquedaFragment);
         });
 
-        esperar(800);
+        esperar(900);
     }
 
     private void esperar(long millis) {
@@ -127,11 +128,13 @@ public class BusquedaUITest {
                     campo
             );
 
+            campo.requestFocus();
+            campo.setText("");
             campo.setText(texto);
             campo.setSelection(campo.getText().length());
         });
 
-        esperar(500);
+        esperar(700);
     }
 
     private int obtenerItemCountRecycler() {
@@ -158,9 +161,12 @@ public class BusquedaUITest {
 
     private void esperarHastaResultados(int minimoResultados) {
         long inicio = SystemClock.elapsedRealtime();
+        int ultimaCantidad = 0;
 
         while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
-            if (obtenerItemCountRecycler() >= minimoResultados) {
+            ultimaCantidad = obtenerItemCountRecycler();
+
+            if (ultimaCantidad >= minimoResultados) {
                 return;
             }
 
@@ -168,7 +174,8 @@ public class BusquedaUITest {
         }
 
         throw new AssertionError(
-                "No aparecieron resultados de búsqueda dentro del tiempo esperado."
+                "No aparecieron resultados de búsqueda dentro del tiempo esperado. "
+                        + "Última cantidad en RecyclerView: " + ultimaCantidad
         );
     }
 

@@ -41,12 +41,24 @@ public class TestDataSeeder {
     private static final String COL_USUARIOS = "usuarios";
     private static final String COL_CATEGORIAS = "categorias";
 
+    public static final String TEST_BUSQUEDA_UID = "test-uid-busqueda-fase4";
+    public static final String TEST_BUSQUEDA_EMAIL = "test-busqueda-fase4@clank.test";
+    public static final String TEST_BUSQUEDA_NOMBRE = "Usuario Busqueda Fase4";
+    public static final String TEST_BUSQUEDA_USUARIO_CLANK = "usuario_busqueda_fase4_unico";
+
+    public static final String TEST_BUSQUEDA_CLANK_ID = "test-clank-busqueda-fase4";
+    public static final String TEST_BUSQUEDA_CLANK_TITULO = "Clank busqueda unico Fase4";
+    public static final String TEST_BUSQUEDA_CLANK_DESCRIPCION =
+            "Descripcion busqueda unica para regresion global";
+
     private static final String SUB_MATERIALES = "materiales";
     private static final String SUB_HERRAMIENTAS = "herramientas";
     private static final String SUB_INSTRUCCIONES = "instrucciones";
     private static final String SUB_LIKES = "likes";
 
-    private static final long TIMEOUT_S = 10;
+    private static final long TIMEOUT_S = 20;
+    private static final int MAX_INTENTOS_AUTH = 4;
+    private static final long ESPERA_REINTENTO_AUTH_MS = 800;
 
     private final FirebaseFirestore db;
     private String uidAutenticadoTest;
@@ -67,27 +79,7 @@ public class TestDataSeeder {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signOut();
 
-        AuthResult resultado;
-
-        try {
-            resultado = Tasks.await(
-                    auth.createUserWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
-                    TIMEOUT_S,
-                    TimeUnit.SECONDS
-            );
-        } catch (ExecutionException errorCreacion) {
-            Throwable causa = errorCreacion.getCause();
-
-            if (causa instanceof FirebaseAuthUserCollisionException) {
-                resultado = Tasks.await(
-                        auth.signInWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
-                        TIMEOUT_S,
-                        TimeUnit.SECONDS
-                );
-            } else {
-                throw errorCreacion;
-            }
-        }
+        AuthResult resultado = crearOIniciarSesionUsuarioAuthTestConReintentos(auth);
 
         FirebaseUser usuario = resultado.getUser();
 
@@ -99,6 +91,106 @@ public class TestDataSeeder {
 
         uidAutenticadoTest = usuario.getUid();
         return uidAutenticadoTest;
+    }
+
+    private AuthResult crearOIniciarSesionUsuarioAuthTestConReintentos(FirebaseAuth auth)
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        ExecutionException ultimoErrorExecution = null;
+        TimeoutException ultimoErrorTimeout = null;
+
+        for (int intento = 1; intento <= MAX_INTENTOS_AUTH; intento++) {
+            try {
+                return Tasks.await(
+                        auth.createUserWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
+                        TIMEOUT_S,
+                        TimeUnit.SECONDS
+                );
+
+            } catch (ExecutionException errorCreacion) {
+                Throwable causa = errorCreacion.getCause();
+
+                if (causa instanceof FirebaseAuthUserCollisionException) {
+                    try {
+                        return Tasks.await(
+                                auth.signInWithEmailAndPassword(TEST_EMAIL, TEST_PASSWORD),
+                                TIMEOUT_S,
+                                TimeUnit.SECONDS
+                        );
+
+                    } catch (ExecutionException errorLogin) {
+                        if (!esErrorTransitorioAuth(errorLogin)
+                                || intento == MAX_INTENTOS_AUTH) {
+                            throw errorLogin;
+                        }
+
+                        ultimoErrorExecution = errorLogin;
+
+                    } catch (TimeoutException errorTimeout) {
+                        if (intento == MAX_INTENTOS_AUTH) {
+                            throw errorTimeout;
+                        }
+
+                        ultimoErrorTimeout = errorTimeout;
+                    }
+
+                } else {
+                    if (!esErrorTransitorioAuth(errorCreacion)
+                            || intento == MAX_INTENTOS_AUTH) {
+                        throw errorCreacion;
+                    }
+
+                    ultimoErrorExecution = errorCreacion;
+                }
+
+            } catch (TimeoutException errorTimeout) {
+                if (intento == MAX_INTENTOS_AUTH) {
+                    throw errorTimeout;
+                }
+
+                ultimoErrorTimeout = errorTimeout;
+            }
+
+            auth.signOut();
+            Thread.sleep(ESPERA_REINTENTO_AUTH_MS * intento);
+        }
+
+        if (ultimoErrorExecution != null) {
+            throw ultimoErrorExecution;
+        }
+
+        if (ultimoErrorTimeout != null) {
+            throw ultimoErrorTimeout;
+        }
+
+        throw new IllegalStateException(
+                "No se pudo crear o iniciar sesión con el usuario Auth de test."
+        );
+    }
+
+    private boolean esErrorTransitorioAuth(Exception error) {
+        Throwable actual = error;
+
+        while (actual != null) {
+            String mensaje = actual.getMessage();
+
+            if (mensaje != null) {
+                String mensajeNormalizado = mensaje.toLowerCase();
+
+                if (mensajeNormalizado.contains("unexpected end of stream")
+                        || mensajeNormalizado.contains("connection reset")
+                        || mensajeNormalizado.contains("failed to connect")
+                        || mensajeNormalizado.contains("timeout")
+                        || mensajeNormalizado.contains("network error")
+                        || mensajeNormalizado.contains("internal error has occurred")) {
+                    return true;
+                }
+            }
+
+            actual = actual.getCause();
+        }
+
+        return false;
     }
 
     public String getUidAutenticadoTest() {
@@ -136,7 +228,7 @@ public class TestDataSeeder {
         usuario.put("usuarioClank", TEST_USUARIO_CLANK);
         usuario.put("fotoPerfil", "");
         usuario.put("fotoPortada", "");
-        usuario.put("fechaCreacion", new Date());
+        usuario.put("fechaCreacion", "2026-05-22");
         usuario.put("fechaNacimiento", "2000-01-01");
         usuario.put("enLinea", false);
 
@@ -607,6 +699,81 @@ public class TestDataSeeder {
         );
     }
 
+    ///////////////////////// datos exclusivos de búsqueda /////////////////////////
+
+    public void insertarUsuarioBusquedaTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        Map<String, Object> usuario = new HashMap<>();
+        usuario.put("uid", TEST_BUSQUEDA_UID);
+        usuario.put("nombre", TEST_BUSQUEDA_NOMBRE);
+        usuario.put("correo", TEST_BUSQUEDA_EMAIL);
+        usuario.put("telefono", "611111111");
+        usuario.put("usuarioClank", TEST_BUSQUEDA_USUARIO_CLANK);
+        usuario.put("fotoPerfil", "");
+        usuario.put("fotoPortada", "");
+        usuario.put("fechaCreacion", new Date());
+        usuario.put("fechaNacimiento", "2000-01-01");
+        usuario.put("enLinea", false);
+
+        Tasks.await(
+                db.collection(COL_USUARIOS)
+                        .document(TEST_BUSQUEDA_UID)
+                        .set(usuario),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void insertarClankBusquedaTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        Map<String, Object> clank = new HashMap<>();
+        clank.put("clankId", TEST_BUSQUEDA_CLANK_ID);
+        clank.put("usuarioId", TEST_BUSQUEDA_UID);
+        clank.put("titulo", TEST_BUSQUEDA_CLANK_TITULO);
+        clank.put("descripcion", TEST_BUSQUEDA_CLANK_DESCRIPCION);
+        clank.put("portada", "");
+        clank.put("tiempo", 1);
+        clank.put("categorias", Arrays.asList(TEST_CATEGORIA_ID));
+        clank.put("estadoAcabado", true);
+        clank.put("numLikes", 0);
+        clank.put("fechaPublicacion", new Date());
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BUSQUEDA_CLANK_ID)
+                        .set(clank),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void eliminarDatosBusquedaTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        borrarSubcoleccion(TEST_BUSQUEDA_CLANK_ID, SUB_MATERIALES);
+        borrarSubcoleccion(TEST_BUSQUEDA_CLANK_ID, SUB_HERRAMIENTAS);
+        borrarSubcoleccion(TEST_BUSQUEDA_CLANK_ID, SUB_INSTRUCCIONES);
+        borrarSubcoleccion(TEST_BUSQUEDA_CLANK_ID, SUB_LIKES);
+
+        Tasks.await(
+                db.collection(COL_CLANKS)
+                        .document(TEST_BUSQUEDA_CLANK_ID)
+                        .delete(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+
+        Tasks.await(
+                db.collection(COL_USUARIOS)
+                        .document(TEST_BUSQUEDA_UID)
+                        .delete(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
     ///////////////////////// utilidades privadas /////////////////////////
 
     private void borrarSubcoleccion(String clankId, String subcoleccion)
@@ -616,6 +783,34 @@ public class TestDataSeeder {
                 db.collection(COL_CLANKS)
                         .document(clankId)
                         .collection(subcoleccion)
+                        .get(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+
+        if (docs.isEmpty()) {
+            return;
+        }
+
+        WriteBatch batch = db.batch();
+
+        for (DocumentSnapshot doc : docs.getDocuments()) {
+            batch.delete(doc.getReference());
+        }
+
+        Tasks.await(
+                batch.commit(),
+                TIMEOUT_S,
+                TimeUnit.SECONDS
+        );
+    }
+
+    public void eliminarUsuariosConUsuarioClankTest()
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        QuerySnapshot docs = Tasks.await(
+                db.collection(COL_USUARIOS)
+                        .whereEqualTo("usuarioClank", TEST_USUARIO_CLANK)
                         .get(),
                 TIMEOUT_S,
                 TimeUnit.SECONDS

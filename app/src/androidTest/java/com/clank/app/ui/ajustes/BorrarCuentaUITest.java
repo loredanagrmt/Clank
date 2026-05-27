@@ -1,9 +1,5 @@
 package com.clank.app.ui.ajustes;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -11,13 +7,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import android.app.Dialog;
 import android.os.SystemClock;
 import android.view.View;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
@@ -38,6 +36,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -59,10 +58,13 @@ import io.qameta.allure.kotlin.Story;
 @Feature("Borrar cuenta")
 public class BorrarCuentaUITest {
 
-    private static final long TIMEOUT_MS = 12000;
+    private static final long TIMEOUT_MS = 60000;
     private static final long INTERVALO_MS = 300;
     private static final long TIMEOUT_FIRESTORE_S = 10;
     private static final long TIMEOUT_AUTH_S = 10;
+
+    private static final String TAG_CONFIRMACION_BORRAR_CUENTA =
+            "confirmacion_borrar_cuenta";
 
     @Rule(order = 0)
     public FirebaseEmulatorRule emulatorRule = new FirebaseEmulatorRule();
@@ -142,20 +144,19 @@ public class BorrarCuentaUITest {
 
     private void esperarHastaDestinoBienvenida() {
         long inicio = SystemClock.elapsedRealtime();
-        final boolean[] enBienvenida = new boolean[1];
+        final int[] destinoActual = new int[]{-1};
 
         while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
-            enBienvenida[0] = false;
-
             escenario.onActivity(activity -> {
                 NavController navController =
                         Navigation.findNavController(activity, R.id.nav_host_fragment);
 
-                enBienvenida[0] = navController.getCurrentDestination() != null
-                        && navController.getCurrentDestination().getId() == R.id.bienvenidaFragment;
+                destinoActual[0] = navController.getCurrentDestination() != null
+                        ? navController.getCurrentDestination().getId()
+                        : -1;
             });
 
-            if (enBienvenida[0]) {
+            if (destinoActual[0] == R.id.bienvenidaFragment) {
                 return;
             }
 
@@ -163,8 +164,140 @@ public class BorrarCuentaUITest {
         }
 
         throw new AssertionError(
-                "No se navegó a bienvenidaFragment tras borrar cuenta."
+                "No se navegó a bienvenidaFragment tras borrar cuenta. Destino actual: "
+                        + destinoActual[0]
         );
+    }
+
+    private void esperarHastaHojaConfirmacionCerrada() {
+        long inicio = SystemClock.elapsedRealtime();
+        final boolean[] cerrada = new boolean[]{false};
+
+        while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
+            escenario.onActivity(activity -> {
+                Fragment hoja = obtenerHojaConfirmacionBorrarCuenta(activity);
+                cerrada[0] = hoja == null || !hoja.isAdded();
+            });
+
+            if (cerrada[0]) {
+                return;
+            }
+
+            esperar(INTERVALO_MS);
+        }
+
+        throw new AssertionError(
+                "La hoja de confirmación de borrar cuenta no se cerró dentro del tiempo esperado."
+        );
+    }
+
+    private void esperarHastaVistaHojaVisible(int idVista, String descripcionVista) {
+        long inicio = SystemClock.elapsedRealtime();
+        final boolean[] visible = new boolean[]{false};
+
+        while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
+            escenario.onActivity(activity -> {
+                Fragment hoja = obtenerHojaConfirmacionBorrarCuenta(activity);
+                View vista = obtenerVistaDeHoja(hoja, idVista);
+                visible[0] = vista != null && vista.isShown();
+            });
+
+            if (visible[0]) {
+                return;
+            }
+
+            esperar(INTERVALO_MS);
+        }
+
+        throw new AssertionError(
+                "No se mostró la vista de la hoja de confirmación: " + descripcionVista
+        );
+    }
+
+    private void pulsarVistaHoja(int idVista, String descripcionVista) {
+        long inicio = SystemClock.elapsedRealtime();
+        final boolean[] pulsada = new boolean[]{false};
+
+        while (SystemClock.elapsedRealtime() - inicio < TIMEOUT_MS) {
+            escenario.onActivity(activity -> {
+                Fragment hoja = obtenerHojaConfirmacionBorrarCuenta(activity);
+                View vista = obtenerVistaDeHoja(hoja, idVista);
+
+                if (vista != null && vista.isShown() && vista.isEnabled()) {
+                    vista.performClick();
+                    pulsada[0] = true;
+                }
+            });
+
+            if (pulsada[0]) {
+                return;
+            }
+
+            esperar(INTERVALO_MS);
+        }
+
+        throw new AssertionError(
+                "No se pudo pulsar la vista de la hoja de confirmación: " + descripcionVista
+        );
+    }
+
+    private Fragment obtenerHojaConfirmacionBorrarCuenta(MainActivity activity) {
+        Fragment fragmentoActual = obtenerFragmentoActualPrincipal(activity);
+
+        if (fragmentoActual == null) {
+            return null;
+        }
+
+        return fragmentoActual
+                .getChildFragmentManager()
+                .findFragmentByTag(TAG_CONFIRMACION_BORRAR_CUENTA);
+    }
+
+    private Fragment obtenerFragmentoActualPrincipal(MainActivity activity) {
+        Fragment navHostFragment =
+                activity.getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment == null) {
+            return null;
+        }
+
+        List<Fragment> fragmentos =
+                navHostFragment.getChildFragmentManager().getFragments();
+
+        for (Fragment fragmento : fragmentos) {
+            if (fragmento != null && fragmento.isAdded()) {
+                return fragmento;
+            }
+        }
+
+        return null;
+    }
+
+    private View obtenerVistaDeHoja(Fragment hoja, int idVista) {
+        if (hoja == null) {
+            return null;
+        }
+
+        View vistaHoja = hoja.getView();
+
+        if (vistaHoja != null) {
+            View vista = vistaHoja.findViewById(idVista);
+
+            if (vista != null) {
+                return vista;
+            }
+        }
+
+        if (hoja instanceof DialogFragment) {
+            Dialog dialogo = ((DialogFragment) hoja).getDialog();
+
+            if (dialogo != null) {
+                return dialogo.findViewById(idVista);
+            }
+        }
+
+        return null;
     }
 
     private DocumentSnapshot obtenerUsuarioFirestore()
@@ -315,16 +448,20 @@ public class BorrarCuentaUITest {
             borrarCuenta.performClick();
         });
 
-        esperar(500);
+        esperarHastaVistaHojaVisible(
+                R.id.tituloPanelOpciones,
+                "título de confirmación"
+        );
 
-        onView(withId(R.id.tituloPanelOpciones))
-                .check(ViewAssertions.matches(isDisplayed()));
+        esperarHastaVistaHojaVisible(
+                R.id.textoConfirmacion,
+                "texto de confirmación"
+        );
 
-        onView(withId(R.id.textoConfirmacion))
-                .check(ViewAssertions.matches(isDisplayed()));
-
-        onView(withId(R.id.contenedorBotonesConfirmacion))
-                .check(ViewAssertions.matches(isDisplayed()));
+        esperarHastaVistaHojaVisible(
+                R.id.contenedorBotonesConfirmacion,
+                "contenedor de botones de confirmación"
+        );
     }
 
     @Test
@@ -340,13 +477,17 @@ public class BorrarCuentaUITest {
             borrarCuenta.performClick();
         });
 
-        esperar(500);
+        esperarHastaVistaHojaVisible(
+                R.id.includeBotonCancelar,
+                "botón cancelar"
+        );
 
-        onView(withId(R.id.includeBotonCancelar))
-                .check(ViewAssertions.matches(isDisplayed()))
-                .perform(click());
+        pulsarVistaHoja(
+                R.id.includeBotonCancelar,
+                "botón cancelar"
+        );
 
-        esperar(500);
+        esperarHastaHojaConfirmacionCerrada();
 
         assertNotNull(
                 "Al cancelar, la sesión debe seguir activa.",
@@ -411,15 +552,19 @@ public class BorrarCuentaUITest {
             borrarCuenta.performClick();
         });
 
-        esperar(500);
+        esperarHastaVistaHojaVisible(
+                R.id.includeBotonConfirmar,
+                "botón confirmar"
+        );
 
-        onView(withId(R.id.includeBotonConfirmar))
-                .check(ViewAssertions.matches(isDisplayed()))
-                .perform(click());
+        pulsarVistaHoja(
+                R.id.includeBotonConfirmar,
+                "botón confirmar"
+        );
 
-        esperarHastaDestinoBienvenida();
         esperarHastaUsuarioFirestoreEliminado();
         esperarHastaBocetoEliminado();
+        esperarHastaDestinoBienvenida();
 
         assertFalse(
                 "El usuario Firestore debe quedar eliminado.",
