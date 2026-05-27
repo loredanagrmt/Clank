@@ -278,7 +278,7 @@ public class ChipCategoriasHelper {
 
   private static void aplicarEstiloInactivo(Context context, Button chip) {
     chip.setBackgroundResource(R.drawable.bg_boton_secundario);
-    chip.setTextColor(ContextCompat.getColor(context, R.color.color_texto_inactivo));
+    chip.setTextColor(ContextCompat.getColor(context, R.color.color_texto_chip_inactivo));
   }
 
   private static int dpToPx(Context context, int dp) {

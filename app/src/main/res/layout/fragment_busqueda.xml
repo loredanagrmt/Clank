@@ -46,7 +46,7 @@
       android:paddingStart="@dimen/spacing_md"
       android:paddingEnd="@dimen/spacing_md"
       android:singleLine="true"
-      android:textColor="@color/color_negrita"
+      android:textColor="@color/color_texto_darkmode_filtros_busqueda"
       android:textColorHint="@color/color_texto_inactivo"
       android:textSize="@dimen/text_body"
       app:layout_constraintStart_toEndOf="@id/btnBusquedaVolver"
