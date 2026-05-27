@@ -8,6 +8,20 @@
     android:paddingStart="@dimen/space_xs"
     android:paddingEnd="@dimen/space_xs">
 
+  <View
+    android:id="@+id/anclaIzquierda"
+    android:layout_width="44dp"
+    android:layout_height="44dp"
+    android:layout_alignParentStart="true"
+    android:layout_centerVertical="true" />
+
+  <View
+    android:id="@+id/anclaDerecha"
+    android:layout_width="44dp"
+    android:layout_height="44dp"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true" />
+
     <ImageButton
         android:id="@+id/btnNavbarVolver"
         android:layout_width="44dp"
@@ -18,15 +32,6 @@
         android:padding="10dp"
         android:src="@drawable/ic_flecha_atras"
         app:tint="@color/color_texto_btprincipal" />
-
-    <TextView
-        android:id="@+id/tvNavbarTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:fontFamily="@font/poppins_semibold"
-        android:textColor="@color/color_texto_btprincipal"
-        android:textSize="@dimen/text_header_title" />
 
     <ImageButton
         android:id="@+id/btnNavbarAccion"
@@ -50,5 +55,19 @@
         android:src="@drawable/ic_filtrar"
         android:visibility="gone"
         app:tint="@color/color_texto_btprincipal" />
+
+  <TextView
+    android:id="@+id/tvNavbarTitulo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_toEndOf="@id/anclaIzquierda"
+    android:layout_toStartOf="@id/anclaDerecha"
+    android:gravity="center"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:fontFamily="@font/poppins_semibold"
+    android:textColor="@color/color_texto_btprincipal"
+    android:textSize="@dimen/text_header_title" />
 
 </RelativeLayout>

@@ -21,6 +21,7 @@ import com.clank.app.data.model.Herramienta;
 import com.clank.app.data.model.Instruccion;
 import com.clank.app.data.model.Material;
 import com.clank.app.databinding.FragmentDetalleClankBinding;
+import com.clank.app.ui.comun.ChipCategoriasHelper;
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.ItemOpcion;
 import com.clank.app.ui.comun.NavbarHost;
@@ -236,9 +237,11 @@ public class DetalleClankFragment extends Fragment {
               v -> mostrarOpcionesClank()
       );
     } else {
-      host.mostrarNavbarConVolver(
-              tituloClankActual != null ? tituloClankActual : ""
-      );
+      String titulo = tituloClankActual != null ? tituloClankActual : "";
+      String tituloNavbar = titulo.length() > 25
+        ? titulo.substring(0, 25) + "…"
+        : titulo;
+      host.mostrarNavbarConVolver(tituloNavbar);
     }
   }
 
@@ -311,12 +314,14 @@ public class DetalleClankFragment extends Fragment {
   private void rellenarHerramientas(List<Herramienta> herramientas) {
     binding.llContenedorHerramientas.removeAllViews();
 
-    if (herramientas == null || herramientas.isEmpty()) {
-      binding.llContenedorHerramientas.setVisibility(View.GONE);
-      return;
-    }
+    boolean hayHerramientas = herramientas != null && !herramientas.isEmpty();
 
-    binding.llContenedorHerramientas.setVisibility(View.VISIBLE);
+    binding.tvTituloHerramientas.setVisibility(
+      hayHerramientas ? View.VISIBLE : View.GONE);
+    binding.llContenedorHerramientas.setVisibility(
+      hayHerramientas ? View.VISIBLE : View.GONE);
+
+    if (!hayHerramientas) return;
 
     for (Herramienta h : herramientas) {
       View fila = LayoutInflater.from(requireContext())
@@ -382,41 +387,10 @@ public class DetalleClankFragment extends Fragment {
   ///////////////////////// categorías (solo visual, no clickables) /////////////////////////
 
   private void rellenarCategorias(List<String[]> categorias) {
-    binding.flexboxCategorias.removeAllViews();
-
-    if (categorias == null || categorias.isEmpty()) {
-      return;
-    }
-
-    for (String[] cat : categorias) {
-      Button chip = (Button) LayoutInflater.from(requireContext())
-              .inflate(
-                      R.layout.bt_secundario,
-                      binding.flexboxCategorias,
-                      false
-              );
-
-      chip.setText(cat[1]);
-      chip.setTag(cat[0]);
-      chip.setSelected(true);
-      chip.setBackgroundResource(R.drawable.bg_boton_principal);
-
-      chip.setTextColor(ContextCompat.getColor(
-              requireContext(),
-              R.color.clank_background_light
-      ));
-
-      chip.setClickable(false);
-      chip.setFocusable(false);
-
-      ViewGroup.MarginLayoutParams lp =
-              (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
-
-      lp.setMargins(0, 0, 8, 8);
-      chip.setLayoutParams(lp);
-
-      binding.flexboxCategorias.addView(chip);
-    }
+    ChipCategoriasHelper.cargarChipsVisuales(
+      requireContext(),
+      binding.contenedorCategorias,
+      categorias);
   }
 
   ///////////////////////// hoja de opciones de clank /////////////////////////

@@ -705,21 +705,8 @@ public class EditarClankFragment extends Fragment {
   }
 
   private List<String> recogerCategoriasSeleccionadas() {
-    List<String> seleccionadas = new ArrayList<>();
-
-    for (int i = 0; i < binding.flexboxCategorias.getChildCount(); i++) {
-      View chip = binding.flexboxCategorias.getChildAt(i);
-
-      if (chip.isSelected() && chip instanceof Button) {
-        Object tag = chip.getTag();
-
-        if (tag instanceof String) {
-          seleccionadas.add((String) tag);
-        }
-      }
-    }
-
-    return seleccionadas;
+    return com.clank.app.ui.comun.ChipCategoriasHelper
+      .recogerSeleccionadas(binding.contenedorCategorias);
   }
 
   ///////////////////////// observadores /////////////////////////
@@ -946,76 +933,22 @@ public class EditarClankFragment extends Fragment {
   ////////////////////////// categorías /////////////////////////
 
   private void cargarChipsCategorias(List<String[]> categorias) {
-    if (categorias == null || categorias.isEmpty()) {
-      return;
-    }
+    if (categorias == null || categorias.isEmpty()) return;
 
-    EditarClankViewModel.DatosClank datos =
-            viewModel.getDatosClank().getValue();
+    EditarClankViewModel.DatosClank datos = viewModel.getDatosClank().getValue();
+    java.util.Set<String> seleccionadas = new java.util.HashSet<>(
+      datos != null ? datos.categorias : new ArrayList<>()
+    );
 
-    List<String> seleccionadas =
-            datos != null ? datos.categorias : new ArrayList<>();
-
-    binding.flexboxCategorias.removeAllViews();
-
-    for (String[] cat : categorias) {
-      String catId = cat[0];
-      String catNombre = cat[1];
-      boolean activo = seleccionadas.contains(catId);
-
-      Button chip = (Button) LayoutInflater.from(requireContext())
-              .inflate(
-                      R.layout.bt_secundario,
-                      binding.flexboxCategorias,
-                      false
-              );
-
-      chip.setText(catNombre);
-      chip.setTag(catId);
-      chip.setSelected(activo);
-
-      chip.setBackgroundResource(
-              activo
-                      ? R.drawable.bg_boton_principal
-                      : R.drawable.bg_boton_secundario
-      );
-
-      chip.setTextColor(ContextCompat.getColor(
-              requireContext(),
-              activo
-                      ? R.color.clank_background_light
-                      : R.color.color_texto_inactivo
-      ));
-
-      ViewGroup.MarginLayoutParams lp =
-              (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
-
-      lp.setMargins(0, 0, 8, 8);
-      chip.setLayoutParams(lp);
-
-      chip.setOnClickListener(b -> {
-        boolean estaActivo = chip.isSelected();
-
-        chip.setSelected(!estaActivo);
-
-        chip.setBackgroundResource(
-                !estaActivo
-                        ? R.drawable.bg_boton_principal
-                        : R.drawable.bg_boton_secundario
-        );
-
-        chip.setTextColor(ContextCompat.getColor(
-                requireContext(),
-                !estaActivo
-                        ? R.color.clank_background_light
-                        : R.color.color_texto_inactivo
-        ));
-
+    com.clank.app.ui.comun.ChipCategoriasHelper.cargarChipsInteractivos(
+      requireContext(),
+      binding.contenedorCategorias,
+      categorias,
+      seleccionadas,
+      (chip, categoriaId, seleccionado) -> {
         viewModel.marcarCambios();
         actualizarEstadoBotonPublicar();
-      });
-
-      binding.flexboxCategorias.addView(chip);
-    }
+      }
+    );
   }
 }

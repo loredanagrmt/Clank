@@ -29,12 +29,15 @@ import com.bumptech.glide.Glide;
 import com.clank.app.R;
 import com.clank.app.databinding.FragmentCrearBinding;
 import com.clank.app.databinding.ItemInstruccionBinding;
+import com.clank.app.ui.comun.ChipCategoriasHelper;
 import com.clank.app.ui.comun.HojaOpciones;
 import com.clank.app.ui.comun.NavbarHost;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -401,6 +404,11 @@ public class CrearFragment extends Fragment {
       binding.etTitulo.requestFocus();
       return;
     }
+    if (titulo.length() > 40) {
+      binding.etTitulo.setError(getString(R.string.crear_error_titulo_largo));
+      binding.etTitulo.requestFocus();
+      return;
+    }
 
     if (descripcion.isEmpty()) {
       binding.etDescripcion.setError(getString(R.string.crear_error_descripcion_vacia));
@@ -547,19 +555,8 @@ public class CrearFragment extends Fragment {
   }
 
   private void limpiarCategoriasSeleccionadas() {
-    for (int i = 0; i < binding.flexboxCategorias.getChildCount(); i++) {
-      View chip = binding.flexboxCategorias.getChildAt(i);
-
-      if (chip instanceof Button) {
-        chip.setSelected(false);
-        chip.setBackgroundResource(R.drawable.bg_boton_secundario);
-
-        ((Button) chip).setTextColor(ContextCompat.getColor(
-                requireContext(),
-                R.color.color_texto_inactivo
-        ));
-      }
-    }
+    viewModel.limpiarCategoriasSeleccionadasVM();
+    ChipCategoriasHelper.limpiarSeleccion(requireContext(), binding.contenedorCategorias);
   }
 
   ///////////////////////// recoger datos clank /////////////////////////
@@ -612,21 +609,7 @@ public class CrearFragment extends Fragment {
   }
 
   private List<String> recogerCategoriasSeleccionadas() {
-    List<String> seleccionadas = new ArrayList<>();
-
-    for (int i = 0; i < binding.flexboxCategorias.getChildCount(); i++) {
-      View chip = binding.flexboxCategorias.getChildAt(i);
-
-      if (chip.isSelected() && chip instanceof Button) {
-        Object tag = chip.getTag();
-
-        if (tag instanceof String) {
-          seleccionadas.add((String) tag);
-        }
-      }
-    }
-
-    return seleccionadas;
+    return ChipCategoriasHelper.recogerSeleccionadas(binding.contenedorCategorias);
   }
 
   ///////////////////////// observadores /////////////////////////
@@ -682,47 +665,18 @@ public class CrearFragment extends Fragment {
   }
 
   private void cargarChipsCategorias(List<String[]> categorias) {
-    if (categorias == null || categorias.isEmpty()) {
-      return;
+    Set<String> seleccionadas = new HashSet<>();
+    if (viewModel.getCategoriasSeleccionadas().getValue() != null) {
+      seleccionadas = viewModel.getCategoriasSeleccionadas().getValue();
     }
-
-    binding.flexboxCategorias.removeAllViews();
-
-    for (String[] cat : categorias) {
-      String catNombre = cat[1];
-
-      Button chip = (Button) LayoutInflater.from(requireContext())
-              .inflate(R.layout.bt_secundario, binding.flexboxCategorias, false);
-
-      chip.setText(catNombre);
-      chip.setTag(cat[0]);
-
-      ViewGroup.MarginLayoutParams lp =
-              (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
-
-      lp.setMargins(0, 0, 8, 8);
-      chip.setLayoutParams(lp);
-
-      chip.setOnClickListener(b -> {
-        boolean activo = chip.isSelected();
-        chip.setSelected(!activo);
-
-        chip.setBackgroundResource(
-                !activo
-                        ? R.drawable.bg_boton_principal
-                        : R.drawable.bg_boton_secundario
-        );
-
-        chip.setTextColor(ContextCompat.getColor(
-                requireContext(),
-                !activo
-                        ? R.color.clank_background_light
-                        : R.color.color_texto_inactivo
-        ));
-      });
-
-      binding.flexboxCategorias.addView(chip);
-    }
+    ChipCategoriasHelper.cargarChipsInteractivos(
+      requireContext(),
+      binding.contenedorCategorias,
+      categorias,
+      seleccionadas,
+      (chip, categoriaId, seleccionado) ->
+        viewModel.toggleCategoriaSeleccionada(categoriaId)
+    );
   }
 
   private void mostrarErrorPortada() {

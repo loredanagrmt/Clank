@@ -100,24 +100,17 @@ public class FiltrosViewModel extends ViewModel {
     private List<String[]> convertirATuplas(List<Categoria> categoriasOriginales) {
         List<String[]> lista = new ArrayList<>();
 
-        if (categoriasOriginales == null) {
-            return lista;
-        }
+      if (categoriasOriginales == null) return lista;
 
         for (Categoria categoria : categoriasOriginales) {
             if (categoria == null) {
                 continue;
             }
 
-            String id =
-                    categoria.getCatId() != null
-                            ? categoria.getCatId()
-                            : "";
+        String id = categoria.getCatId() != null ? categoria.getCatId() : "";
+        String nombre = categoria.getCategoria() != null ? categoria.getCategoria() : "";
 
-            String nombre =
-                    categoria.getCategoria() != null
-                            ? categoria.getCategoria()
-                            : "";
+        if (nombre.trim().isEmpty() || id.trim().isEmpty()) continue;
 
             lista.add(new String[]{id, nombre});
         }
@@ -126,37 +119,30 @@ public class FiltrosViewModel extends ViewModel {
     }
 
     private List<Categoria> convertirACategorias(List<String[]> categoriasTraducidas) {
-        List<Categoria> lista = new ArrayList<>();
+      List<Categoria> lista = new ArrayList<>();
 
-        if (categoriasTraducidas == null) {
-            return lista;
-        }
+      if (categoriasTraducidas == null) return lista;
 
-        for (String[] categoriaTraducida : categoriasTraducidas) {
-            if (categoriaTraducida == null) {
-                continue;
-            }
+      for (String[] categoriaTraducida : categoriasTraducidas) {
+        if (categoriaTraducida == null) continue;
 
-            Categoria categoria = new Categoria();
+        String id = categoriaTraducida.length > 0 && categoriaTraducida[0] != null
+          ? categoriaTraducida[0]
+          : "";
 
-            categoria.setCatId(
-                    categoriaTraducida.length > 0
-                            && categoriaTraducida[0] != null
-                            ? categoriaTraducida[0]
-                            : ""
-            );
+        String nombre = categoriaTraducida.length > 1 && categoriaTraducida[1] != null
+          ? categoriaTraducida[1]
+          : "";
 
-            categoria.setCategoria(
-                    categoriaTraducida.length > 1
-                            && categoriaTraducida[1] != null
-                            ? categoriaTraducida[1]
-                            : ""
-            );
+        if (nombre.trim().isEmpty() || id.trim().isEmpty()) continue;
 
-            lista.add(categoria);
-        }
+        Categoria categoria = new Categoria();
+        categoria.setCatId(id);
+        categoria.setCategoria(nombre);
+        lista.add(categoria);
+      }
 
-        return lista;
+      return lista;
     }
 
     @Override

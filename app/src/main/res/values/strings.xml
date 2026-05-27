@@ -157,6 +157,7 @@
     <string name="crear_ver_imagen">Ver imagen</string>
     <string name="crear_eliminar_imagen">Eliminar imagen</string>
     <string name="crear_error_portada_vacia">Debes añadir una portada</string>
+    <string name="crear_error_titulo_largo">Vaya… Es un título demasiado largo. Inténtalo de nuevo</string>
 
     <!-- Editar Clank -->
     <string name="editar_titulo">Editar Clank</string>
