@@ -43,6 +43,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:fontFamily="@font/poppins_semibold"
                         android:shadowColor="@color/color_circulo_opciones"
                         android:shadowDx="0"
@@ -198,6 +200,7 @@
 
             <!-- Herramientas -->
             <TextView
+                android:id="@+id/tvTituloHerramientas"
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
                 android:fontFamily="@font/poppins_semibold"
@@ -236,15 +239,13 @@
                 android:text="@string/crear_campo_categorias"
                 android:textColor="@color/color_clank_activo" />
 
-            <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/flexboxCategorias"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
-                android:layout_marginTop="@dimen/crear_campo_margin_top"
-                app:alignItems="center"
-                app:flexWrap="wrap"
-                app:justifyContent="flex_start" />
+          <LinearLayout
+            android:id="@+id/contenedorCategorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+            android:layout_marginTop="@dimen/crear_campo_margin_top"
+            android:orientation="vertical" />
 
         </LinearLayout>
 
