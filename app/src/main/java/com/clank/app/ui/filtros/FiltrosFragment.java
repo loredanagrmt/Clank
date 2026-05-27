@@ -73,33 +73,32 @@ public class FiltrosFragment extends Fragment {
             binding.tvErrorFiltros.setVisibility(View.GONE);
 
             for (Categoria cat : categorias) {
-                Button chip = (Button) LayoutInflater.from(requireContext())
-                        .inflate(
-                                R.layout.bt_secundario,
-                                binding.chipGroupCategorias,
-                                false
-                        );
+              String nombre = cat.getCategoria();
+              if (nombre == null || nombre.trim().isEmpty()) continue;
 
-                chip.setText(cat.getCategoria());
-                chip.setTag(cat.getCatId());
-
-                ViewGroup.MarginLayoutParams lp =
-                        (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
-
-                lp.setMargins(
-                        0,
-                        0,
-                        (int) getResources().getDimension(R.dimen.chip_margin),
-                        (int) getResources().getDimension(R.dimen.chip_margin)
+              Button chip = (Button) LayoutInflater.from(requireContext())
+                .inflate(
+                  R.layout.bt_secundario,
+                  binding.chipGroupCategorias,
+                  false
                 );
 
-                chip.setLayoutParams(lp);
+              chip.setText(nombre);
+              chip.setTag(cat.getCatId());
 
-                chip.setOnClickListener(v ->
-                        navegarAResultados(cat)
-                );
+              ViewGroup.MarginLayoutParams lp =
+                (ViewGroup.MarginLayoutParams) chip.getLayoutParams();
 
-                binding.chipGroupCategorias.addView(chip);
+              lp.setMargins(
+                0,
+                0,
+                (int) getResources().getDimension(R.dimen.chip_margin),
+                (int) getResources().getDimension(R.dimen.chip_margin)
+              );
+
+              chip.setLayoutParams(lp);
+              chip.setOnClickListener(v -> navegarAResultados(cat));
+              binding.chipGroupCategorias.addView(chip);
             }
         });
 
