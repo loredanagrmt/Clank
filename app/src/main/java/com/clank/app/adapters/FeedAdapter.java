@@ -25,6 +25,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +96,14 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     return tarjetasPreparadas ? super.getItemCount() : 0;
   }
 
+  public int getCantidadRealFirestore() {
+    return super.getItemCount();
+  }
+
+  public boolean estaPreparado() {
+    return tarjetasPreparadas;
+  }
+
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -114,9 +126,9 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
     holder.itemView.setVisibility(View.VISIBLE);
 
-    //título y descripción
     TraductorTarjetaClank.TextoTarjetaTraducido textos =
-      obtenerTextoTarjeta(clankId, clank);
+            obtenerTextoTarjeta(clankId, clank);
+
     holder.binding.tarjeta.tvTituloClank.setText(textos.titulo);
     holder.binding.tarjeta.tvDescripcionClank.setText(textos.descripcion);
 
@@ -129,11 +141,17 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
       ContextCompat.getDrawable(context, iconoTiempo));
 
     //portada
+    Glide.with(context).clear(holder.binding.tarjeta.ivPortada);
+
     if (clank.getPortada() != null && !clank.getPortada().isEmpty()) {
-      Glide.with(context).load(clank.getPortada()).centerCrop()
-        .into(holder.binding.tarjeta.ivPortada);
+      Glide.with(context)
+              .load(clank.getPortada())
+              .centerCrop()
+              .placeholder(R.drawable.img_usuario_defecto)
+              .error(R.drawable.img_usuario_defecto)
+              .into(holder.binding.tarjeta.ivPortada);
     } else {
-      holder.binding.tarjeta.ivPortada.setImageDrawable(null);
+      holder.binding.tarjeta.ivPortada.setImageResource(R.drawable.img_usuario_defecto);
     }
 
     Integer contadorVm = contadorLikesLocal.get(clankId);
@@ -141,11 +159,28 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
       String.valueOf(contadorVm != null ? contadorVm : clank.getNumLikes()));
 
     holder.binding.tarjeta.ivOpciones.setVisibility(View.VISIBLE);
+    holder.binding.tarjeta.ivOpciones.setEnabled(true);
+    holder.binding.tarjeta.ivOpciones.setClickable(true);
+
+    holder.binding.tarjeta.ivLike.setVisibility(View.VISIBLE);
+    holder.binding.tarjeta.ivLike.setEnabled(false);
+    holder.binding.tarjeta.ivLike.setClickable(false);
+
     pintarEstadoLike(holder, clankId);
 
     holder.binding.tarjeta.ivOpciones.setOnClickListener(v -> {
-      if (likeListener != null) likeListener.onLikeClick(clankId);
+      holder.binding.tarjeta.ivOpciones.setEnabled(false);
+
+      if (likeListener != null) {
+        likeListener.onLikeClick(clankId);
+      }
+
+      holder.binding.tarjeta.ivOpciones.postDelayed(
+              () -> holder.binding.tarjeta.ivOpciones.setEnabled(true),
+              500
+      );
     });
+
     holder.binding.cabeceraUsuario.tvUsernameItem.setText("");
     holder.binding.cabeceraUsuario.civAvatarUsuario
       .setImageResource(R.drawable.img_usuario_defecto);
@@ -214,12 +249,15 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
                                @NonNull List<Object> payloads) {
     if (!payloads.isEmpty() && payloads.contains(PAYLOAD_LIKE)) {
       String clankId = getSnapshots().getSnapshot(position).getId();
+
       pintarEstadoLike(holder, clankId);
 
       Integer contador = contadorLikesLocal.get(clankId);
+
       if (contador != null) {
         holder.binding.tarjeta.tvNumLikes.setText(String.valueOf(contador));
       }
+
       AnimUtils.animarLike(holder.binding.tarjeta.ivOpciones);
       return;
     }
@@ -232,6 +270,12 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   public void onDataChanged() {
     tarjetasPreparadas = false;
     notifyDataSetChanged();
+
+    limpiarCachesDeClanksEliminados();
+
+    if (listenerPreparacion != null) {
+      listenerPreparacion.alIniciarPreparacion();
+    }
 
     if (itemsListosListener != null) {
       List<String> ids = new ArrayList<>();
@@ -247,6 +291,29 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
     prepararTraduccionesTarjetas();
   }
+
+  private void limpiarCachesDeClanksEliminados() {
+    Set<String> idsActuales = new HashSet<>();
+
+    for (int i = 0; i < super.getItemCount(); i++) {
+      idsActuales.add(getSnapshots().getSnapshot(i).getId());
+    }
+
+    estadoLikesLocal.keySet().removeIf(id -> !idsActuales.contains(id));
+    contadorLikesLocal.keySet().removeIf(id -> !idsActuales.contains(id));
+
+    Iterator<String> iterador = cacheTraducciones.keySet().iterator();
+
+    while (iterador.hasNext()) {
+      String clave = iterador.next();
+      String clankId = clave.split("\\|")[0];
+
+      if (!idsActuales.contains(clankId)) {
+        iterador.remove();
+      }
+    }
+  }
+
   public void actualizarLike(String clankId, boolean isLiked, int numLikes) {
     estadoLikesLocal.put(clankId, isLiked);
     contadorLikesLocal.put(clankId, numLikes);
@@ -254,12 +321,19 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   private void pintarEstadoLike(@NonNull ViewHolder holder, String clankId) {
     Boolean activo = estadoLikesLocal.get(clankId);
-    boolean liked  = Boolean.TRUE.equals(activo);
+    boolean liked = Boolean.TRUE.equals(activo);
+
     holder.binding.tarjeta.ivOpciones.setImageResource(
-      liked ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
+            liked
+                    ? R.drawable.ic_like_activo
+                    : R.drawable.ic_like_inactivo
+    );
+
     holder.binding.tarjeta.ivOpciones.setBackgroundResource(
-      liked ? R.drawable.bg_circulo_opciones_activo
-        : R.drawable.bg_circulo_opciones_inactivo);
+            liked
+                    ? R.drawable.bg_circulo_opciones_activo
+                    : R.drawable.bg_circulo_opciones_inactivo
+    );
   }
 
   //////////////////////////traductor/////////////////////////
@@ -278,7 +352,11 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   private void prepararTraduccionesTarjetas() {
     int versionActual = ++versionPreparacion;
-    if (listenerPreparacion != null) listenerPreparacion.alIniciarPreparacion();
+
+    if (super.getItemCount() == 0) {
+      finalizarPreparacion(versionActual);
+      return;
+    }
 
     List<Task<?>> tareas = new ArrayList<>();
 
@@ -286,19 +364,45 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
       Clank clank = getItem(i);
       String clankId = getSnapshots().getSnapshot(i).getId();
       String clave = construirClaveTraduccion(clankId, clank);
-      if (cacheTraducciones.containsKey(clave)) continue;
 
-      String tituloOrig = clank.getTitulo() != null ? clank.getTitulo() : "";
-      String descOrig   = clank.getDescripcion() != null ? clank.getDescripcion() : "";
-      TraductorTarjetaClank.TextoTarjetaTraducido textoOrig =
-        new TraductorTarjetaClank.TextoTarjetaTraducido(tituloOrig, descOrig);
+      if (cacheTraducciones.containsKey(clave)) {
+        continue;
+      }
+
+      String tituloOriginal = clank.getTitulo() != null
+              ? clank.getTitulo()
+              : "";
+
+      String descripcionOriginal = clank.getDescripcion() != null
+              ? clank.getDescripcion()
+              : "";
+
+      TraductorTarjetaClank.TextoTarjetaTraducido textoOriginal =
+              new TraductorTarjetaClank.TextoTarjetaTraducido(
+                      tituloOriginal,
+                      descripcionOriginal
+              );
 
       Task<?> tarea = traductorTarjetaClank
-        .traducirSiProcede(tituloOrig, descOrig)
-        .addOnSuccessListener(r ->
-          cacheTraducciones.put(clave, r != null ? r : textoOrig))
-        .addOnFailureListener(e ->
-          cacheTraducciones.put(clave, textoOrig));
+              .traducirSiProcede(tituloOriginal, descripcionOriginal)
+              .addOnSuccessListener(resultado -> {
+                if (versionActual != versionPreparacion) {
+                  return;
+                }
+
+                cacheTraducciones.put(
+                        clave,
+                        resultado != null ? resultado : textoOriginal
+                );
+              })
+              .addOnFailureListener(error -> {
+                if (versionActual != versionPreparacion) {
+                  return;
+                }
+
+                cacheTraducciones.put(clave, textoOriginal);
+              });
+
       tareas.add(tarea);
     }
 
@@ -308,7 +412,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     }
 
     Tasks.whenAllComplete(tareas)
-      .addOnCompleteListener(t -> finalizarPreparacion(versionActual));
+            .addOnCompleteListener(tarea -> finalizarPreparacion(versionActual));
   }
 
   private void finalizarPreparacion(int versionActual) {

@@ -39,6 +39,11 @@ public class ChipCategoriasHelper {
     List<String[]> categorias, Set<String> seleccionadas,
     OnChipClickListener listener) {
     contenedor.removeAllViews();
+
+    if (context == null || contenedor == null) {
+      return;
+    }
+
     if (categorias == null || categorias.isEmpty()) return;
     contenedor.getViewTreeObserver().addOnGlobalLayoutListener(
       new ViewTreeObserver.OnGlobalLayoutListener() {

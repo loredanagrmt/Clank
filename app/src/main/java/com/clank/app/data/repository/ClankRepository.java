@@ -12,6 +12,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,12 @@ public class ClankRepository {
         return dataSource.collection(COLLECTION)
                 .document(clankId)
                 .get();
+    }
+
+    public Task<DocumentSnapshot> getPorIdServidor(String clankId) {
+        return dataSource.collection(COLLECTION)
+                .document(clankId)
+                .get(Source.SERVER);
     }
 
     // Subcolecciones de un clank
