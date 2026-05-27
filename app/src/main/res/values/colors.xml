@@ -22,5 +22,5 @@
     <color name="color_sombra_popup">#66000000</color>
 
     <color name="color_error">#ffb3261e</color>
-
+  <color name="color_texto_darkmode_filtros_busqueda">#1A2F23</color>
 </resources>

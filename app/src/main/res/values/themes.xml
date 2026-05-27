@@ -24,8 +24,9 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginStart">24dp</item>
     <item name="android:fontFamily">@font/poppins_semibold</item>
-    <item name="android:textColor">@color/color_negrita</item>
-    <item name="android:textSize">15sp</item>
+    <item name="android:textColor">@color/color_clank_activo</item>
+    <item name="android:textSize">@dimen/hoja_opciones_titulo_text_size</item>
+    <item name="android:textStyle">bold</item>
   </style>
 
   <!-- Botones -->
