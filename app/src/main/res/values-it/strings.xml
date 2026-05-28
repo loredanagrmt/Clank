@@ -8,7 +8,7 @@
     <string name="error_generico">Si è verificato un errore. Riprova.</string>
     <string name="error_permiso_camara">È necessario il permesso per la fotocamera</string>
     <string name="error_camara">Impossibile aprire la fotocamera</string>
-    <string name="comun_espere_un_momento">Attendi un momento</string>
+    <string name="comun_espere_un_momento">Attendere un momento…</string>
     <string name="crear_descartar_clank_titulo">Scarta Clank</string>
     <string name="crear_descartar_clank_mensaje">Vuoi davvero scartare questo Clank? Tutti i dati inseriti andranno persi.</string>
     <string name="crear_descartar_clank_confirmar">Scarta</string>
