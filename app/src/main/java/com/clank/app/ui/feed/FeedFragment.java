@@ -32,7 +32,6 @@ public class FeedFragment extends Fragment {
   private FeedViewModel viewModel;
   private FeedAdapter adapter;
 
-  // guarda los clankIds cuyos observadores ya arrancamos para no duplicar
   private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
 
   @Override
@@ -185,17 +184,11 @@ public class FeedFragment extends Fragment {
 
   private void observarEstadoLike(String clankId) {
     viewModel.getEstadoLike(clankId).observe(getViewLifecycleOwner(), isLiked -> {
-      if (isLiked == null) {
+      if (isLiked == null || adapter == null) {
         return;
       }
 
-      Integer contador = viewModel.getContadorLikes(clankId).getValue();
-
-      adapter.actualizarLike(
-              clankId,
-              isLiked,
-              contador != null ? contador : 0
-      );
+      adapter.actualizarEstadoLike(clankId, isLiked);
 
       int pos = encontrarPosicion(clankId);
 
@@ -207,17 +200,11 @@ public class FeedFragment extends Fragment {
 
   private void observarContadorLike(String clankId) {
     viewModel.getContadorLikes(clankId).observe(getViewLifecycleOwner(), contador -> {
-      if (contador == null) {
+      if (contador == null || adapter == null) {
         return;
       }
 
-      Boolean isLiked = viewModel.getEstadoLike(clankId).getValue();
-
-      adapter.actualizarLike(
-              clankId,
-              Boolean.TRUE.equals(isLiked),
-              contador
-      );
+      adapter.actualizarContadorLike(clankId, contador);
 
       int pos = encontrarPosicion(clankId);
 

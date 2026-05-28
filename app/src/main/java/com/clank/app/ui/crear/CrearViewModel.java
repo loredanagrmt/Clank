@@ -52,7 +52,6 @@ public class CrearViewModel extends ViewModel {
     this.storage = storage;
     this.authRepository = authRepository;
     this.traductorCategorias = traductorCategorias;
-    cargarCategoriasEsperandoAuth();
   }
 
   public LiveData<Recurso<Void>> getEstadoPublicacion() {
@@ -61,6 +60,10 @@ public class CrearViewModel extends ViewModel {
 
   public LiveData<List<String[]>> getCategorias() {
     return categorias;
+  }
+
+  public void recargarCategorias() {
+    cargarCategoriasEsperandoAuth();
   }
 
   /// ////////////////////// categorias de bbdd /////////////////////////
@@ -95,17 +98,18 @@ public class CrearViewModel extends ViewModel {
     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
     if (usuario != null) {
-      ejecutarCargaCategorias();
+      cargarCategorias();
       return;
     }
 
     authStateListener = firebaseAuth -> {
       FirebaseUser user = firebaseAuth.getCurrentUser();
 
-      if (user != null && !categoriasCargadas) {
-        categoriasCargadas = true;
-        ejecutarCargaCategorias();
+      if (user != null) {
+        cargarCategorias();
+
         FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
+        authStateListener = null;
       }
     };
 
@@ -113,22 +117,32 @@ public class CrearViewModel extends ViewModel {
   }
 
   private void ejecutarCargaCategorias() {
-    db.collection("categorias").get()
+    db.collection("categorias")
+            .get()
             .addOnSuccessListener(snapshot -> {
               List<String[]> lista = new ArrayList<>();
 
-              for (var doc : snapshot.getDocuments()) {
+              for (com.google.firebase.firestore.DocumentSnapshot doc : snapshot.getDocuments()) {
                 String nombre = doc.getString("categoria");
 
-                if (nombre != null && !nombre.isEmpty()) {
-                  lista.add(new String[]{doc.getId(), nombre});
+                if (nombre != null && !nombre.trim().isEmpty()) {
+                  lista.add(new String[]{doc.getId(), nombre.trim()});
                 }
               }
 
+              if (lista.isEmpty()) {
+                categorias.setValue(new ArrayList<>());
+                return;
+              }
+
               traductorCategorias.traducirSiProcede(lista)
-                      .addOnSuccessListener(categoriasTraducidas ->
-                              categorias.setValue(categoriasTraducidas)
-                      )
+                      .addOnSuccessListener(categoriasTraducidas -> {
+                        if (categoriasTraducidas != null && !categoriasTraducidas.isEmpty()) {
+                          categorias.setValue(categoriasTraducidas);
+                        } else {
+                          categorias.setValue(lista);
+                        }
+                      })
                       .addOnFailureListener(error ->
                               categorias.setValue(lista)
                       );
@@ -498,4 +512,10 @@ public class CrearViewModel extends ViewModel {
 
     traductorCategorias.cerrar();
   }
+
+  public void cargarCategorias() {
+    ejecutarCargaCategorias();
+  }
+
+
 }

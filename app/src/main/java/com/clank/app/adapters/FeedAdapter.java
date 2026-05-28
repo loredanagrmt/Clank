@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.ViewHolder> {
+
   public static final String PAYLOAD_LIKE = "payload_like";
 
   public interface OnClankClickListener {
@@ -50,36 +51,43 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   public interface OnItemsListosListener {
     void onItemsListos(List<String> clankIds, List<Integer> numLikesIniciales);
   }
+
   public interface OnPreparacionTarjetasListener {
     void alIniciarPreparacion();
     void alFinalizarPreparacion();
   }
+
   private final Context context;
   private final UsuarioRepository usuarioRepository;
   private final String uidUsuario;
   private final OnClankClickListener listener;
   private final OnLikeClickListener likeListener;
-  @Nullable private final OnItemsListosListener itemsListosListener;
-  @Nullable private final OnPreparacionTarjetasListener listenerPreparacion;
+
+  @Nullable
+  private final OnItemsListosListener itemsListosListener;
+
+  @Nullable
+  private final OnPreparacionTarjetasListener listenerPreparacion;
+
   private final TraductorTarjetaClank traductorTarjetaClank;
-  private final Map<String, TraductorTarjetaClank.TextoTarjetaTraducido> cacheTraducciones = new HashMap<>();
-  private final Map<String, Boolean>  estadoLikesLocal   = new HashMap<>();
-  private final Map<String, Integer>  contadorLikesLocal = new HashMap<>();
+
+  private final Map<String, TraductorTarjetaClank.TextoTarjetaTraducido> cacheTraducciones =
+          new HashMap<>();
+
+  private final Map<String, Boolean> estadoLikesLocal = new HashMap<>();
+  private final Map<String, Integer> contadorLikesLocal = new HashMap<>();
 
   private int versionPreparacion = 0;
   private boolean tarjetasPreparadas = false;
 
-  /////////////////////////constructor/////////////////////////
-
-  public FeedAdapter(
-    @NonNull FirestoreRecyclerOptions<Clank> options,
-    Context context,
-    UsuarioRepository usuarioRepository,
-    String uidUsuario,
-    OnClankClickListener listener,
-    OnLikeClickListener likeListener,
-    @Nullable OnItemsListosListener itemsListosListener,
-    @Nullable OnPreparacionTarjetasListener listenerPreparacion) {
+  public FeedAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
+                     Context context,
+                     UsuarioRepository usuarioRepository,
+                     String uidUsuario,
+                     OnClankClickListener listener,
+                     OnLikeClickListener likeListener,
+                     @Nullable OnItemsListosListener itemsListosListener,
+                     @Nullable OnPreparacionTarjetasListener listenerPreparacion) {
     super(options);
     this.context = context;
     this.usuarioRepository = usuarioRepository;
@@ -107,13 +115,18 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    ItemFeedBinding b = ItemFeedBinding.inflate(
-      LayoutInflater.from(parent.getContext()), parent, false);
-    return new ViewHolder(b);
+    ItemFeedBinding binding = ItemFeedBinding.inflate(
+            LayoutInflater.from(parent.getContext()),
+            parent,
+            false
+    );
+
+    return new ViewHolder(binding);
   }
 
   @Override
-  protected void onBindViewHolder(@NonNull ViewHolder holder, int position,
+  protected void onBindViewHolder(@NonNull ViewHolder holder,
+                                  int position,
                                   @NonNull Clank clank) {
     String clankId = getSnapshots().getSnapshot(position).getId();
 
@@ -132,100 +145,112 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     holder.binding.tarjeta.tvTituloClank.setText(textos.titulo);
     holder.binding.tarjeta.tvDescripcionClank.setText(textos.descripcion);
 
-    //icono de tiempo
     int tiempo = clank.getTiempo();
-    int iconoTiempo = tiempo == 0 ? R.drawable.ic_cohete
-      : tiempo == 1         ? R.drawable.ic_liebre
-      : R.drawable.ic_tortuga;
-    holder.binding.tarjeta.ivTiempo.setImageDrawable(
-      ContextCompat.getDrawable(context, iconoTiempo));
 
-    //portada
+    int iconoTiempo = tiempo == 0
+            ? R.drawable.ic_cohete
+            : tiempo == 1
+            ? R.drawable.ic_liebre
+            : R.drawable.ic_tortuga;
+
+    holder.binding.tarjeta.ivTiempo.setImageDrawable(
+            ContextCompat.getDrawable(context, iconoTiempo)
+    );
+
     Glide.with(context).clear(holder.binding.tarjeta.ivPortada);
 
     if (clank.getPortada() != null && !clank.getPortada().isEmpty()) {
+      holder.binding.tarjeta.ivPortada.setVisibility(View.INVISIBLE);
+
       Glide.with(context)
               .load(clank.getPortada())
               .centerCrop()
-              .placeholder(R.drawable.img_usuario_defecto)
-              .error(R.drawable.img_usuario_defecto)
+              .dontAnimate()
               .into(holder.binding.tarjeta.ivPortada);
+
+      holder.binding.tarjeta.ivPortada.postDelayed(
+              () -> holder.binding.tarjeta.ivPortada.setVisibility(View.VISIBLE),
+              250
+      );
     } else {
+      holder.binding.tarjeta.ivPortada.setVisibility(View.VISIBLE);
       holder.binding.tarjeta.ivPortada.setImageResource(R.drawable.img_usuario_defecto);
     }
 
     Integer contadorVm = contadorLikesLocal.get(clankId);
+
     holder.binding.tarjeta.tvNumLikes.setText(
-      String.valueOf(contadorVm != null ? contadorVm : clank.getNumLikes()));
+            String.valueOf(contadorVm != null ? contadorVm : clank.getNumLikes())
+    );
 
-    holder.binding.tarjeta.ivOpciones.setVisibility(View.VISIBLE);
-    holder.binding.tarjeta.ivOpciones.setEnabled(true);
-    holder.binding.tarjeta.ivOpciones.setClickable(true);
-
-    holder.binding.tarjeta.ivLike.setVisibility(View.VISIBLE);
-    holder.binding.tarjeta.ivLike.setEnabled(false);
-    holder.binding.tarjeta.ivLike.setClickable(false);
-
+    configurarBotonesLike(holder, clankId);
     pintarEstadoLike(holder, clankId);
 
-    holder.binding.tarjeta.ivOpciones.setOnClickListener(v -> {
-      holder.binding.tarjeta.ivOpciones.setEnabled(false);
-
-      if (likeListener != null) {
-        likeListener.onLikeClick(clankId);
-      }
-
-      holder.binding.tarjeta.ivOpciones.postDelayed(
-              () -> holder.binding.tarjeta.ivOpciones.setEnabled(true),
-              500
-      );
-    });
-
     holder.binding.cabeceraUsuario.tvUsernameItem.setText("");
-    holder.binding.cabeceraUsuario.civAvatarUsuario
-      .setImageResource(R.drawable.img_usuario_defecto);
     Glide.with(context).clear(holder.binding.cabeceraUsuario.civAvatarUsuario);
+    holder.binding.cabeceraUsuario.civAvatarUsuario.setVisibility(View.INVISIBLE);
 
     String usuarioId = clank.getUsuarioId();
+
     if (usuarioId != null && !usuarioId.isEmpty()) {
       holder.binding.cabeceraUsuario.civAvatarUsuario.setTag(usuarioId);
 
       usuarioRepository.getUsuario(usuarioId).addOnSuccessListener(doc -> {
-        if (!usuarioId.equals(
-          holder.binding.cabeceraUsuario.civAvatarUsuario.getTag())) return;
-        if (!doc.exists()) return;
+        if (!usuarioId.equals(holder.binding.cabeceraUsuario.civAvatarUsuario.getTag())) {
+          return;
+        }
+
+        if (!doc.exists()) {
+          return;
+        }
 
         String foto = doc.contains("fotoPerfil")
-          ? doc.getString("fotoPerfil") : "";
+                ? doc.getString("fotoPerfil")
+                : "";
+
         String usuarioClank = doc.contains("usuarioClank")
-          ? doc.getString("usuarioClank") : "";
+                ? doc.getString("usuarioClank")
+                : "";
+
         String handle = usuarioClank != null
-          ? usuarioClank.replace("@", "").trim() : "";
+                ? usuarioClank.replace("@", "").trim()
+                : "";
 
         holder.binding.cabeceraUsuario.tvUsernameItem.setText(
-          !handle.isEmpty() ? "@" + handle : "");
+                !handle.isEmpty() ? "@" + handle : ""
+        );
 
         if (foto != null && !foto.isEmpty()) {
-          Glide.with(context).load(foto).circleCrop()
-            .placeholder(R.drawable.img_usuario_defecto)
-            .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
+          Glide.with(context)
+                  .load(foto)
+                  .circleCrop()
+                  .dontAnimate()
+                  .into(holder.binding.cabeceraUsuario.civAvatarUsuario);
+
+          holder.binding.cabeceraUsuario.civAvatarUsuario.postDelayed(
+                  () -> holder.binding.cabeceraUsuario.civAvatarUsuario.setVisibility(View.VISIBLE),
+                  250
+          );
         } else {
+          holder.binding.cabeceraUsuario.civAvatarUsuario.setVisibility(View.VISIBLE);
           holder.binding.cabeceraUsuario.civAvatarUsuario
-            .setImageResource(R.drawable.img_usuario_defecto);
+                  .setImageResource(R.drawable.img_usuario_defecto);
         }
       });
 
-      holder.binding.cabeceraUsuario.civAvatarUsuario
-        .setOnClickListener(v -> {
-          if (listener != null) listener.onUsuarioClick(usuarioId);
-        });
-      holder.binding.cabeceraUsuario.tvUsernameItem
-        .setOnClickListener(v -> {
-          if (listener != null) listener.onUsuarioClick(usuarioId);
-        });
+      holder.binding.cabeceraUsuario.civAvatarUsuario.setOnClickListener(v -> {
+        if (listener != null) {
+          listener.onUsuarioClick(usuarioId);
+        }
+      });
+
+      holder.binding.cabeceraUsuario.tvUsernameItem.setOnClickListener(v -> {
+        if (listener != null) {
+          listener.onUsuarioClick(usuarioId);
+        }
+      });
     }
 
-    //fecha
     if (clank.getFechaPublicacion() != null) {
       holder.binding.cabeceraUsuario.tvFechaItem.setText(
               FechaUtils.formatearFechaRelativa(
@@ -233,6 +258,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
                       clank.getFechaPublicacion()
               )
       );
+
       holder.binding.cabeceraUsuario.tvFechaItem.setVisibility(View.VISIBLE);
     } else {
       holder.binding.cabeceraUsuario.tvFechaItem.setText("");
@@ -240,12 +266,60 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     }
 
     holder.itemView.setOnClickListener(v -> {
-      if (listener != null) listener.onClankClick(clankId);
+      if (listener != null) {
+        listener.onClankClick(clankId);
+      }
+    });
+  }
+
+  private void configurarBotonesLike(@NonNull ViewHolder holder, String clankId) {
+    boolean likeListo = estadoLikesLocal.containsKey(clankId)
+            && contadorLikesLocal.containsKey(clankId);
+
+    holder.binding.tarjeta.ivOpciones.setVisibility(View.VISIBLE);
+    holder.binding.tarjeta.ivOpciones.setEnabled(likeListo);
+    holder.binding.tarjeta.ivOpciones.setClickable(likeListo);
+    holder.binding.tarjeta.ivOpciones.setFocusable(likeListo);
+
+    holder.binding.tarjeta.ivLike.setVisibility(View.VISIBLE);
+    holder.binding.tarjeta.ivLike.setImageResource(R.drawable.ic_like_inactivo);
+    holder.binding.tarjeta.ivLike.setEnabled(true);
+    holder.binding.tarjeta.ivLike.setClickable(true);
+    holder.binding.tarjeta.ivLike.setFocusable(false);
+    holder.binding.tarjeta.ivLike.setSoundEffectsEnabled(false);
+    holder.binding.tarjeta.ivLike.setHapticFeedbackEnabled(false);
+
+    holder.binding.tarjeta.ivLike.setOnClickListener(v -> {
+
+    });
+
+    holder.binding.tarjeta.ivOpciones.setOnClickListener(v -> {
+      if (!estadoLikesLocal.containsKey(clankId)
+              || !contadorLikesLocal.containsKey(clankId)) {
+        return;
+      }
+
+      holder.binding.tarjeta.ivOpciones.setEnabled(false);
+
+      if (likeListener != null) {
+        likeListener.onLikeClick(clankId);
+      }
+
+      holder.binding.tarjeta.ivOpciones.postDelayed(() -> {
+        if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
+          boolean listoDespues = estadoLikesLocal.containsKey(clankId)
+                  && contadorLikesLocal.containsKey(clankId);
+
+          holder.binding.tarjeta.ivOpciones.setEnabled(listoDespues);
+          holder.binding.tarjeta.ivOpciones.setClickable(listoDespues);
+        }
+      }, 500);
     });
   }
 
   @Override
-  public void onBindViewHolder(@NonNull ViewHolder holder, int position,
+  public void onBindViewHolder(@NonNull ViewHolder holder,
+                               int position,
                                @NonNull List<Object> payloads) {
     if (!payloads.isEmpty() && payloads.contains(PAYLOAD_LIKE)) {
       String clankId = getSnapshots().getSnapshot(position).getId();
@@ -261,10 +335,9 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
       AnimUtils.animarLike(holder.binding.tarjeta.ivOpciones);
       return;
     }
+
     super.onBindViewHolder(holder, position, payloads);
   }
-
-  /////////////////////////ondataChanged/////////////////////////
 
   @Override
   public void onDataChanged() {
@@ -314,14 +387,31 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     }
   }
 
-  public void actualizarLike(String clankId, boolean isLiked, int numLikes) {
+  public void actualizarEstadoLike(String clankId, boolean isLiked) {
+    if (clankId == null || clankId.trim().isEmpty()) {
+      return;
+    }
+
     estadoLikesLocal.put(clankId, isLiked);
-    contadorLikesLocal.put(clankId, numLikes);
+  }
+
+  public void actualizarContadorLike(String clankId, int numLikes) {
+    if (clankId == null || clankId.trim().isEmpty()) {
+      return;
+    }
+
+    contadorLikesLocal.put(clankId, Math.max(0, numLikes));
+  }
+
+  public void actualizarLike(String clankId, boolean isLiked, int numLikes) {
+    actualizarEstadoLike(clankId, isLiked);
+    actualizarContadorLike(clankId, numLikes);
   }
 
   private void pintarEstadoLike(@NonNull ViewHolder holder, String clankId) {
     Boolean activo = estadoLikesLocal.get(clankId);
     boolean liked = Boolean.TRUE.equals(activo);
+
 
     holder.binding.tarjeta.ivOpciones.setImageResource(
             liked
@@ -334,9 +424,9 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
                     ? R.drawable.bg_circulo_opciones_activo
                     : R.drawable.bg_circulo_opciones_inactivo
     );
-  }
 
-  //////////////////////////traductor/////////////////////////
+    holder.binding.tarjeta.ivLike.setImageResource(R.drawable.ic_like_inactivo);
+  }
 
   @Override
   public void onError(@NonNull FirebaseFirestoreException error) {
@@ -429,10 +519,16 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   }
 
   private TraductorTarjetaClank.TextoTarjetaTraducido obtenerTextoTarjeta(
-    String clankId, Clank clank) {
+          String clankId,
+          Clank clank
+  ) {
     String clave = construirClaveTraduccion(clankId, clank);
-    TraductorTarjetaClank.TextoTarjetaTraducido r = cacheTraducciones.get(clave);
-    if (r != null) return r;
+    TraductorTarjetaClank.TextoTarjetaTraducido resultado = cacheTraducciones.get(clave);
+
+    if (resultado != null) {
+      return resultado;
+    }
+
     return new TraductorTarjetaClank.TextoTarjetaTraducido(
             clank.getTitulo() != null ? clank.getTitulo() : "",
             clank.getDescripcion() != null ? clank.getDescripcion() : ""
@@ -441,15 +537,22 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   private String construirClaveTraduccion(String clankId, Clank clank) {
     String idioma = GestorIdioma.getInstance(context).getIdiomaActual();
-    return clankId + "|" + idioma + "|"
-      + Objects.hash(clank.getTitulo(), clank.getDescripcion());
+
+    return clankId
+            + "|"
+            + idioma
+            + "|"
+            + Objects.hash(clank.getTitulo(), clank.getDescripcion());
   }
+
   public void cerrar() {
     traductorTarjetaClank.cerrar();
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
+
     final ItemFeedBinding binding;
+
     public ViewHolder(@NonNull ItemFeedBinding binding) {
       super(binding.getRoot());
       this.binding = binding;

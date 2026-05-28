@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/clank_background_light"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,19 +18,22 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/crear_padding_bottom">
 
-            <!-- Portada con título encima -->
             <FrameLayout
+                android:id="@+id/contenedorPortadaDetalle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/crear_portada_height">
+                android:layout_height="@dimen/crear_portada_height"
+                android:background="@color/color_clank_activo">
 
                 <ImageView
                     android:id="@+id/ivPortada"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/tarjeta_portada_desc"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:visibility="invisible" />
 
                 <LinearLayout
+                    android:id="@+id/contenedorTituloDetalle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -81,6 +85,8 @@
                             android:src="@drawable/ic_like_inactivo"
                             android:background="@drawable/bg_circulo_opciones_inactivo"
                             android:padding="@dimen/space_xs"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:contentDescription="@string/tarjeta_likes_desc" />
 
                     </LinearLayout>
@@ -89,7 +95,6 @@
 
             </FrameLayout>
 
-            <!-- Cabecera del usuario que publicó el clank -->
             <include
                 android:id="@+id/cabeceraUsuario"
                 layout="@layout/item_cabecera_usuario" />
@@ -105,7 +110,6 @@
                 android:textColor="@color/color_negrita"
                 android:textSize="@dimen/text_body" />
 
-            <!-- Tiempo -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_primera_seccion_margin_top"
@@ -182,7 +186,6 @@
 
             </LinearLayout>
 
-            <!-- Materiales -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
@@ -198,7 +201,6 @@
                 android:layout_marginTop="@dimen/crear_campo_margin_top"
                 android:orientation="vertical" />
 
-            <!-- Herramientas -->
             <TextView
                 android:id="@+id/tvTituloHerramientas"
                 style="@style/Crear.LabelSeccion"
@@ -215,7 +217,6 @@
                 android:layout_marginTop="@dimen/crear_campo_margin_top"
                 android:orientation="vertical" />
 
-            <!-- Instrucciones -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
@@ -231,7 +232,6 @@
                 android:layout_marginTop="@dimen/crear_campo_margin_top"
                 android:orientation="vertical" />
 
-            <!-- Categorías -->
             <TextView
                 style="@style/Crear.LabelSeccion"
                 android:layout_marginTop="@dimen/crear_seccion_margin_top"
@@ -239,13 +239,13 @@
                 android:text="@string/crear_campo_categorias"
                 android:textColor="@color/color_clank_activo" />
 
-          <LinearLayout
-            android:id="@+id/contenedorCategorias"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
-            android:layout_marginTop="@dimen/crear_campo_margin_top"
-            android:orientation="vertical" />
+            <LinearLayout
+                android:id="@+id/contenedorCategorias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                android:layout_marginTop="@dimen/crear_campo_margin_top"
+                android:orientation="vertical" />
 
         </LinearLayout>
 
@@ -272,7 +272,7 @@
         android:background="@color/clank_background_light"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <include
             layout="@layout/vista_cargando"

@@ -482,6 +482,19 @@ public class PerfilFragment extends Fragment {
 
     private void arrancarObservadoresLikes(List<String> clankIds,
                                            List<Integer> numLikesIniciales) {
+        java.util.Set<String> idsActuales = new java.util.HashSet<>(clankIds);
+
+        java.util.Iterator<String> iterador = observadosLikes.iterator();
+
+        while (iterador.hasNext()) {
+            String clankIdObservado = iterador.next();
+
+            if (!idsActuales.contains(clankIdObservado)) {
+                viewModel.detenerListenerLike(clankIdObservado);
+                iterador.remove();
+            }
+        }
+
         for (int i = 0; i < clankIds.size(); i++) {
             String clankId = clankIds.get(i);
             int likesInicial = numLikesIniciales.get(i);
@@ -506,14 +519,7 @@ public class PerfilFragment extends Fragment {
                         return;
                     }
 
-                    Integer contador =
-                            viewModel.getContadorLikes(clankId).getValue();
-
-                    adapter.actualizarLike(
-                            clankId,
-                            isLiked,
-                            contador != null ? contador : 0
-                    );
+                    adapter.actualizarEstadoLike(clankId, isLiked);
 
                     int pos = encontrarPosicion(clankId);
 
@@ -533,14 +539,7 @@ public class PerfilFragment extends Fragment {
                         return;
                     }
 
-                    Boolean isLiked =
-                            viewModel.getEstadoLike(clankId).getValue();
-
-                    adapter.actualizarLike(
-                            clankId,
-                            Boolean.TRUE.equals(isLiked),
-                            contador
-                    );
+                    adapter.actualizarContadorLike(clankId, contador);
 
                     int pos = encontrarPosicion(clankId);
 

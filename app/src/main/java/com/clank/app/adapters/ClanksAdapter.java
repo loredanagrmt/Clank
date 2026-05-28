@@ -126,9 +126,25 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
     this.itemsListosListener = itemsListosListener;
   }
 
-  public void actualizarLike(String clankId, boolean isLiked, int numLikes) {
+  public void actualizarEstadoLike(String clankId, boolean isLiked) {
+    if (clankId == null || clankId.trim().isEmpty()) {
+      return;
+    }
+
     estadoLikesLocal.put(clankId, isLiked);
-    contadorLikesLocal.put(clankId, numLikes);
+  }
+
+  public void actualizarContadorLike(String clankId, int numLikes) {
+    if (clankId == null || clankId.trim().isEmpty()) {
+      return;
+    }
+
+    contadorLikesLocal.put(clankId, Math.max(0, numLikes));
+  }
+
+  public void actualizarLike(String clankId, boolean isLiked, int numLikes) {
+    actualizarEstadoLike(clankId, isLiked);
+    actualizarContadorLike(clankId, numLikes);
   }
 
 
@@ -193,10 +209,29 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
         }
       });
     } else {
-      //perfil ajeno: botón de like
       pintarEstadoLike(holder, clankId);
+
       holder.binding.ivOpciones.setOnClickListener(v -> {
-        if (likeListener != null) likeListener.onLikeClick(clankId);
+        if (!estadoLikesLocal.containsKey(clankId)
+                || !contadorLikesLocal.containsKey(clankId)) {
+          return;
+        }
+
+        holder.binding.ivOpciones.setEnabled(false);
+
+        if (likeListener != null) {
+          likeListener.onLikeClick(clankId);
+        }
+
+        holder.binding.ivOpciones.postDelayed(() -> {
+          if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
+            boolean listoDespues = estadoLikesLocal.containsKey(clankId)
+                    && contadorLikesLocal.containsKey(clankId);
+
+            holder.binding.ivOpciones.setEnabled(listoDespues);
+            holder.binding.ivOpciones.setClickable(listoDespues);
+          }
+        }, 500);
       });
     }
 
@@ -245,12 +280,26 @@ public class ClanksAdapter extends FirestoreRecyclerAdapter<Clank, ClanksAdapter
 
   private void pintarEstadoLike(@NonNull ViewHolder holder, String clankId) {
     Boolean activo = estadoLikesLocal.get(clankId);
-    boolean liked  = Boolean.TRUE.equals(activo);
+    boolean liked = Boolean.TRUE.equals(activo);
+
+    boolean likeListo = estadoLikesLocal.containsKey(clankId)
+            && contadorLikesLocal.containsKey(clankId);
+
     holder.binding.ivOpciones.setImageResource(
-      liked ? R.drawable.ic_like_activo : R.drawable.ic_like_inactivo);
+            liked
+                    ? R.drawable.ic_like_activo
+                    : R.drawable.ic_like_inactivo
+    );
+
     holder.binding.ivOpciones.setBackgroundResource(
-      liked ? R.drawable.bg_circulo_opciones_activo
-        : R.drawable.bg_circulo_opciones_inactivo);
+            liked
+                    ? R.drawable.bg_circulo_opciones_activo
+                    : R.drawable.bg_circulo_opciones_inactivo
+    );
+
+    holder.binding.ivOpciones.setEnabled(likeListo);
+    holder.binding.ivOpciones.setClickable(likeListo);
+    holder.binding.ivOpciones.setFocusable(likeListo);
   }
 
 
