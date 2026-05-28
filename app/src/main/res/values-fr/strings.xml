@@ -8,7 +8,7 @@
     <string name="error_generico">Une erreur est survenue. Réessaie.</string>
     <string name="error_permiso_camara">L’autorisation d’accès à la caméra est nécessaire</string>
     <string name="error_camara">Impossible d’ouvrir la caméra</string>
-    <string name="comun_espere_un_momento">Patiente un instant</string>
+    <string name="comun_espere_un_momento">Veuillez patienter…</string>
     <string name="crear_descartar_clank_titulo">Supprimer le Clank</string>
     <string name="crear_descartar_clank_mensaje">Voulez-vous vraiment supprimer ce Clank ? Toutes les données saisies seront perdues.</string>
     <string name="crear_descartar_clank_confirmar">Supprimer</string>

@@ -16,7 +16,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent" />
 
-
+  <!-- Contenedor del fragment termina donde empieza la barra real -->
   <androidx.fragment.app.FragmentContainerView
       android:id="@+id/nav_host_fragment"
       android:name="androidx.navigation.fragment.NavHostFragment"
@@ -29,12 +29,24 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent" />
 
-  <!-- Bottom bar global. -->
+  <!-- Degradado flotante -->
+  <View
+      android:id="@+id/viewDegradadoGlobal"
+      android:layout_width="0dp"
+      android:layout_height="@dimen/bottombar_alto_contenedor"
+      android:background="@drawable/bg_degradado_bottombar"
+      android:elevation="6dp"
+      app:layout_constraintBottom_toTopOf="@id/frameBottomBar"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
+
+  <!-- Bottom bar: solo la pill, sin degradado -->
   <FrameLayout
       android:id="@+id/frameBottomBar"
       android:layout_width="0dp"
       android:layout_height="@dimen/bottombar_alto_contenedor"
       android:visibility="gone"
+    android:elevation="8dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent">

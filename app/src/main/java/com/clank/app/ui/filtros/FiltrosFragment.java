@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -84,6 +85,7 @@ public class FiltrosFragment extends Fragment {
                 );
 
               chip.setText(nombre);
+              chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_texto_darkmode_filtros_busqueda));
               chip.setTag(cat.getCatId());
 
               ViewGroup.MarginLayoutParams lp =
