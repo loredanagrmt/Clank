@@ -53,6 +53,8 @@ public class CrearFragment extends Fragment {
   private Uri uriPortadaSeleccionada = null;
   private Uri uriFotoTemporal = null;
   private boolean esPublicacion = false;
+  private boolean navegandoTrasGuardar = false;
+  private boolean navegacionRealizada = false;
 
   ///////////////////////// launchers /////////////////////////
 
@@ -452,6 +454,16 @@ public class CrearFragment extends Fragment {
 
   private void publicarClankConfirmado() {
     esPublicacion = true;
+    navegandoTrasGuardar = true;
+    navegacionRealizada = false;
+
+    if (binding == null) {
+      return;
+    }
+
+    binding.overlayCargando.setVisibility(View.VISIBLE);
+    binding.btnPublicar.setEnabled(false);
+    binding.btnGuardarBoceto.setEnabled(false);
 
     String titulo = binding.etTitulo.getText().toString().trim();
     String descripcion = binding.etDescripcion.getText().toString().trim();
@@ -485,9 +497,18 @@ public class CrearFragment extends Fragment {
             recogerCategoriasSeleccionadas()
     );
   }
-
   private void guardarBoceto() {
     esPublicacion = false;
+    navegandoTrasGuardar = true;
+    navegacionRealizada = false;
+
+    if (binding == null) {
+      return;
+    }
+
+    binding.overlayCargando.setVisibility(View.VISIBLE);
+    binding.btnPublicar.setEnabled(false);
+    binding.btnGuardarBoceto.setEnabled(false);
 
     viewModel.guardarBoceto(
             binding.etTitulo.getText().toString().trim(),
@@ -738,7 +759,7 @@ public class CrearFragment extends Fragment {
 
   private void observarViewModel() {
     viewModel.getEstadoPublicacion().observe(getViewLifecycleOwner(), estado -> {
-      if (estado == null) {
+      if (estado == null || binding == null) {
         return;
       }
 
@@ -750,9 +771,15 @@ public class CrearFragment extends Fragment {
           break;
 
         case EXITO:
-          binding.overlayCargando.setVisibility(View.GONE);
-          binding.btnPublicar.setEnabled(true);
-          binding.btnGuardarBoceto.setEnabled(true);
+          binding.overlayCargando.setVisibility(View.VISIBLE);
+          binding.btnPublicar.setEnabled(false);
+          binding.btnGuardarBoceto.setEnabled(false);
+
+          if (navegacionRealizada) {
+            return;
+          }
+
+          navegacionRealizada = true;
 
           Bundle args = new Bundle();
           args.putString(
@@ -760,11 +787,20 @@ public class CrearFragment extends Fragment {
                   esPublicacion ? "clanks" : "bocetos"
           );
 
-          Navigation.findNavController(requireView())
-                  .navigate(R.id.action_crear_a_perfil, args);
+          requireView().post(() -> {
+            if (binding == null || !isAdded()) {
+              return;
+            }
+
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_crear_a_perfil, args);
+          });
           break;
 
         case ERROR:
+          navegandoTrasGuardar = false;
+          navegacionRealizada = false;
+
           binding.overlayCargando.setVisibility(View.GONE);
           binding.btnPublicar.setEnabled(true);
           binding.btnGuardarBoceto.setEnabled(true);
@@ -785,10 +821,13 @@ public class CrearFragment extends Fragment {
         return;
       }
 
+      if (navegandoTrasGuardar) {
+        return;
+      }
+
       cargarChipsCategorias(categorias);
     });
   }
-
   private void cargarChipsCategorias(List<String[]> categorias) {
     if (binding == null || !isAdded()) {
       return;

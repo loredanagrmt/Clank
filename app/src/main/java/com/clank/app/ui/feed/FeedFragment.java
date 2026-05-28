@@ -2,6 +2,7 @@ package com.clank.app.ui.feed;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.clank.app.databinding.FragmentFeedBinding;
 import com.clank.app.ui.comun.NavbarHost;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -28,11 +30,18 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class FeedFragment extends Fragment {
 
+  private static final long DURACION_MINIMA_CARGANDO_MS = 1800L;
+  private static final long ESPERA_PINTADO_RECYCLER_MS = 400L;
+
   private FragmentFeedBinding binding;
   private FeedViewModel viewModel;
   private FeedAdapter adapter;
 
   private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
+
+  private Runnable ocultarOverlayPendiente;
+  private boolean feedMostradoUnaVez = false;
+  private long inicioCargandoMs = 0L;
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,11 +76,19 @@ public class FeedFragment extends Fragment {
                       .navigate(R.id.action_feedFragment_to_filtrosFragment)
       );
     }
+
+    if (binding != null
+            && binding.overlayCargandoFeed.getVisibility() == View.VISIBLE
+            && !feedMostradoUnaVez) {
+      prepararAnimacionCargando(binding.overlayCargandoFeed);
+    }
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+
+    cancelarOcultacionPendiente();
 
     if (adapter != null) {
       adapter.cerrar();
@@ -103,8 +120,14 @@ public class FeedFragment extends Fragment {
       }
     });
 
+    feedMostradoUnaVez = false;
+    inicioCargandoMs = SystemClock.elapsedRealtime();
+
     binding.rvFeed.setVisibility(View.INVISIBLE);
+    binding.tvFeedVacio.setVisibility(View.GONE);
     binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+
+    prepararAnimacionCargando(binding.overlayCargandoFeed);
   }
 
   private void cargarAdapter() {
@@ -148,7 +171,7 @@ public class FeedFragment extends Fragment {
 
               @Override
               public void alFinalizarPreparacion() {
-                ocultarCargandoFeed();
+                mostrarFeedCuandoEstePintado();
               }
             }
     );
@@ -238,37 +261,212 @@ public class FeedFragment extends Fragment {
       return;
     }
 
-    binding.tvFeedVacio.setVisibility(View.GONE);
-    binding.rvFeed.setVisibility(View.INVISIBLE);
-    binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
-  }
+    cancelarOcultacionPendiente();
 
-  private void ocultarCargandoFeed() {
-    if (binding == null) {
+    if (feedMostradoUnaVez) {
+      binding.overlayCargandoFeed.setVisibility(View.GONE);
+      binding.rvFeed.setVisibility(
+              adapter != null && adapter.getCantidadRealFirestore() > 0
+                      ? View.VISIBLE
+                      : View.GONE
+      );
       return;
     }
 
-    binding.overlayCargandoFeed.setVisibility(View.GONE);
-    actualizarEstadoContenido();
+    if (inicioCargandoMs == 0L) {
+      inicioCargandoMs = SystemClock.elapsedRealtime();
+    }
+
+    binding.tvFeedVacio.setVisibility(View.GONE);
+    binding.rvFeed.setVisibility(View.INVISIBLE);
+    binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+
+    prepararAnimacionCargando(binding.overlayCargandoFeed);
   }
 
-  private void actualizarEstadoContenido() {
+  private void mostrarFeedCuandoEstePintado() {
     if (binding == null || adapter == null) {
       return;
     }
 
+    cancelarOcultacionPendiente();
+
     if (!adapter.estaPreparado()) {
-      binding.tvFeedVacio.setVisibility(View.GONE);
-      binding.rvFeed.setVisibility(View.INVISIBLE);
-      binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+      if (!feedMostradoUnaVez) {
+        binding.tvFeedVacio.setVisibility(View.GONE);
+        binding.rvFeed.setVisibility(View.INVISIBLE);
+        binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+        prepararAnimacionCargando(binding.overlayCargandoFeed);
+      }
       return;
     }
 
     boolean hayClanks = adapter.getCantidadRealFirestore() > 0;
 
-    binding.overlayCargandoFeed.setVisibility(View.GONE);
-    binding.rvFeed.setVisibility(hayClanks ? View.VISIBLE : View.GONE);
-    binding.tvFeedVacio.setVisibility(hayClanks ? View.GONE : View.VISIBLE);
+    if (!hayClanks) {
+      long esperaRestante = calcularEsperaRestanteCargando();
+
+      ocultarOverlayPendiente = () -> {
+        if (binding == null) {
+          return;
+        }
+
+        feedMostradoUnaVez = true;
+        inicioCargandoMs = 0L;
+
+        binding.rvFeed.setVisibility(View.GONE);
+        binding.tvFeedVacio.setVisibility(View.VISIBLE);
+        binding.overlayCargandoFeed.setVisibility(View.GONE);
+      };
+
+      binding.overlayCargandoFeed.postDelayed(
+              ocultarOverlayPendiente,
+              esperaRestante
+      );
+      return;
+    }
+
+    binding.tvFeedVacio.setVisibility(View.GONE);
+    binding.rvFeed.setVisibility(View.VISIBLE);
+
+    if (feedMostradoUnaVez) {
+      binding.overlayCargandoFeed.setVisibility(View.GONE);
+      return;
+    }
+
+    binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+    prepararAnimacionCargando(binding.overlayCargandoFeed);
+
+    long esperaRestante = calcularEsperaRestanteCargando();
+    long esperaFinal = Math.max(ESPERA_PINTADO_RECYCLER_MS, esperaRestante);
+
+    ocultarOverlayPendiente = () -> {
+      if (binding == null || adapter == null) {
+        return;
+      }
+
+      if (!adapter.estaPreparado() || adapter.getCantidadRealFirestore() <= 0) {
+        binding.rvFeed.setVisibility(View.INVISIBLE);
+        binding.tvFeedVacio.setVisibility(View.GONE);
+        binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
+        prepararAnimacionCargando(binding.overlayCargandoFeed);
+        return;
+      }
+
+      binding.rvFeed.post(() -> {
+        if (binding == null) {
+          return;
+        }
+
+        feedMostradoUnaVez = true;
+        inicioCargandoMs = 0L;
+
+        binding.rvFeed.setVisibility(View.VISIBLE);
+        binding.tvFeedVacio.setVisibility(View.GONE);
+        binding.overlayCargandoFeed.setVisibility(View.GONE);
+      });
+    };
+
+    binding.overlayCargandoFeed.postDelayed(ocultarOverlayPendiente, esperaFinal);
+  }
+
+  private void prepararAnimacionCargando(View vista) {
+    if (vista == null) {
+      return;
+    }
+
+    vista.setVisibility(View.VISIBLE);
+    vista.invalidate();
+    vista.requestLayout();
+
+    arrancarAnimacionSiExiste(vista);
+
+    vista.post(() -> {
+      if (binding == null || feedMostradoUnaVez) {
+        return;
+      }
+
+      arrancarAnimacionSiExiste(vista);
+      vista.invalidate();
+    });
+
+    vista.postDelayed(() -> {
+      if (binding == null || feedMostradoUnaVez) {
+        return;
+      }
+
+      arrancarAnimacionSiExiste(vista);
+      vista.invalidate();
+    }, 300);
+  }
+
+  private void arrancarAnimacionSiExiste(View vista) {
+    if (vista == null) {
+      return;
+    }
+
+    intentarInvocarAnimacion(vista);
+
+    if (vista instanceof ViewGroup) {
+      ViewGroup grupo = (ViewGroup) vista;
+
+      for (int i = 0; i < grupo.getChildCount(); i++) {
+        arrancarAnimacionSiExiste(grupo.getChildAt(i));
+      }
+    }
+  }
+
+  private void intentarInvocarAnimacion(View vista) {
+    String nombreClase = vista.getClass().getName();
+
+    if (!nombreClase.toLowerCase().contains("lottie")
+            && !nombreClase.toLowerCase().contains("animation")) {
+      return;
+    }
+
+    vista.setVisibility(View.VISIBLE);
+
+    try {
+      Method setRepeatCount = vista.getClass().getMethod("setRepeatCount", int.class);
+      setRepeatCount.invoke(vista, -1);
+    } catch (Exception ignored) {
+    }
+
+    try {
+      Method cancelAnimation = vista.getClass().getMethod("cancelAnimation");
+      cancelAnimation.invoke(vista);
+    } catch (Exception ignored) {
+    }
+
+    try {
+      Method setProgress = vista.getClass().getMethod("setProgress", float.class);
+      setProgress.invoke(vista, 0f);
+    } catch (Exception ignored) {
+    }
+
+    try {
+      Method playAnimation = vista.getClass().getMethod("playAnimation");
+      playAnimation.invoke(vista);
+    } catch (Exception ignored) {
+    }
+  }
+
+  private long calcularEsperaRestanteCargando() {
+    if (inicioCargandoMs == 0L) {
+      return DURACION_MINIMA_CARGANDO_MS;
+    }
+
+    long transcurrido = SystemClock.elapsedRealtime() - inicioCargandoMs;
+    return Math.max(0L, DURACION_MINIMA_CARGANDO_MS - transcurrido);
+  }
+
+  private void cancelarOcultacionPendiente() {
+    if (binding != null && ocultarOverlayPendiente != null) {
+      binding.overlayCargandoFeed.removeCallbacks(ocultarOverlayPendiente);
+      binding.rvFeed.removeCallbacks(ocultarOverlayPendiente);
+    }
+
+    ocultarOverlayPendiente = null;
   }
 
   private void entrarDetalle(String clankId) {
