@@ -108,7 +108,7 @@ public class DetalleClankViewModel extends ViewModel {
     procesoFinalLanzado = false;
     cargaCancelada = false;
 
-    clankRepository.getPorIdServidor(clankIdLimpio).addOnSuccessListener(doc -> {
+    clankRepository.getPorId(clankIdLimpio).addOnSuccessListener(doc -> {
       if (!doc.exists()) {
         cancelarCarga(ERROR_CLANK_NO_EXISTE);
         return;

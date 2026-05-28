@@ -32,7 +32,6 @@ public class FeedFragment extends Fragment {
   private FeedViewModel viewModel;
   private FeedAdapter adapter;
 
-  // guarda los clankIds cuyos observadores ya arrancamos para no duplicar
   private final java.util.Set<String> observadosLikes = new java.util.HashSet<>();
 
   @Override
@@ -58,14 +57,16 @@ public class FeedFragment extends Fragment {
   public void onResume() {
     super.onResume();
 
-    ((NavbarHost) requireActivity()).mostrarNavbarConAccionYFiltro(
-            getString(R.string.app_name),
-            R.drawable.ic_buscar,
-            v -> Navigation.findNavController(requireView())
-                    .navigate(R.id.action_feed_a_busqueda),
-            v -> Navigation.findNavController(requireView())
-                    .navigate(R.id.action_feedFragment_to_filtrosFragment)
-    );
+    if (requireActivity() instanceof NavbarHost) {
+      ((NavbarHost) requireActivity()).mostrarNavbarConAccionYFiltro(
+              getString(R.string.app_name),
+              R.drawable.ic_buscar,
+              v -> Navigation.findNavController(requireView())
+                      .navigate(R.id.action_feed_a_busqueda),
+              v -> Navigation.findNavController(requireView())
+                      .navigate(R.id.action_feedFragment_to_filtrosFragment)
+      );
+    }
   }
 
   @Override
@@ -76,6 +77,11 @@ public class FeedFragment extends Fragment {
       adapter.cerrar();
     }
 
+    for (String clankId : observadosLikes) {
+      viewModel.detenerListenerLike(clankId);
+    }
+
+    observadosLikes.clear();
     binding = null;
   }
 
@@ -96,11 +102,10 @@ public class FeedFragment extends Fragment {
         }
       }
     });
+
     binding.rvFeed.setVisibility(View.INVISIBLE);
     binding.overlayCargandoFeed.setVisibility(View.VISIBLE);
   }
-
-  ///////////////////////// adapter /////////////////////////
 
   private void cargarAdapter() {
     FirestoreRecyclerOptions<Clank> options =
@@ -118,7 +123,7 @@ public class FeedFragment extends Fragment {
             new FeedAdapter.OnClankClickListener() {
               @Override
               public void onClankClick(String clankId) {
-                comprobarYEntrarDetalle(clankId);
+                entrarDetalle(clankId);
               }
 
               @Override
@@ -133,8 +138,7 @@ public class FeedFragment extends Fragment {
 
             clankId -> viewModel.toggleLike(clankId),
 
-            (clankIds, numLikesIniciales) ->
-                    arrancarObservadoresLikes(clankIds, numLikesIniciales),
+            this::arrancarObservadoresLikes,
 
             new FeedAdapter.OnPreparacionTarjetasListener() {
               @Override
@@ -185,17 +189,11 @@ public class FeedFragment extends Fragment {
 
   private void observarEstadoLike(String clankId) {
     viewModel.getEstadoLike(clankId).observe(getViewLifecycleOwner(), isLiked -> {
-      if (isLiked == null) {
+      if (isLiked == null || adapter == null) {
         return;
       }
 
-      Integer contador = viewModel.getContadorLikes(clankId).getValue();
-
-      adapter.actualizarLike(
-              clankId,
-              isLiked,
-              contador != null ? contador : 0
-      );
+      adapter.actualizarEstadoLike(clankId, isLiked);
 
       int pos = encontrarPosicion(clankId);
 
@@ -207,17 +205,11 @@ public class FeedFragment extends Fragment {
 
   private void observarContadorLike(String clankId) {
     viewModel.getContadorLikes(clankId).observe(getViewLifecycleOwner(), contador -> {
-      if (contador == null) {
+      if (contador == null || adapter == null) {
         return;
       }
 
-      Boolean isLiked = viewModel.getEstadoLike(clankId).getValue();
-
-      adapter.actualizarLike(
-              clankId,
-              Boolean.TRUE.equals(isLiked),
-              contador
-      );
+      adapter.actualizarContadorLike(clankId, contador);
 
       int pos = encontrarPosicion(clankId);
 
@@ -240,8 +232,6 @@ public class FeedFragment extends Fragment {
 
     return -1;
   }
-
-  ///////////////////////// overlay cargando /////////////////////////
 
   private void mostrarCargandoFeed() {
     if (binding == null) {
@@ -281,39 +271,15 @@ public class FeedFragment extends Fragment {
     binding.tvFeedVacio.setVisibility(hayClanks ? View.GONE : View.VISIBLE);
   }
 
-  private void comprobarYEntrarDetalle(String clankId) {
+  private void entrarDetalle(String clankId) {
     if (clankId == null || clankId.trim().isEmpty()) {
       return;
     }
 
-    viewModel.getClankRepository()
-            .getPorIdServidor(clankId)
-            .addOnSuccessListener(documento -> {
-              if (binding == null) {
-                return;
-              }
+    Bundle args = new Bundle();
+    args.putString("clankId", clankId);
 
-              if (documento == null || !documento.exists()) {
-                if (adapter != null) {
-                  adapter.notifyDataSetChanged();
-                }
-
-                actualizarEstadoContenido();
-                return;
-              }
-
-              Bundle args = new Bundle();
-              args.putString("clankId", clankId);
-
-              Navigation.findNavController(requireView())
-                      .navigate(R.id.action_feed_a_detalle_clank, args);
-            })
-            .addOnFailureListener(error -> {
-              if (binding == null) {
-                return;
-              }
-
-              actualizarEstadoContenido();
-            });
+    Navigation.findNavController(requireView())
+            .navigate(R.id.action_feed_a_detalle_clank, args);
   }
 }

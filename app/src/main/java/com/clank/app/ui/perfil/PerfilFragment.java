@@ -498,7 +498,6 @@ public class PerfilFragment extends Fragment {
             observarContadorLike(clankId);
         }
     }
-
     private void observarEstadoLike(String clankId) {
         viewModel.getEstadoLike(clankId)
                 .observe(getViewLifecycleOwner(), isLiked -> {

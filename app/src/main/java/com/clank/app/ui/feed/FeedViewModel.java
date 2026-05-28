@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.clank.app.data.model.Clank;
 import com.clank.app.data.repository.AuthRepository;
 import com.clank.app.data.repository.ClankRepository;
 import com.clank.app.data.repository.LikeRepository;
@@ -22,112 +21,208 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class FeedViewModel extends ViewModel {
 
-  private final ClankRepository clankRepository;
-  private final UsuarioRepository usuarioRepository;
-  private final AuthRepository authRepository;
-  private final LikeRepository likeRepository;
+    private final ClankRepository clankRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final AuthRepository authRepository;
+    private final LikeRepository likeRepository;
 
-  //estado de likes por clankId
-  private final Map<String, MutableLiveData<Boolean>> estadoLikes   = new HashMap<>();
-  private final Map<String, MutableLiveData<Integer>> contadorLikes = new HashMap<>();
-  private final Map<String, Boolean>                  likeEnProceso = new HashMap<>();
-  private final Map<String, ListenerRegistration>     listeners     = new HashMap<>();
+    private final Map<String, MutableLiveData<Boolean>> estadoLikes = new HashMap<>();
+    private final Map<String, MutableLiveData<Integer>> contadorLikes = new HashMap<>();
+    private final Map<String, Boolean> likeEnProceso = new HashMap<>();
 
-  @Inject
-  public FeedViewModel(ClankRepository clankRepository,
-                       UsuarioRepository usuarioRepository,
-                       AuthRepository authRepository,
-                       LikeRepository likeRepository) {
-    this.clankRepository  = clankRepository;
-    this.usuarioRepository = usuarioRepository;
-    this.authRepository   = authRepository;
-    this.likeRepository   = likeRepository;
-  }
+    private final Map<String, ListenerRegistration> listenersEstadoLike = new HashMap<>();
+    private final Map<String, ListenerRegistration> listenersContadorLike = new HashMap<>();
 
-  /////////////////////////getters/////////////////////////
-  public UsuarioRepository getUsuarioRepository() { return usuarioRepository; }
-  public ClankRepository   getClankRepository()   { return clankRepository; }
-  public String            getCurrentUserId()     { return authRepository.getUid(); }
-
-  /////////////////////////guery/////////////////////////
-  public Query getFeedQuery() {
-    return clankRepository.getTodosAcabados();
-  }
-
-  /////////////////////////likes/////////////////////////
-  public LiveData<Boolean> getEstadoLike(String clankId) {
-    return obtenerOCrearEstado(clankId);
-  }
-
-  public LiveData<Integer> getContadorLikes(String clankId) {
-    return obtenerOCrearContador(clankId);
-  }
-  public void iniciarListenerLike(String clankId, int numLikesInicial) {
-    if (listeners.containsKey(clankId)) return;
-
-    //valor inicial de likes
-    MutableLiveData<Integer> liveContador = obtenerOCrearContador(clankId);
-    if (liveContador.getValue() == null || liveContador.getValue() == 0) {
-      liveContador.setValue(numLikesInicial);
+    @Inject
+    public FeedViewModel(ClankRepository clankRepository,
+                         UsuarioRepository usuarioRepository,
+                         AuthRepository authRepository,
+                         LikeRepository likeRepository) {
+        this.clankRepository = clankRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.authRepository = authRepository;
+        this.likeRepository = likeRepository;
     }
-    String uid = authRepository.getUid();
-    if (uid != null && !uid.isEmpty()) {
-      likeRepository.hasDadoLike(clankId, uid).addOnSuccessListener(dioLike -> {
-        MutableLiveData<Boolean> liveEstado = obtenerOCrearEstado(clankId);
-        if (liveEstado.getValue() == null) {
-          liveEstado.setValue(dioLike);
+
+    public UsuarioRepository getUsuarioRepository() {
+        return usuarioRepository;
+    }
+
+    public ClankRepository getClankRepository() {
+        return clankRepository;
+    }
+
+    public String getCurrentUserId() {
+        return authRepository.getUid();
+    }
+
+    public Query getFeedQuery() {
+        return clankRepository.getTodosAcabados();
+    }
+
+    public LiveData<Boolean> getEstadoLike(String clankId) {
+        return obtenerOCrearEstado(clankId);
+    }
+
+    public LiveData<Integer> getContadorLikes(String clankId) {
+        return obtenerOCrearContador(clankId);
+    }
+
+    public void iniciarListenerLike(String clankId, int numLikesInicial) {
+        if (clankId == null || clankId.trim().isEmpty()) {
+            return;
         }
-      });
+
+        String clankIdLimpio = clankId.trim();
+
+        MutableLiveData<Integer> liveContador = obtenerOCrearContador(clankIdLimpio);
+
+        if (liveContador.getValue() == null) {
+            liveContador.setValue(Math.max(0, numLikesInicial));
+        }
+
+        String uid = authRepository.getUid();
+
+        if (uid == null || uid.isEmpty()) {
+            obtenerOCrearEstado(clankIdLimpio).setValue(false);
+        } else if (!listenersEstadoLike.containsKey(clankIdLimpio)) {
+            ListenerRegistration regEstado = likeRepository.escucharEstadoLike(
+                    clankIdLimpio,
+                    uid,
+                    haDadoLike -> {
+                        if (Boolean.TRUE.equals(likeEnProceso.get(clankIdLimpio))) {
+                            return;
+                        }
+
+                        obtenerOCrearEstado(clankIdLimpio).postValue(haDadoLike);
+                    }
+            );
+
+            listenersEstadoLike.put(clankIdLimpio, regEstado);
+        }
+
+        if (!listenersContadorLike.containsKey(clankIdLimpio)) {
+            ListenerRegistration regContador = likeRepository.escucharNumLikes(
+                    clankIdLimpio,
+                    cantidad -> obtenerOCrearContador(clankIdLimpio)
+                            .postValue(Math.max(0, cantidad))
+            );
+
+            listenersContadorLike.put(clankIdLimpio, regContador);
+        }
     }
 
-    ListenerRegistration reg = likeRepository.escucharNumLikes(
-      clankId,
-      cantidad -> obtenerOCrearContador(clankId).postValue(cantidad)
-    );
-    listeners.put(clankId, reg);
-  }
+    public void detenerListenerLike(String clankId) {
+        if (clankId == null || clankId.trim().isEmpty()) {
+            return;
+        }
 
-  public void detenerListenerLike(String clankId) {
-    ListenerRegistration reg = listeners.remove(clankId);
-    if (reg != null) reg.remove();
-  }
-  public void toggleLike(String clankId) {
-    if (Boolean.TRUE.equals(likeEnProceso.get(clankId))) return;
+        String clankIdLimpio = clankId.trim();
 
-    String uid = authRepository.getUid();
-    if (uid == null || uid.isEmpty()) return;
+        ListenerRegistration regEstado = listenersEstadoLike.remove(clankIdLimpio);
 
-    likeEnProceso.put(clankId, true);
+        if (regEstado != null) {
+            regEstado.remove();
+        }
 
-    likeRepository.toggleLike(clankId, uid)
-      .addOnSuccessListener(ahoraLikeado -> {
-        obtenerOCrearEstado(clankId).setValue(ahoraLikeado);
-        likeEnProceso.put(clankId, false);
-      })
-      .addOnFailureListener(e -> likeEnProceso.put(clankId, false));
-  }
-  private MutableLiveData<Boolean> obtenerOCrearEstado(String clankId) {
-    if (!estadoLikes.containsKey(clankId)) {
-      estadoLikes.put(clankId, new MutableLiveData<>(null));
+        ListenerRegistration regContador = listenersContadorLike.remove(clankIdLimpio);
+
+        if (regContador != null) {
+            regContador.remove();
+        }
+
+        likeEnProceso.remove(clankIdLimpio);
     }
-    return estadoLikes.get(clankId);
-  }
 
-  private MutableLiveData<Integer> obtenerOCrearContador(String clankId) {
-    if (!contadorLikes.containsKey(clankId)) {
-      contadorLikes.put(clankId, new MutableLiveData<>(0));
+    public void toggleLike(String clankId) {
+        if (clankId == null || clankId.trim().isEmpty()) {
+            return;
+        }
+
+        String clankIdLimpio = clankId.trim();
+
+        if (Boolean.TRUE.equals(likeEnProceso.get(clankIdLimpio))) {
+            return;
+        }
+
+        String uid = authRepository.getUid();
+
+        if (uid == null || uid.isEmpty()) {
+            return;
+        }
+
+        MutableLiveData<Boolean> liveEstado = obtenerOCrearEstado(clankIdLimpio);
+        MutableLiveData<Integer> liveContador = obtenerOCrearContador(clankIdLimpio);
+
+        Boolean estadoActual = liveEstado.getValue();
+
+        if (estadoActual == null) {
+            return;
+        }
+
+        boolean estadoAnterior = Boolean.TRUE.equals(estadoActual);
+
+        int contadorAnterior = liveContador.getValue() != null
+                ? Math.max(0, liveContador.getValue())
+                : 0;
+
+        boolean estadoOptimista = !estadoAnterior;
+
+        int contadorOptimista = estadoOptimista
+                ? contadorAnterior + 1
+                : Math.max(0, contadorAnterior - 1);
+
+        likeEnProceso.put(clankIdLimpio, true);
+
+        liveEstado.setValue(estadoOptimista);
+        liveContador.setValue(contadorOptimista);
+
+        likeRepository.toggleLike(clankIdLimpio, uid)
+                .addOnSuccessListener(ahoraLikeado -> {
+                    liveEstado.setValue(Boolean.TRUE.equals(ahoraLikeado));
+                    likeEnProceso.remove(clankIdLimpio);
+                })
+                .addOnFailureListener(error -> {
+                    liveEstado.setValue(estadoAnterior);
+                    liveContador.setValue(contadorAnterior);
+                    likeEnProceso.remove(clankIdLimpio);
+                });
     }
-    return contadorLikes.get(clankId);
-  }
 
-  //////////////////////////limpieza/////////////////////////
+    private MutableLiveData<Boolean> obtenerOCrearEstado(String clankId) {
+        if (!estadoLikes.containsKey(clankId)) {
+            estadoLikes.put(clankId, new MutableLiveData<>(null));
+        }
 
-  @Override
-  protected void onCleared() {
-    super.onCleared();
-    for (ListenerRegistration reg : listeners.values()) {
-      if (reg != null) reg.remove();
+        return estadoLikes.get(clankId);
     }
-    listeners.clear();
-  }
+
+    private MutableLiveData<Integer> obtenerOCrearContador(String clankId) {
+        if (!contadorLikes.containsKey(clankId)) {
+            contadorLikes.put(clankId, new MutableLiveData<>(null));
+        }
+
+        return contadorLikes.get(clankId);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+
+        for (ListenerRegistration registration : listenersEstadoLike.values()) {
+            if (registration != null) {
+                registration.remove();
+            }
+        }
+
+        for (ListenerRegistration registration : listenersContadorLike.values()) {
+            if (registration != null) {
+                registration.remove();
+            }
+        }
+
+        listenersEstadoLike.clear();
+        listenersContadorLike.clear();
+        likeEnProceso.clear();
+    }
 }
