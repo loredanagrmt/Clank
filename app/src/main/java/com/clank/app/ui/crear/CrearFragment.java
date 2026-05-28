@@ -102,10 +102,20 @@ public class CrearFragment extends Fragment {
 
     configurarNavbar();
     configurarListeners(view);
-    obtenerOCrearContenedorCategorias();
     observarViewModel();
-    anyadirFilaMaterial(false);
-    anyadirFilaInstruccion();
+
+    if (binding != null && isAdded()) {
+      anyadirFilaMaterial(false);
+      anyadirFilaInstruccion();
+    }
+
+    if (binding != null && binding.contenedorCategorias != null) {
+      binding.contenedorCategorias.post(() -> {
+        if (binding != null && isAdded()) {
+          viewModel.recargarCategorias();
+        }
+      });
+    }
   }
 
   @Override
@@ -117,10 +127,18 @@ public class CrearFragment extends Fragment {
   ///////////////////////// navbar /////////////////////////
 
   private void configurarNavbar() {
+    if (!(requireActivity() instanceof NavbarHost)) {
+      return;
+    }
+
     ((NavbarHost) requireActivity()).mostrarNavbarConVolver(
             getString(R.string.crear_titulo),
             R.drawable.ic_delete_inactivo,
-            v -> mostrarConfirmarEliminar(requireView())
+            v -> {
+              if (binding != null && isAdded()) {
+                mostrarConfirmarEliminar(requireView());
+              }
+            }
     );
   }
 
@@ -336,32 +354,57 @@ public class CrearFragment extends Fragment {
   ///////////////////////// añadir filas /////////////////////////
 
   private void anyadirFilaMaterial(boolean esHerramienta) {
+    if (binding == null || !isAdded()) {
+      return;
+    }
+
     LinearLayout contenedor = esHerramienta
             ? binding.llContenedorHerramientas
             : binding.llContenedorMateriales;
 
+    if (contenedor == null) {
+      return;
+    }
+
     View fila = LayoutInflater.from(requireContext())
             .inflate(R.layout.item_material, contenedor, false);
 
-    if (esHerramienta) {
-      fila.findViewById(R.id.etCantidad).setVisibility(View.GONE);
+    EditText etCantidad = fila.findViewById(R.id.etCantidad);
+    EditText etNombreElemento = fila.findViewById(R.id.etNombreElemento);
+    View btnEliminarElemento = fila.findViewById(R.id.btnEliminarElemento);
 
-      ((EditText) fila.findViewById(R.id.etNombreElemento))
-              .setHint(getString(R.string.crear_hint_herramienta));
+    if (esHerramienta) {
+      if (etCantidad != null) {
+        etCantidad.setVisibility(View.GONE);
+      }
+
+      if (etNombreElemento != null) {
+        etNombreElemento.setHint(getString(R.string.crear_hint_herramienta));
+      }
     }
 
-    fila.findViewById(R.id.btnEliminarElemento).setOnClickListener(b -> {
-      if (contenedor.getChildCount() > 1 || esHerramienta) {
-        contenedor.removeView(fila);
-      } else {
-        mostrarErrorPrimerMaterial();
-      }
-    });
+    if (btnEliminarElemento != null) {
+      btnEliminarElemento.setOnClickListener(b -> {
+        if (binding == null) {
+          return;
+        }
+
+        if (contenedor.getChildCount() > 1 || esHerramienta) {
+          contenedor.removeView(fila);
+        } else {
+          mostrarErrorPrimerMaterial();
+        }
+      });
+    }
 
     contenedor.addView(fila);
   }
 
   private void anyadirFilaInstruccion() {
+    if (binding == null || !isAdded()) {
+      return;
+    }
+
     ItemInstruccionBinding itemBinding = ItemInstruccionBinding.inflate(
             LayoutInflater.from(requireContext()),
             binding.llContenedorInstrucciones,
@@ -369,6 +412,10 @@ public class CrearFragment extends Fragment {
     );
 
     itemBinding.btnEliminarInstruccion.setOnClickListener(b -> {
+      if (binding == null) {
+        return;
+      }
+
       if (binding.llContenedorInstrucciones.getChildCount() > 1) {
         binding.llContenedorInstrucciones.removeView(itemBinding.getRoot());
         renumerarInstrucciones();
@@ -377,13 +424,16 @@ public class CrearFragment extends Fragment {
       }
     });
 
-    itemBinding.llBotonImagenInstruccion.setOnClickListener(b ->
-            mostrarDialogoSeleccionImagen(itemBinding.getRoot()));
+    itemBinding.llBotonImagenInstruccion.setOnClickListener(b -> {
+      if (binding != null && isAdded()) {
+        mostrarDialogoSeleccionImagen(itemBinding.getRoot());
+      }
+    });
 
     itemBinding.ivPreviewInstruccion.setOnClickListener(b -> {
       Uri uri = (Uri) itemBinding.getRoot().getTag(R.id.ivPreviewInstruccion);
 
-      if (uri != null) {
+      if (uri != null && binding != null && isAdded()) {
         mostrarDialogoAccionesImagen(uri, itemBinding.getRoot());
       }
     });
@@ -577,106 +627,6 @@ public class CrearFragment extends Fragment {
     binding.btnPublicar.setEnabled(true);
   }
 
-  @Nullable
-  private LinearLayout obtenerContenedorCategorias() {
-    if (binding == null) {
-      return null;
-    }
-
-    return binding.getRoot().findViewById(R.id.contenedorCategorias);
-  }
-
-  @Nullable
-  private LinearLayout obtenerOCrearContenedorCategorias() {
-    if (binding == null || !isAdded()) {
-      return null;
-    }
-
-    LinearLayout contenedorExistente =
-            binding.getRoot().findViewById(R.id.contenedorCategorias);
-
-    if (contenedorExistente != null) {
-      return contenedorExistente;
-    }
-
-    TextView etiquetaCategorias = buscarEtiquetaCategorias(binding.getRoot());
-
-    if (etiquetaCategorias == null) {
-      return null;
-    }
-
-    if (!(etiquetaCategorias.getParent() instanceof LinearLayout)) {
-      return null;
-    }
-
-    LinearLayout padre = (LinearLayout) etiquetaCategorias.getParent();
-
-    LinearLayout nuevoContenedor = new LinearLayout(requireContext());
-    nuevoContenedor.setId(R.id.contenedorCategorias);
-    nuevoContenedor.setOrientation(LinearLayout.VERTICAL);
-
-    int margenHorizontal = getResources().getDimensionPixelSize(
-            R.dimen.screen_margin_horizontal
-    );
-
-    int margenSuperior = getResources().getDimensionPixelSize(
-            R.dimen.crear_campo_margin_top
-    );
-
-    LinearLayout.LayoutParams parametros =
-            new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-
-    parametros.setMargins(
-            margenHorizontal,
-            margenSuperior,
-            margenHorizontal,
-            0
-    );
-
-    nuevoContenedor.setLayoutParams(parametros);
-
-    int indiceEtiqueta = padre.indexOfChild(etiquetaCategorias);
-
-    padre.addView(
-            nuevoContenedor,
-            indiceEtiqueta + 1
-    );
-
-    return nuevoContenedor;
-  }
-
-  @Nullable
-  private TextView buscarEtiquetaCategorias(View vista) {
-    if (vista instanceof TextView) {
-      TextView textView = (TextView) vista;
-
-      CharSequence texto = textView.getText();
-
-      if (texto != null
-              && texto.toString().equals(getString(R.string.crear_campo_categorias))) {
-        return textView;
-      }
-    }
-
-    if (!(vista instanceof ViewGroup)) {
-      return null;
-    }
-
-    ViewGroup grupo = (ViewGroup) vista;
-
-    for (int i = 0; i < grupo.getChildCount(); i++) {
-      TextView resultado = buscarEtiquetaCategorias(grupo.getChildAt(i));
-
-      if (resultado != null) {
-        return resultado;
-      }
-    }
-
-    return null;
-  }
 
   private void limpiarCategoriasSeleccionadas() {
     viewModel.limpiarCategoriasSeleccionadasVM();
@@ -685,15 +635,9 @@ public class CrearFragment extends Fragment {
       return;
     }
 
-    LinearLayout contenedorCategorias = obtenerOCrearContenedorCategorias();
-
-    if (contenedorCategorias == null) {
-      return;
-    }
-
     ChipCategoriasHelper.limpiarSeleccion(
             requireContext(),
-            contenedorCategorias
+            binding.contenedorCategorias
     );
   }
   ///////////////////////// recoger datos clank /////////////////////////
@@ -746,13 +690,11 @@ public class CrearFragment extends Fragment {
   }
 
   private List<String> recogerCategoriasSeleccionadas() {
-    LinearLayout contenedorCategorias = obtenerOCrearContenedorCategorias();
-
-    if (contenedorCategorias == null) {
+    if (binding == null) {
       return new ArrayList<>();
     }
 
-    return ChipCategoriasHelper.recogerSeleccionadas(contenedorCategorias);
+    return ChipCategoriasHelper.recogerSeleccionadas(binding.contenedorCategorias);
   }
 
   ///////////////////////// observadores /////////////////////////
@@ -833,12 +775,6 @@ public class CrearFragment extends Fragment {
       return;
     }
 
-    LinearLayout contenedorCategorias = obtenerOCrearContenedorCategorias();
-
-    if (contenedorCategorias == null) {
-      return;
-    }
-
     Set<String> seleccionadas = new HashSet<>();
 
     if (viewModel.getCategoriasSeleccionadas().getValue() != null) {
@@ -847,7 +783,7 @@ public class CrearFragment extends Fragment {
 
     ChipCategoriasHelper.cargarChipsInteractivos(
             requireContext(),
-            contenedorCategorias,
+            binding.contenedorCategorias,
             categorias,
             seleccionadas,
             (chip, categoriaId, seleccionado) ->

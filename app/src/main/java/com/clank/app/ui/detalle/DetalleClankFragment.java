@@ -231,7 +231,6 @@ public class DetalleClankFragment extends Fragment {
                       datos.fechaPublicacion
               )
       );
-
       binding.cabeceraUsuario.tvFechaItem.setVisibility(View.VISIBLE);
     } else {
       binding.cabeceraUsuario.tvFechaItem.setText("");
