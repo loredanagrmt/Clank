@@ -23,4 +23,6 @@
 
     <color name="color_error">#ffb3261e</color>
   <color name="color_texto_darkmode_filtros_busqueda">#1A2F23</color>
+
+    <color name="color_texto_chip_inactivo">#FFFCF8</color>
 </resources>

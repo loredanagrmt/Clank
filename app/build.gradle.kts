@@ -92,4 +92,7 @@ dependencies {
 
   // Imagen circular (perfil)
   implementation(libs.circleimageview)
+  //animacion de lottie
+  implementation(libs.lottie)
+
 }

@@ -8,7 +8,7 @@
     <string name="error_generico">Ocorreu um erro. Tenta novamente.</string>
     <string name="error_permiso_camara">É necessária permissão para a câmara</string>
     <string name="error_camara">Não foi possível abrir a câmara</string>
-    <string name="comun_espere_un_momento">Aguarda um momento</string>
+    <string name="comun_espere_un_momento">Por favor, aguarde…</string>
     <string name="crear_descartar_clank_titulo">Descartar Clank</string>
     <string name="crear_descartar_clank_mensaje">Tens a certeza de que queres descartar este Clank? Todos os dados introduzidos serão perdidos.</string>
     <string name="crear_descartar_clank_confirmar">Descartar</string>

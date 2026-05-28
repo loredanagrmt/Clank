@@ -8,7 +8,7 @@
     <string name="error_generico">Ein Fehler ist aufgetreten. Bitte versuche es erneut.</string>
     <string name="error_permiso_camara">Kameraberechtigung erforderlich</string>
     <string name="error_camara">Die Kamera konnte nicht geöffnet werden</string>
-    <string name="comun_espere_un_momento">Bitte einen Moment warten</string>
+    <string name="comun_espere_un_momento">Bitte warten…</string>
     <string name="crear_descartar_clank_titulo">Clank verwerfen</string>
     <string name="crear_descartar_clank_mensaje">Möchtest du diesen Clank wirklich verwerfen? Alle eingegebenen Daten gehen verloren.</string>
     <string name="crear_descartar_clank_confirmar">Verwerfen</string>
