@@ -287,8 +287,8 @@
   <dimen name="cambiar_contrasenya_boton_height">48dp</dimen>
 
   <!-- ── Bottom bar ──────────────────────────────────── -->
-  <dimen name="bottombar_alto_contenedor">88dp</dimen>
-  <dimen name="bottombar_alto_barra">56dp</dimen>
+  <dimen name="bottombar_alto_contenedor">68dp</dimen>
+  <dimen name="bottombar_alto_barra">38dp</dimen>
   <dimen name="bottombar_margen_inferior">16dp</dimen>
   <dimen name="bottombar_padding_horizontal">20dp</dimen>
   <dimen name="bottombar_item_padding_horizontal">16dp</dimen>
