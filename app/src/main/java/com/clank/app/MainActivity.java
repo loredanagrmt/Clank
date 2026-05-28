@@ -122,8 +122,10 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
         nav.addOnDestinationChangedListener((controller, destination, args) -> {
             if (FRAGMENTS_SIN_BOTTOMBAR.contains(destination.getId())) {
                 binding.frameBottomBar.setVisibility(View.GONE);
+                binding.viewDegradadoGlobal.setVisibility(View.GONE);
             } else {
                 binding.frameBottomBar.setVisibility(View.VISIBLE);
+                binding.viewDegradadoGlobal.setVisibility(View.VISIBLE);
                 actualizarIndicador(destination.getId());
             }
         });
@@ -134,8 +136,10 @@ public class MainActivity extends AppCompatActivity implements NavbarHost {
 
             if (FRAGMENTS_SIN_BOTTOMBAR.contains(destinoActual)) {
                 binding.frameBottomBar.setVisibility(View.GONE);
+                binding.viewDegradadoGlobal.setVisibility(View.GONE);
             } else {
                 binding.frameBottomBar.setVisibility(View.VISIBLE);
+                binding.viewDegradadoGlobal.setVisibility(View.VISIBLE);
                 actualizarIndicador(destinoActual);
             }
         }

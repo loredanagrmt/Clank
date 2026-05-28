@@ -12,18 +12,21 @@ import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
 
+import java.util.HashMap;
+import java.util.Map;
 public class TraductorTarjetaClank {
 
   private final Context contextoAplicacion;
   private final LanguageIdentifier identificador;
 
+  //cache de traductores ya descargados
+  private final Map<String, Translator> traductoresListos = new HashMap<>();
+  //cache de tareas de descarga en curso
+  private final Map<String, Task<Void>> descargasEnCurso = new HashMap<>();
+
   public TraductorTarjetaClank(Context context) {
     this.contextoAplicacion = context.getApplicationContext();
     this.identificador = LanguageIdentification.getClient();
-  }
-
-  public void cerrar() {
-    identificador.close();
   }
 
     public static class TextoTarjetaTraducido {
@@ -79,122 +82,124 @@ public class TraductorTarjetaClank {
             new TextoTarjetaTraducido(tituloSeguro, descripcionSegura));
         }
 
-        return traducirTarjeta(tituloSeguro, descripcionSegura,
-          idiomaOrigen, idiomaDestino);
+        return traducirConTraductorCacheado(
+          tituloSeguro, descripcionSegura,
+          idiomaOrigen, idiomaDestino
+        );
       });
   }
 
-    private Task<TextoTarjetaTraducido> traducirTarjeta(
-            String tituloOriginal,
-            String descripcionOriginal,
-            String idiomaOrigen,
-            String idiomaDestino
+private Task<TextoTarjetaTraducido> traducirConTraductorCacheado(
+    String titulo,
+    String descripcion,
+    String idiomaOrigen,
+    String idiomaDestino
     ) {
-        TranslatorOptions opciones =
-                new TranslatorOptions.Builder()
-                        .setSourceLanguage(idiomaOrigen)
-                        .setTargetLanguage(idiomaDestino)
-                        .build();
+    String clavePar = idiomaOrigen + "->" + idiomaDestino;
 
-        Translator traductor =
-                Translation.getClient(opciones);
+    if (traductoresListos.containsKey(clavePar)) {
+      Translator traductor = traductoresListos.get(clavePar);
+      return traducirConTraductor(traductor, titulo, descripcion);
+    }
+    Task<Void> descargaExistente = descargasEnCurso.get(clavePar);
+    if (descargaExistente != null) {
+      return descargaExistente.continueWithTask(t -> {
+        Translator traductor = traductoresListos.get(clavePar);
+        if (traductor == null) {
+          return Tasks.forResult(new TextoTarjetaTraducido(titulo, descripcion));
+        }
+        return traducirConTraductor(traductor, titulo, descripcion);
+      });
+    }
+    TranslatorOptions opciones = new TranslatorOptions.Builder()
+      .setSourceLanguage(idiomaOrigen)
+      .setTargetLanguage(idiomaDestino)
+      .build();
 
-        DownloadConditions condiciones =
-                new DownloadConditions.Builder()
-                        .build();
+    Translator nuevoTraductor = Translation.getClient(opciones);
+    DownloadConditions condiciones = new DownloadConditions.Builder().build();
 
-        return traductor.downloadModelIfNeeded(condiciones)
-                .continueWithTask(tareaDescarga -> {
-                    if (!tareaDescarga.isSuccessful()) {
-                        traductor.close();
+    Task<Void> tareaDescarga = nuevoTraductor
+      .downloadModelIfNeeded(condiciones)
+      .addOnSuccessListener(v -> {
+        traductoresListos.put(clavePar, nuevoTraductor);
+        descargasEnCurso.remove(clavePar);
+      })
+      .addOnFailureListener(e -> {
+        nuevoTraductor.close();
+        descargasEnCurso.remove(clavePar);
+      });
 
-                        return Tasks.forResult(
-                                new TextoTarjetaTraducido(
-                                        tituloOriginal,
-                                        descripcionOriginal
-                                )
-                        );
-                    }
+    descargasEnCurso.put(clavePar, tareaDescarga);
 
-                    Task<String> tareaTitulo =
-                            traducirTextoSeguro(
-                                    traductor,
-                                    tituloOriginal
-                            );
+    return tareaDescarga.continueWithTask(t -> {
+      Translator traductor = traductoresListos.get(clavePar);
+      if (traductor == null) {
+        return Tasks.forResult(new TextoTarjetaTraducido(titulo, descripcion));
+      }
+      return traducirConTraductor(traductor, titulo, descripcion);
+    });
+  }
 
-                    Task<String> tareaDescripcion =
-                            traducirTextoSeguro(
-                                    traductor,
-                                    descripcionOriginal
-                            );
+  private Task<TextoTarjetaTraducido> traducirConTraductor(
+    Translator traductor,
+    String titulo,
+    String descripcion
+  ) {
+    Task<String> tareaTitulo = traducirTextoSeguro(traductor, titulo);
+    Task<String> tareaDescripcion = traducirTextoSeguro(traductor, descripcion);
 
-                    return Tasks.whenAllComplete(
-                                    tareaTitulo,
-                                    tareaDescripcion
-                            )
-                            .continueWith(tareaTraduccion -> {
-                                String tituloTraducido =
-                                        tareaTitulo.isSuccessful()
-                                                && tareaTitulo.getResult() != null
-                                                ? tareaTitulo.getResult()
-                                                : tituloOriginal;
+    return Tasks.whenAllComplete(tareaTitulo, tareaDescripcion)
+      .continueWith(t -> {
+        String tituloTraducido = tareaTitulo.isSuccessful()
+          && tareaTitulo.getResult() != null
+          ? tareaTitulo.getResult() : titulo;
 
-                                String descripcionTraducida =
-                                        tareaDescripcion.isSuccessful()
-                                                && tareaDescripcion.getResult() != null
-                                                ? tareaDescripcion.getResult()
-                                                : descripcionOriginal;
+        String descripcionTraducida = tareaDescripcion.isSuccessful()
+          && tareaDescripcion.getResult() != null
+          ? tareaDescripcion.getResult() : descripcion;
 
-                                traductor.close();
-
-                                return new TextoTarjetaTraducido(
-                                        tituloTraducido,
-                                        descripcionTraducida
-                                );
-                            });
-                });
+        return new TextoTarjetaTraducido(tituloTraducido, descripcionTraducida);
+      });
     }
 
-    private Task<String> traducirTextoSeguro(
-            Translator traductor,
-            String textoOriginal
-    ) {
-        String textoSeguro =
-                textoOriginal != null ? textoOriginal : "";
+  private Task<String> traducirTextoSeguro(Translator traductor, String textoOriginal) {
+    String textoSeguro = textoOriginal != null ? textoOriginal : "";
 
         if (textoSeguro.trim().isEmpty()) {
             return Tasks.forResult(textoSeguro);
         }
 
         return traductor.translate(textoSeguro)
-                .continueWith(tarea -> {
-                    if (tarea.isSuccessful()
-                            && tarea.getResult() != null) {
-                        return tarea.getResult();
-                    }
+          .continueWith(tarea -> {
+        if (tarea.isSuccessful() && tarea.getResult() != null) {
+          return tarea.getResult();
+        }
+        return textoSeguro;
+      });
+  }
 
-                    return textoSeguro;
-                });
-    }
-
-    private String construirTextoDeteccion(
-            String titulo,
-            String descripcion
-    ) {
-        StringBuilder texto = new StringBuilder();
+  private String construirTextoDeteccion(String titulo, String descripcion) {
+    StringBuilder texto = new StringBuilder();
 
         if (titulo != null && !titulo.trim().isEmpty()) {
             texto.append(titulo.trim());
         }
 
-        if (descripcion != null && !descripcion.trim().isEmpty()) {
-            if (texto.length() > 0) {
-                texto.append("\n");
-            }
-
+      if (descripcion != null && !descripcion.trim().isEmpty()) {
+      if (texto.length() > 0) texto.append("\n");
             texto.append(descripcion.trim());
         }
 
         return texto.toString();
     }
+
+  public void cerrar() {
+    identificador.close();
+    for (Translator t : traductoresListos.values()) {
+      t.close();
+    }
+    traductoresListos.clear();
+    descargasEnCurso.clear();
+  }
 }
