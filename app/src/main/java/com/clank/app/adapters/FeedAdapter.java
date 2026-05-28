@@ -297,7 +297,6 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     holder.binding.tarjeta.ivLike.setHapticFeedbackEnabled(false);
 
     holder.binding.tarjeta.ivLike.setOnClickListener(v -> {
-      // Solo contador visual.
     });
 
     holder.binding.tarjeta.ivOpciones.setOnClickListener(v -> {
