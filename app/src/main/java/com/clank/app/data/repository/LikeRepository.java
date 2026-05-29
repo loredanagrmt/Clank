@@ -84,6 +84,27 @@ public class LikeRepository {
             );
   }
 
+  public ListenerRegistration escucharEstadoLike(String clankId,
+                                                 String uid,
+                                                 OnEstadoLikeListener listener) {
+    return dataSource.collection(CLANKS)
+            .document(clankId)
+            .collection(LIKES)
+            .document(uid)
+            .addSnapshotListener((snapshot, error) -> {
+              if (listener == null) {
+                return;
+              }
+
+              if (error != null) {
+                listener.onEstadoLike(false);
+                return;
+              }
+
+              listener.onEstadoLike(snapshot != null && snapshot.exists());
+            });
+  }
+
   public ListenerRegistration escucharNumLikes(String clankId,
                                                OnNumLikesListener listener) {
     return dataSource.collection(CLANKS)
@@ -94,22 +115,12 @@ public class LikeRepository {
                 return;
               }
 
-              int cantidadReal = Math.max(0, snap.size());
-
-              listener.onNumLikes(cantidadReal);
-
-              sincronizarNumLikes(clankId, cantidadReal);
+              listener.onNumLikes(Math.max(0, snap.size()));
             });
   }
 
-  private void sincronizarNumLikes(String clankId, int cantidadReal) {
-    if (clankId == null || clankId.trim().isEmpty()) {
-      return;
-    }
-
-    dataSource.collection(CLANKS)
-            .document(clankId)
-            .update("numLikes", Math.max(0, cantidadReal));
+  public interface OnEstadoLikeListener {
+    void onEstadoLike(boolean haDadoLike);
   }
 
   public interface OnNumLikesListener {

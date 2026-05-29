@@ -87,12 +87,8 @@ public class DetalleClankFragment extends Fragment {
   public void onResume() {
     super.onResume();
 
-    if (viewModel != null &&
-            viewModel.getDetalle().getValue() != null) {
-
-      configurarBotonOpciones(
-              viewModel.getDetalle().getValue().usuarioId
-      );
+    if (viewModel != null && viewModel.getDetalle().getValue() != null) {
+      configurarBotonOpciones(viewModel.getDetalle().getValue().usuarioId);
     } else {
       configurarNavbarInicial();
     }
@@ -147,6 +143,10 @@ public class DetalleClankFragment extends Fragment {
 
   private void observarViewModel() {
     viewModel.getCargando().observe(getViewLifecycleOwner(), cargando -> {
+      if (binding == null) {
+        return;
+      }
+
       if (Boolean.TRUE.equals(cargando)) {
         mostrarCargandoDetalle();
       }
@@ -248,7 +248,8 @@ public class DetalleClankFragment extends Fragment {
     configurarBotonOpciones(datos.usuarioId);
     configurarLike(datos.clankId);
 
-    cargarPortadaYMostrarDetalle(datos.portadaUrl);
+    mostrarContenidoDetalle();
+    cargarPortadaSinPlaceholder(datos.portadaUrl);
   }
 
   private void cargarAvatarUsuario(String fotoPerfil) {
@@ -271,7 +272,7 @@ public class DetalleClankFragment extends Fragment {
     }
   }
 
-  private void cargarPortadaYMostrarDetalle(String portadaUrl) {
+  private void cargarPortadaSinPlaceholder(String portadaUrl) {
     if (binding == null) {
       return;
     }
@@ -282,12 +283,8 @@ public class DetalleClankFragment extends Fragment {
 
     if (portadaUrl == null || portadaUrl.trim().isEmpty()) {
       binding.ivPortada.setVisibility(View.GONE);
-      mostrarContenidoDetalle();
       return;
     }
-
-    binding.overlayCargando.setVisibility(View.VISIBLE);
-    binding.contenidoDetalle.setVisibility(View.GONE);
 
     Glide.with(this)
             .load(portadaUrl.trim())
@@ -305,8 +302,6 @@ public class DetalleClankFragment extends Fragment {
 
                 binding.ivPortada.setImageDrawable(null);
                 binding.ivPortada.setVisibility(View.GONE);
-                mostrarContenidoDetalle();
-
                 return true;
               }
 
@@ -321,8 +316,6 @@ public class DetalleClankFragment extends Fragment {
                 }
 
                 binding.ivPortada.setVisibility(View.VISIBLE);
-                mostrarContenidoDetalle();
-
                 return false;
               }
             })
@@ -657,6 +650,10 @@ public class DetalleClankFragment extends Fragment {
   }
 
   private void pintarBotonLike(boolean activo) {
+    if (binding == null) {
+      return;
+    }
+
     binding.btnLikeDetalle.setImageResource(
             activo
                     ? R.drawable.ic_like_activo

@@ -25,15 +25,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.ViewHolder> {
 
@@ -41,6 +40,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   public interface OnClankClickListener {
     void onClankClick(String clankId);
+
     void onUsuarioClick(String usuarioId);
   }
 
@@ -54,6 +54,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   public interface OnPreparacionTarjetasListener {
     void alIniciarPreparacion();
+
     void alFinalizarPreparacion();
   }
 
@@ -79,6 +80,8 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   private int versionPreparacion = 0;
   private boolean tarjetasPreparadas = false;
+  private boolean primeraCargaIniciada = false;
+  private boolean primeraCargaCompletada = false;
 
   public FeedAdapter(@NonNull FirestoreRecyclerOptions<Clank> options,
                      Context context,
@@ -89,6 +92,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
                      @Nullable OnItemsListosListener itemsListosListener,
                      @Nullable OnPreparacionTarjetasListener listenerPreparacion) {
     super(options);
+
     this.context = context;
     this.usuarioRepository = usuarioRepository;
     this.uidUsuario = uidUsuario;
@@ -101,6 +105,10 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   @Override
   public int getItemCount() {
+    if (primeraCargaCompletada) {
+      return super.getItemCount();
+    }
+
     return tarjetasPreparadas ? super.getItemCount() : 0;
   }
 
@@ -109,7 +117,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   }
 
   public boolean estaPreparado() {
-    return tarjetasPreparadas;
+    return tarjetasPreparadas || primeraCargaCompletada;
   }
 
   @NonNull
@@ -132,7 +140,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
     String claveTraduccion = construirClaveTraduccion(clankId, clank);
 
-    if (!cacheTraducciones.containsKey(claveTraduccion)) {
+    if (!primeraCargaCompletada && !cacheTraducciones.containsKey(claveTraduccion)) {
       holder.itemView.setVisibility(View.INVISIBLE);
       return;
     }
@@ -273,13 +281,12 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
   }
 
   private void configurarBotonesLike(@NonNull ViewHolder holder, String clankId) {
-    boolean likeListo = estadoLikesLocal.containsKey(clankId)
-            && contadorLikesLocal.containsKey(clankId);
+    boolean estadoLikeListo = estadoLikesLocal.containsKey(clankId);
 
     holder.binding.tarjeta.ivOpciones.setVisibility(View.VISIBLE);
-    holder.binding.tarjeta.ivOpciones.setEnabled(likeListo);
-    holder.binding.tarjeta.ivOpciones.setClickable(likeListo);
-    holder.binding.tarjeta.ivOpciones.setFocusable(likeListo);
+    holder.binding.tarjeta.ivOpciones.setEnabled(estadoLikeListo);
+    holder.binding.tarjeta.ivOpciones.setClickable(estadoLikeListo);
+    holder.binding.tarjeta.ivOpciones.setFocusable(estadoLikeListo);
 
     holder.binding.tarjeta.ivLike.setVisibility(View.VISIBLE);
     holder.binding.tarjeta.ivLike.setImageResource(R.drawable.ic_like_inactivo);
@@ -290,12 +297,10 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     holder.binding.tarjeta.ivLike.setHapticFeedbackEnabled(false);
 
     holder.binding.tarjeta.ivLike.setOnClickListener(v -> {
-
     });
 
     holder.binding.tarjeta.ivOpciones.setOnClickListener(v -> {
-      if (!estadoLikesLocal.containsKey(clankId)
-              || !contadorLikesLocal.containsKey(clankId)) {
+      if (!estadoLikesLocal.containsKey(clankId)) {
         return;
       }
 
@@ -307,8 +312,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
       holder.binding.tarjeta.ivOpciones.postDelayed(() -> {
         if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
-          boolean listoDespues = estadoLikesLocal.containsKey(clankId)
-                  && contadorLikesLocal.containsKey(clankId);
+          boolean listoDespues = estadoLikesLocal.containsKey(clankId);
 
           holder.binding.tarjeta.ivOpciones.setEnabled(listoDespues);
           holder.binding.tarjeta.ivOpciones.setClickable(listoDespues);
@@ -341,14 +345,10 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
 
   @Override
   public void onDataChanged() {
-    tarjetasPreparadas = false;
-    notifyDataSetChanged();
+    boolean debeIniciarPrimeraCarga = !primeraCargaIniciada && !primeraCargaCompletada;
+    boolean debeCerrarPrimeraCarga = !primeraCargaCompletada;
 
     limpiarCachesDeClanksEliminados();
-
-    if (listenerPreparacion != null) {
-      listenerPreparacion.alIniciarPreparacion();
-    }
 
     if (itemsListosListener != null) {
       List<String> ids = new ArrayList<>();
@@ -362,7 +362,17 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
       itemsListosListener.onItemsListos(ids, likes);
     }
 
-    prepararTraduccionesTarjetas();
+    if (debeIniciarPrimeraCarga) {
+      primeraCargaIniciada = true;
+      tarjetasPreparadas = false;
+      notifyDataSetChanged();
+
+      if (listenerPreparacion != null) {
+        listenerPreparacion.alIniciarPreparacion();
+      }
+    }
+
+    prepararTraduccionesTarjetas(debeCerrarPrimeraCarga);
   }
 
   private void limpiarCachesDeClanksEliminados() {
@@ -412,6 +422,7 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     Boolean activo = estadoLikesLocal.get(clankId);
     boolean liked = Boolean.TRUE.equals(activo);
 
+    boolean estadoLikeListo = estadoLikesLocal.containsKey(clankId);
 
     holder.binding.tarjeta.ivOpciones.setImageResource(
             liked
@@ -425,6 +436,10 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
                     : R.drawable.bg_circulo_opciones_inactivo
     );
 
+    holder.binding.tarjeta.ivOpciones.setEnabled(estadoLikeListo);
+    holder.binding.tarjeta.ivOpciones.setClickable(estadoLikeListo);
+    holder.binding.tarjeta.ivOpciones.setFocusable(estadoLikeListo);
+
     holder.binding.tarjeta.ivLike.setImageResource(R.drawable.ic_like_inactivo);
   }
 
@@ -433,6 +448,9 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     super.onError(error);
 
     tarjetasPreparadas = true;
+    primeraCargaIniciada = true;
+    primeraCargaCompletada = true;
+
     notifyDataSetChanged();
 
     if (listenerPreparacion != null) {
@@ -440,11 +458,11 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     }
   }
 
-  private void prepararTraduccionesTarjetas() {
+  private void prepararTraduccionesTarjetas(boolean debeCerrarPrimeraCarga) {
     int versionActual = ++versionPreparacion;
 
     if (super.getItemCount() == 0) {
-      finalizarPreparacion(versionActual);
+      finalizarPreparacion(versionActual, debeCerrarPrimeraCarga);
       return;
     }
 
@@ -497,23 +515,30 @@ public class FeedAdapter extends FirestoreRecyclerAdapter<Clank, FeedAdapter.Vie
     }
 
     if (tareas.isEmpty()) {
-      finalizarPreparacion(versionActual);
+      finalizarPreparacion(versionActual, debeCerrarPrimeraCarga);
       return;
     }
 
     Tasks.whenAllComplete(tareas)
-            .addOnCompleteListener(tarea -> finalizarPreparacion(versionActual));
+            .addOnCompleteListener(tarea ->
+                    finalizarPreparacion(versionActual, debeCerrarPrimeraCarga)
+            );
   }
 
-  private void finalizarPreparacion(int versionActual) {
+  private void finalizarPreparacion(int versionActual, boolean debeCerrarPrimeraCarga) {
     if (versionActual != versionPreparacion) {
       return;
     }
 
     tarjetasPreparadas = true;
+
+    if (debeCerrarPrimeraCarga) {
+      primeraCargaCompletada = true;
+    }
+
     notifyDataSetChanged();
 
-    if (listenerPreparacion != null) {
+    if (debeCerrarPrimeraCarga && listenerPreparacion != null) {
       listenerPreparacion.alFinalizarPreparacion();
     }
   }
