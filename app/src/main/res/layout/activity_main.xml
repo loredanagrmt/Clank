@@ -35,6 +35,7 @@
       android:layout_width="0dp"
       android:layout_height="@dimen/bottombar_alto_contenedor"
       android:background="@drawable/bg_degradado_bottombar"
+      android:visibility="gone"
       android:elevation="6dp"
       app:layout_constraintBottom_toTopOf="@id/frameBottomBar"
       app:layout_constraintStart_toStartOf="parent"
