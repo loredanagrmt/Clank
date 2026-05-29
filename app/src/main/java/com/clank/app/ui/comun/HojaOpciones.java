@@ -1,5 +1,6 @@
 package com.clank.app.ui.comun;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,10 @@ public class HojaOpciones extends BottomSheetDialogFragment {
         void ejecutar();
     }
 
+  public interface OnDismissListener {
+    void alCerrar();
+  }
+
     private enum ModoHoja {
         LISTA,
         CONFIRMACION
@@ -47,7 +52,8 @@ public class HojaOpciones extends BottomSheetDialogFragment {
     private Accion accionCancelar;
     private Accion accionConfirmar;
 
-    public static HojaOpciones nuevaLista(
+  private OnDismissListener onDismissListener;
+  public static HojaOpciones nuevaLista(
             String titulo,
             List<ItemOpcion> opciones,
             Callback callback
@@ -60,6 +66,10 @@ public class HojaOpciones extends BottomSheetDialogFragment {
         return hoja;
     }
 
+  public HojaOpciones conOnDismiss(OnDismissListener listener) {
+    this.onDismissListener = listener;
+    return this;
+  }
     public static HojaOpciones nuevaConfirmacion(
             String titulo,
             String mensajeConfirmacion,
@@ -114,6 +124,13 @@ public class HojaOpciones extends BottomSheetDialogFragment {
         comportamiento.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
+  @Override
+  public void onDismiss(@NonNull DialogInterface dialog) {
+    super.onDismiss(dialog);
+    if (onDismissListener != null) {
+      onDismissListener.alCerrar();
+    }
+  }
     private void configurarModoLista() {
         binding.listaOpciones.setVisibility(View.VISIBLE);
         binding.textoConfirmacion.setVisibility(View.GONE);

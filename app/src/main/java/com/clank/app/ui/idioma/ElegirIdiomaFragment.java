@@ -37,6 +37,11 @@ public class ElegirIdiomaFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+      View overlay = view.findViewById(R.id.viewOverlayOscuro);
+      overlay.setClickable(true);
+      overlay.setOnClickListener(v -> mostrarSelectorIdiomas(view));
+
         mostrarSelectorIdiomas(view);
     }
 
@@ -47,22 +52,32 @@ public class ElegirIdiomaFragment extends Fragment {
     }
 
     private void mostrarSelectorIdiomas(View view) {
+    if (getChildFragmentManager().findFragmentByTag("selector_idioma") != null) {
+      return;
+    }
+
         HojaOpciones hoja = HojaOpciones.nuevaLista(
                 obtenerTextoSiempreEnEspanol(R.string.elige_tu_idioma),
                 obtenerIdiomasDisponibles(),
                 codigoIdioma -> {
                     GestorIdioma.getInstance(requireContext())
-                            .aplicarIdioma(codigoIdioma);
+                          .aplicarIdioma(codigoIdioma);
 
                     NavController navController =
-                            Navigation.findNavController(view);
-
+                      Navigation.findNavController(view);
                     navController.navigate(R.id.action_idioma_a_inicio);
                 }
         );
 
+    hoja.conOnDismiss(() -> {
+      if (isAdded() && !isDetached()) {
+        mostrarSelectorIdiomas(view);
+      }
+    });
+
         hoja.show(getChildFragmentManager(), "selector_idioma");
     }
+
 
     private List<ItemOpcion> obtenerIdiomasDisponibles() {
         List<ItemOpcion> idiomas = new ArrayList<>();
