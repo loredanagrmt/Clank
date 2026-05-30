@@ -248,4 +248,10 @@ public class ClankRepository {
     return dataSource.collection(COLLECTION).whereEqualTo("estadoAcabado", true)
       .orderBy("fechaPublicacion", Query.Direction.DESCENDING).limit(limite).get();
   }
+
+    public Query getTodosAcabadosDesdeServidor() {
+        return dataSource.collection(COLLECTION)
+                .whereEqualTo("estadoAcabado", true)
+                .orderBy("fechaPublicacion", Query.Direction.DESCENDING);
+    }
 }
