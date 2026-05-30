@@ -104,6 +104,8 @@ public class CrearFragment extends Fragment {
     configurarListeners(view);
     observarViewModel();
 
+    viewModel.recargarCategorias();
+
     if (binding != null && isAdded()) {
       anyadirFilaMaterial(false);
       anyadirFilaInstruccion();
