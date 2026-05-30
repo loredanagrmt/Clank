@@ -38,6 +38,11 @@ public class BienvenidaFragment extends Fragment {
                               @Nullable Bundle estadoGuardado) {
         super.onViewCreated(vista, estadoGuardado);
 
+        View contenedorNavHost = requireActivity().findViewById(R.id.nav_host_fragment);
+        if (contenedorNavHost != null) {
+            contenedorNavHost.setVisibility(View.VISIBLE);
+        }
+
         vistaModeloRegistro = new ViewModelProvider(requireActivity())
                 .get(RegistroCompartidoViewModel.class);
 

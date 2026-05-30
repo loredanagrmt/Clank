@@ -30,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AjustesFragment extends Fragment {
 
+    private boolean navegandoFuera = false;
     private FragmentAjustesBinding binding;
     private AjustesViewModel vistaModelo;
 
@@ -84,6 +85,8 @@ public class AjustesFragment extends Fragment {
 
     private void observarVistaModelo() {
         vistaModelo.getEliminandoCuenta().observe(getViewLifecycleOwner(), eliminando -> {
+            if (navegandoFuera) return;
+
             boolean estaEliminando = Boolean.TRUE.equals(eliminando);
 
             binding.btnBorrarCuenta.setEnabled(!estaEliminando);
@@ -91,18 +94,21 @@ public class AjustesFragment extends Fragment {
             binding.btnCambiarContrasenya.setEnabled(!estaEliminando);
             binding.btnLenguaje.setEnabled(!estaEliminando);
             binding.switchTemaOscuro.setEnabled(!estaEliminando);
+
+            binding.overlayEliminando.setVisibility(
+                    estaEliminando ? View.VISIBLE : View.GONE
+            );
         });
 
         vistaModelo.getEstadoEliminacionCuenta().observe(getViewLifecycleOwner(), estado -> {
-            if (estado == null) {
-                return;
-            }
+            if (estado == null) return;
 
             switch (estado) {
                 case EXITO:
-                    vistaModelo.limpiarEstadoEliminacionCuenta();
+                    navegandoFuera = true;
                     vistaModelo.cerrarSesion();
                     navegarABienvenida();
+                    vistaModelo.limpiarEstadoEliminacionCuenta();
                     break;
 
                 case ERROR_GENERAL:
@@ -183,6 +189,11 @@ public class AjustesFragment extends Fragment {
         if (navegador.getCurrentDestination() == null ||
                 navegador.getCurrentDestination().getId() != R.id.ajustesFragment) {
             return;
+        }
+
+        View contenedorNavHost = requireActivity().findViewById(R.id.nav_host_fragment);
+        if (contenedorNavHost != null) {
+            contenedorNavHost.setVisibility(View.INVISIBLE);
         }
 
         NavOptions opcionesNavegacion = new NavOptions.Builder()
