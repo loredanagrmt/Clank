@@ -41,6 +41,7 @@ public class FeedFragment extends Fragment {
 
   private Runnable ocultarOverlayPendiente;
   private boolean feedMostradoUnaVez = false;
+  private boolean adapterInicializado = false;
   private long inicioCargandoMs = 0L;
 
   @Override
@@ -82,6 +83,11 @@ public class FeedFragment extends Fragment {
             && !feedMostradoUnaVez) {
       prepararAnimacionCargando(binding.overlayCargandoFeed);
     }
+
+    if (adapterInicializado && adapter != null && feedMostradoUnaVez) {
+      adapter.stopListening();
+      adapter.startListening();
+    }
   }
 
   @Override
@@ -89,6 +95,7 @@ public class FeedFragment extends Fragment {
     super.onDestroyView();
 
     cancelarOcultacionPendiente();
+    adapterInicializado = false;
 
     if (adapter != null) {
       adapter.cerrar();
@@ -177,6 +184,7 @@ public class FeedFragment extends Fragment {
     );
 
     binding.rvFeed.setAdapter(adapter);
+    adapterInicializado = true;
   }
 
   private void arrancarObservadoresLikes(List<String> clankIds,

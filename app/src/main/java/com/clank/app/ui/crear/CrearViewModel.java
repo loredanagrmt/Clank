@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -63,6 +64,7 @@ public class CrearViewModel extends ViewModel {
   }
 
   public void recargarCategorias() {
+    categoriasCargadas = false;
     cargarCategoriasEsperandoAuth();
   }
 
@@ -95,6 +97,7 @@ public class CrearViewModel extends ViewModel {
     return sel != null ? new ArrayList<>(sel) : new ArrayList<>();
   }
   private void cargarCategoriasEsperandoAuth() {
+    if (categoriasCargadas) return;
     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
     if (usuario != null) {
@@ -121,10 +124,8 @@ public class CrearViewModel extends ViewModel {
             .get()
             .addOnSuccessListener(snapshot -> {
               List<String[]> lista = new ArrayList<>();
-
-              for (com.google.firebase.firestore.DocumentSnapshot doc : snapshot.getDocuments()) {
+              for (DocumentSnapshot doc : snapshot.getDocuments()) {
                 String nombre = doc.getString("categoria");
-
                 if (nombre != null && !nombre.trim().isEmpty()) {
                   lista.add(new String[]{doc.getId(), nombre.trim()});
                 }
@@ -137,19 +138,21 @@ public class CrearViewModel extends ViewModel {
 
               traductorCategorias.traducirSiProcede(lista)
                       .addOnSuccessListener(categoriasTraducidas -> {
+                        categoriasCargadas = true;
                         if (categoriasTraducidas != null && !categoriasTraducidas.isEmpty()) {
                           categorias.setValue(categoriasTraducidas);
                         } else {
                           categorias.setValue(lista);
                         }
                       })
-                      .addOnFailureListener(error ->
-                              categorias.setValue(lista)
-                      );
+                      .addOnFailureListener(error -> {
+                        categoriasCargadas = true;
+                        categorias.setValue(lista);
+                      });
             })
-            .addOnFailureListener(error ->
-                    categorias.setValue(new ArrayList<>())
-            );
+            .addOnFailureListener(error -> {
+              categorias.setValue(new ArrayList<>());
+            });
   }
 
   /// ////////////////////// publicar clank /////////////////////////
@@ -514,6 +517,7 @@ public class CrearViewModel extends ViewModel {
   }
 
   public void cargarCategorias() {
+    if (categoriasCargadas) return;
     ejecutarCargaCategorias();
   }
 

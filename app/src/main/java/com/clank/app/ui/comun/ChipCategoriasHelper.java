@@ -55,31 +55,30 @@ public class ChipCategoriasHelper {
 
     contenedor.post(() -> {
       Context contextoSeguro = contenedor.getContext();
-
-      if (contextoSeguro == null) {
-        return;
-      }
+      if (contextoSeguro == null) return;
 
       int anchoReal = contenedor.getWidth();
 
       if (anchoReal <= 0) {
-        int margenFallback = dpToPx(contextoSeguro, 32);
-        anchoReal = contextoSeguro.getResources().getDisplayMetrics().widthPixels - margenFallback;
-      }
-
-      if (anchoReal <= 0) {
+        // Fallback más robusto: reintenta en el siguiente frame
+        contenedor.post(() -> {
+          int anchoReintento = contenedor.getWidth();
+          if (anchoReintento <= 0) {
+            int margenFallback = dpToPx(contextoSeguro, 32);
+            anchoReintento = contextoSeguro.getResources()
+                    .getDisplayMetrics().widthPixels - margenFallback;
+          }
+          if (anchoReintento <= 0) return;
+          construirFilas(contextoSeguro, contenedor, categoriasValidas,
+                  seleccionadas != null ? seleccionadas : new HashSet<>(),
+                  true, listener, anchoReintento);
+        });
         return;
       }
 
-      construirFilas(
-              contextoSeguro,
-              contenedor,
-              categoriasValidas,
+      construirFilas(contextoSeguro, contenedor, categoriasValidas,
               seleccionadas != null ? seleccionadas : new HashSet<>(),
-              true,
-              listener,
-              anchoReal
-      );
+              true, listener, anchoReal);
     });
   }
 

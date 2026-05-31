@@ -60,6 +60,12 @@ public class FeedViewModel extends ViewModel {
         return clankRepository.getTodosAcabados();
     }
 
+    public void invalidarCacheFeed() {
+        clankRepository.getTodosAcabados()
+                .limit(1)
+                .get(com.google.firebase.firestore.Source.SERVER)
+                .addOnCompleteListener(tarea -> {});
+    }
     public LiveData<Boolean> getEstadoLike(String clankId) {
         return obtenerOCrearEstado(clankId);
     }

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/clank_background_light"
-    android:orientation="vertical">
+    android:background="@color/clank_background_light">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ajustes_dimension_cero"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:fillViewport="true">
 
         <LinearLayout
@@ -175,4 +173,22 @@
 
     </androidx.core.widget.NestedScrollView>
 
-</LinearLayout>
+    <!-- Overlay cargando - eliminar cuenta -->
+    <FrameLayout
+        android:id="@+id/overlayEliminando"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/clank_background_light"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/vista_cargando"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</FrameLayout>
